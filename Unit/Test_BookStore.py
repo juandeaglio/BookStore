@@ -1,6 +1,6 @@
 import unittest
 
-from BookStore import BookStore
+from Source.BookStore import BookStore
 
 
 class TestBookStore(unittest.TestCase):
