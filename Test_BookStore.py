@@ -3,7 +3,7 @@ import unittest
 from BookStore import BookStore
 
 
-class MyTestCase(unittest.TestCase):
+class TestBookStore(unittest.TestCase):
     def setUp(self):
         self.books = [{'Title': 'The Hunger Games', 'Author': 'Suzanne Collins', 'Release year': '2012'},
                       {'Title': 'Harry Potter and the Sorcerer\'s Stone', 'Author': 'J.K. Rowling',
