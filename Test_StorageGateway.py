@@ -10,20 +10,18 @@ class TestStorageGateway(unittest.TestCase):
                        'Release year': '1998'},
                       {'Title': 'To Kill a Mockingbird', 'Author': 'Harper Lee', 'Release year': '1960'}]
         self.storageGateway = InMemoryStorageGateway()
+        self.storageGateway.save(self.books)
 
     def test_saveAndRetrieveCatalog(self):
-        assert self.storageGateway.save(self.books)
-        numOfBooks = len(self.storageGateway.loadAll())
+        numOfBooks = len(self.storageGateway.loadAllToCache())
         assert len(self.books) == numOfBooks
 
     def test_removeEntryFromCatalog(self):
-        self.storageGateway.save(self.books)
-        numOfBooks = len(self.storageGateway.loadAll())
+        numOfBooks = len(self.storageGateway.loadAllToCache())
         self.storageGateway.removeEntry(self.books[len(self.books)-1])
-        assert len(self.storageGateway.loadAll()) == numOfBooks - 1
+        assert len(self.storageGateway.loadAllToCache()) == numOfBooks - 1
 
     def test_addEntryToCatalog(self):
-        self.storageGateway.save(self.books)
-        numOfBooks = len(self.storageGateway.loadAll())
+        numOfBooks = len(self.storageGateway.loadAllToCache())
         self.storageGateway.add([{'Title': 'Catching Fire', 'Author': 'Suzanne Collins', 'Release year': '2009'}])
-        assert len(self.storageGateway.loadAll()) == numOfBooks + 1
+        assert len(self.storageGateway.loadAllToCache()) == numOfBooks + 1

@@ -10,11 +10,11 @@ class StorageGatewayInterface(ABC):
         pass
 
     @abstractmethod
-    def loadAll(self):
+    def loadAllToCache(self):
         pass
 
     @abstractmethod
-    def loadEntry(self, book):
+    def loadEntryToCache(self, book):
         pass
 
     def removeEntry(self, entry):
@@ -23,5 +23,8 @@ class StorageGatewayInterface(ABC):
 
     def add(self, entries):
         for entry in entries:
-            if self.loadEntry(entry) is None:
+            if not self.doesBookExist(entry):
                 self.data.append(entry)
+
+    def doesBookExist(self, entry):
+        return self.loadEntryToCache(entry) is not None
