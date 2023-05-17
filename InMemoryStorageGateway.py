@@ -11,6 +11,6 @@ class InMemoryStorageGateway(StorageGatewayInterface):
         return self.data
 
     def loadEntry(self, book):
-        return book
+        return book if book in self.data else None
 
 

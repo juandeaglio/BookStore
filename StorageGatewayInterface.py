@@ -23,5 +23,5 @@ class StorageGatewayInterface(ABC):
 
     def add(self, entries):
         for entry in entries:
-            if entry not in self.data:
+            if self.loadEntry(entry) is None:
                 self.data.append(entry)
