@@ -6,9 +6,15 @@ class InMemoryDatabase(DatabaseConnection):
         self.books = []
 
     def insert(self, books):
+        oldLen = len(self.books)
         for book in books:
             if book not in self.books:
                 self.books.append(book)
+
+        if len(self.books) != oldLen:
+            return self.books
+        else:
+            return None
 
     def selectAll(self):
         return self.books

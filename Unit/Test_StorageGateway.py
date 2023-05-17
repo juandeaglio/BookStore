@@ -11,7 +11,7 @@ class TestStorageGateway(unittest.TestCase):
                        'Release year': '1998'},
                       {'Title': 'To Kill a Mockingbird', 'Author': 'Harper Lee', 'Release year': '1960'}]
         self.storageGateway = StorageGateway(InMemoryDatabase())
-        self.storageGateway.save(self.books)
+        assert self.storageGateway.save(self.books)
 
     def test_saveAndRetrieveCatalog(self):
         numOfBooks = len(self.storageGateway.loadAllToCache())
