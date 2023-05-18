@@ -9,22 +9,24 @@ class TestBookStore(unittest.TestCase):
                       {'Title': 'Harry Potter and the Sorcerer\'s Stone', 'Author': 'J.K. Rowling',
                        'Release year': '1998'},
                       {'Title': 'To Kill a Mockingbird', 'Author': 'Harper Lee', 'Release year': '1960'}]
+        self.bookStore = BookStore()
+
+    def test_getAllBooksInCatalog(self):
+        self.bookStore.addToCatalog(self.books)
+        assert len(self.bookStore.getCatalog()) == len(self.books)
 
     def test_addBookToCatalog(self):
-        bookStore = BookStore()
-        bookStore.addToCatalog(self.books)
-        self.assertTrue(bookStore.catalog.size == 3)
+        self.bookStore.addToCatalog(self.books)
+        self.assertTrue(self.bookStore.catalog.size == 3)
 
     def test_addNoBooksToCatalog(self):
-        bookStore = BookStore()
-        bookStore.addToCatalog([])
-        self.assertTrue(bookStore.catalog.size == 0)
+        self.bookStore.addToCatalog([])
+        self.assertTrue(self.bookStore.catalog.size == 0)
 
     def test_removeBookFromCatalogByName(self):
-        bookStore = BookStore()
-        bookStore.addToCatalog(self.books)
-        bookStore.removeByTitle("Harry Potter")
-        self.assertTrue(bookStore.catalog.size == 2)
+        self.bookStore.addToCatalog(self.books)
+        self.bookStore.removeByTitle("Harry Potter")
+        self.assertTrue(self.bookStore.catalog.size == 2)
 
 if __name__ == '__main__':
     unittest.main()

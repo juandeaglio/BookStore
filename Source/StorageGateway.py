@@ -4,7 +4,7 @@ from Source.DatabaseConnection import DatabaseConnection
 class StorageGateway:
     def __init__(self, databasePipe):
         self.data = []
-        if isinstance(databasePipe,DatabaseConnection):
+        if isinstance(databasePipe, DatabaseConnection):
             self.dbConnection = databasePipe
 
     def save(self, books):

@@ -12,3 +12,6 @@ class BookStore:
 
     def removeByTitle(self, title):
         self.catalog.removeAllByTitle(title)
+
+    def getCatalog(self):
+        return self.catalog.bookRepository
