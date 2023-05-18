@@ -1,3 +1,5 @@
+from functools import cmp_to_key
+
 from Source.DatabaseConnection import DatabaseConnection
 
 
@@ -17,6 +19,7 @@ class InMemoryDatabase(DatabaseConnection):
             return None
 
     def selectAll(self):
+        self.books = sorted(self.books, key=lambda book: book['Title'])
         return self.books
 
     def delete(self, entry):

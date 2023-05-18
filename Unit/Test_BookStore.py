@@ -20,6 +20,7 @@ class TestBookStore(unittest.TestCase):
     def test_addBookToCatalog(self):
         self.bookStore.addToCatalog(self.books)
         self.assertTrue(len(self.bookStore.getCatalog()) == 3)
+        self.assertTrue('Harry' in self.bookStore.getCatalog()[0]['Title'])
 
     def test_addNoBooksToCatalog(self):
         self.bookStore.addToCatalog([])
