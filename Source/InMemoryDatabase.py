@@ -24,3 +24,20 @@ class InMemoryDatabase(DatabaseConnection):
 
     def select(self, book):
         return book if book in self.books else None
+
+    def selectWhereTitle(self, title):
+        found = []
+        for book in self.books:
+            if title in book['Title']:
+                found.append(book)
+
+        return found
+
+    def deleteWhereTitle(self, title):
+        deleted = 0
+        for book in self.books:
+            if title in book['Title']:
+                self.books.remove(book)
+                deleted += 1
+
+        return deleted

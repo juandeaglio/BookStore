@@ -1,13 +1,20 @@
-class Catalog:
-    def __init__(self):
-        self.size = 0
-        self.bookRepository = []
+from Source.StorageGateway import StorageGateway
 
-    def add(self, book):
-        self.bookRepository.append(book)
+
+class Catalog:
+    def __init__(self, dbConnection):
+        self.storageGateway = StorageGateway(dbConnection)
+
+    def add(self, books):
+        self.storageGateway.add(books)
 
     def removeAllByTitle(self, title):
-        for book in self.bookRepository:
+        for book in self.getAllBooks():
             if title in book['Title']:
-                self.bookRepository.remove(book)
-                self.size -= 1
+                self.storageGateway.removeEntryByTitle(title)
+
+    def getAllBooks(self):
+        return self.storageGateway.loadAllToCache()
+
+    def getSizeOfCatalog(self):
+        return len(self.getAllBooks())

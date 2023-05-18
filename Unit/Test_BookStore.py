@@ -1,6 +1,7 @@
 import unittest
 
 from Source.BookStore import BookStore
+from Source.InMemoryDatabase import InMemoryDatabase
 
 
 class TestBookStore(unittest.TestCase):
@@ -9,7 +10,7 @@ class TestBookStore(unittest.TestCase):
                       {'Title': 'Harry Potter and the Sorcerer\'s Stone', 'Author': 'J.K. Rowling',
                        'Release year': '1998'},
                       {'Title': 'To Kill a Mockingbird', 'Author': 'Harper Lee', 'Release year': '1960'}]
-        self.bookStore = BookStore()
+        self.bookStore = BookStore(InMemoryDatabase())
 
     def test_getAllBooksInCatalog(self):
         self.bookStore.addToCatalog(self.books)
@@ -17,16 +18,16 @@ class TestBookStore(unittest.TestCase):
 
     def test_addBookToCatalog(self):
         self.bookStore.addToCatalog(self.books)
-        self.assertTrue(self.bookStore.catalog.size == 3)
+        self.assertTrue(len(self.bookStore.getCatalog()) == 3)
 
     def test_addNoBooksToCatalog(self):
         self.bookStore.addToCatalog([])
-        self.assertTrue(self.bookStore.catalog.size == 0)
+        self.assertTrue(len(self.bookStore.getCatalog()) == 0)
 
     def test_removeBookFromCatalogByName(self):
         self.bookStore.addToCatalog(self.books)
         self.bookStore.removeByTitle("Harry Potter")
-        self.assertTrue(self.bookStore.catalog.size == 2)
+        self.assertTrue(len(self.bookStore.getCatalog()) == 2)
 
 if __name__ == '__main__':
     unittest.main()

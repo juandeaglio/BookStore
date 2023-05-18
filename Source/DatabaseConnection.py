@@ -17,3 +17,11 @@ class DatabaseConnection(ABC):
     @abstractmethod
     def select(self, book):
         pass
+
+    @abstractmethod
+    def selectWhereTitle(self, title):
+        pass
+
+    @abstractmethod
+    def deleteWhereTitle(self, title):
+        pass
