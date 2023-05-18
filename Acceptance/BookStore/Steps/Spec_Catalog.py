@@ -1,16 +1,17 @@
-from behave import given, when, then
+from behave import given, when, then, fixture, use_fixture
 from Source.BookStore import BookStore
-import pytest
-
 from Source.Catalog import Catalog
-from Source.InMemoryDatabase import InMemoryDatabase
+from Source.SqlDatabase import SqlDatabase
 
 
 @given('A catalog')
 def defineCatalog(context):
-    context.bookStore = BookStore(Catalog(InMemoryDatabase()))
+    SqlDatabase().clearData()
+    context.bookStore = BookStore(Catalog(SqlDatabase()))
     books = convertTableToArray(context)
     context.bookStore.addToCatalog(books)
+    print(context.bookStore.getCatalog())
+
 
 
 @when('I view the catalog')
@@ -26,12 +27,21 @@ def displayCatalog(context):
         assert theSame(element, otherElement)
 
 
+
 def theSame(book, otherBook):
     return book == otherBook
 
 
 def convertTableToArray(context):
+    # books = []
+    # for book in table:
+    #     b = {}
+    #     for i in range(len(table.headings)):
+    #         b[table.headings[i]] = book[i]
+    #     books.append(b)
+
     books = []
     for book in context.table:
-        books.append({'Title': book[0], 'Author': book[1], 'Year': book[2]})
+        #print("Book: " + str(book))
+        books.append({'Title': book[0], 'Author': book[1], 'Release year': book[2]})
     return books
