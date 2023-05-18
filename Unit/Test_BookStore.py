@@ -1,6 +1,6 @@
 import unittest
-
 from Source.BookStore import BookStore
+from Source.Catalog import Catalog
 from Source.InMemoryDatabase import InMemoryDatabase
 
 
@@ -10,7 +10,8 @@ class TestBookStore(unittest.TestCase):
                       {'Title': 'Harry Potter and the Sorcerer\'s Stone', 'Author': 'J.K. Rowling',
                        'Release year': '1998'},
                       {'Title': 'To Kill a Mockingbird', 'Author': 'Harper Lee', 'Release year': '1960'}]
-        self.bookStore = BookStore(InMemoryDatabase())
+        catalog = Catalog(InMemoryDatabase())
+        self.bookStore = BookStore(catalog)
 
     def test_getAllBooksInCatalog(self):
         self.bookStore.addToCatalog(self.books)
