@@ -85,3 +85,4 @@ class SqlDatabase(DatabaseConnection):
                     DROP TABLE IF EXISTS catalog
                 '''
         sql.executeCommit(query)
+        return self
