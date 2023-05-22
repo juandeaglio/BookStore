@@ -1,15 +1,13 @@
-from behave import given, when, then, fixture, use_fixture
-from Source.BookStore import BookStore
+from behave import given, when, then
 from Source.Catalog import Catalog
-from Source.SqlDatabase import SqlDatabase
+from Source.BookStore import BookStore
 
 
 @given('A catalog')
 def defineCatalog(context):
-    context.bookStore = BookStore(Catalog(SqlDatabase()))
+    context.bookStore = BookStore(Catalog())
     books = convertTableToArray(context)
     context.bookStore.addToCatalog(books)
-    print(context.bookStore.getCatalog())
 
 
 @when('I view the catalog')
@@ -20,11 +18,9 @@ def viewCatalog(context):
 @then('The entire catalog is displayed')
 def displayCatalog(context):
     books = convertTableToArray(context)
-    for element, otherElement in zip(books, context.bookStore.getCatalog()):
-        assert theSame(element, otherElement)
+    assert books == context.bookStore.getCatalog()
 
-
-def theSame(book, otherBook):
+def booksEqual(book, otherBook):
     return book == otherBook
 
 

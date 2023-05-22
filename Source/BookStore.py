@@ -1,4 +1,4 @@
-from Source.Catalog import Catalog
+from Source.CatalogInterface import CatalogInterface
 
 
 class BookStore:
