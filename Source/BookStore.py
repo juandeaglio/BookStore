@@ -6,7 +6,10 @@ class BookStore:
         self.catalog = catalog
 
     def addToCatalog(self, books):
-        self.catalog.add(books)
+        if books is None:
+            pass
+        else:
+            self.catalog.add(books)
 
     def removeByTitle(self, title):
         self.catalog.removeAllByTitle(title)

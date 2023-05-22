@@ -15,19 +15,24 @@ class TestBookStore(unittest.TestCase):
         self.bookStore.addToCatalog(self.books)
         assert len(self.bookStore.getCatalog()) == len(self.books)
 
-    def test_addBookToCatalog(self):
+    def test_addBooksToCatalog(self):
         self.bookStore.addToCatalog(self.books)
-        self.assertTrue(len(self.bookStore.getCatalog()) == 3)
-        self.assertTrue('Harry' in self.bookStore.getCatalog()[0]['Title'])
+        assert len(self.bookStore.getCatalog()) == 3
 
     def test_addNoBooksToCatalog(self):
-        self.bookStore.addToCatalog([])
-        self.assertTrue(len(self.bookStore.getCatalog()) == 0)
+        self.bookStore.addToCatalog(None)
+        assert len(self.bookStore.getCatalog()) == 0
 
     def test_removeBookFromCatalogByName(self):
         self.bookStore.addToCatalog(self.books)
         self.bookStore.removeByTitle("Harry Potter")
-        self.assertTrue(len(self.bookStore.getCatalog()) == 2)
+        assert len(self.bookStore.getCatalog()) == 2
+
+    def test_catalogBooksAreSorted(self):
+        self.bookStore.addToCatalog(self.books)
+        expectedSorted = [self.books[1], self.books[0], self.books[2]]
+        assert expectedSorted == self.bookStore.getCatalog()
+
 
 if __name__ == '__main__':
     unittest.main()

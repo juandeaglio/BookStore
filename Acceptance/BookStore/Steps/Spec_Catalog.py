@@ -20,6 +20,7 @@ def displayCatalog(context):
     books = convertTableToArray(context)
     assert books == context.bookStore.getCatalog()
 
+
 def booksEqual(book, otherBook):
     return book == otherBook
 
