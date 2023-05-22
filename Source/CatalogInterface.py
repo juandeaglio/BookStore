@@ -10,7 +10,7 @@ class CatalogInterface:
 
     def removeAllByTitle(self, title):
         for book in self.getAllBooks():
-            if title in book['Title']:
+            if title in book.title:
                 self.storageGateway.removeEntryByTitle(title)
 
     def getAllBooks(self):

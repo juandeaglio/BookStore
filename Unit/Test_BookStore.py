@@ -1,14 +1,15 @@
 import unittest
+
+from Source.Book import Book
 from Source.BookStore import BookStore
 from Source.TestCatalog import TestCatalog
 
 
 class TestBookStore(unittest.TestCase):
     def setUp(self):
-        self.books = [{'Title': 'The Hunger Games', 'Author': 'Suzanne Collins', 'Release year': '2012'},
-                      {'Title': 'Harry Potter and the Sorcerer\'s Stone', 'Author': 'J.K. Rowling',
-                       'Release year': '1998'},
-                      {'Title': 'To Kill a Mockingbird', 'Author': 'Harper Lee', 'Release year': '1960'}]
+        self.books = [Book('The Hunger Games', 'Suzanne Collins', '2012'),
+                      Book('Harry Potter and the Sorcerer\'s Stone', 'J.K. Rowling', '1998'),
+                      Book('To Kill a Mockingbird', 'Harper Lee', '1960')]
         self.bookStore = BookStore(TestCatalog())
 
     def test_getAllBooksInCatalog(self):

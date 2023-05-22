@@ -17,7 +17,7 @@ class InMemoryDatabase(DatabaseConnection):
             return None
 
     def selectAll(self):
-        self.books = sorted(self.books, key=lambda book: book['Title'])
+        self.books = sorted(self.books, key=lambda book: book.title)
         return self.books
 
     def delete(self, entry):
@@ -29,7 +29,7 @@ class InMemoryDatabase(DatabaseConnection):
     def selectWhereTitle(self, title):
         found = []
         for book in self.books:
-            if title in book['Title']:
+            if title in book.title:
                 found.append(book)
 
         return found
@@ -37,7 +37,7 @@ class InMemoryDatabase(DatabaseConnection):
     def deleteWhereTitle(self, title):
         deleted = 0
         for book in self.books:
-            if title in book['Title']:
+            if title in book.title:
                 self.books.remove(book)
                 deleted += 1
 
