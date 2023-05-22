@@ -7,7 +7,7 @@ from Source.TestCatalog import TestCatalog
 
 class TestBookStore(unittest.TestCase):
     def setUp(self):
-        self.books = [Book('The Hunger Games', 'Suzanne Collins', '2012'),
+        self.books = [Book('The Hunger Games', 'Suzanne Collins', '2008'),
                       Book('Harry Potter and the Sorcerer\'s Stone', 'J.K. Rowling', '1998'),
                       Book('To Kill a Mockingbird', 'Harper Lee', '1960')]
         self.bookStore = BookStore(TestCatalog())

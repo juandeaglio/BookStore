@@ -1,8 +1,9 @@
 from Source.SqlDatabase import SqlDatabase
 
-def before_feature(context, feature):
+
+def before_scenario(context, scenario):
     clearDatabase()
+
 
 def clearDatabase():
     SqlDatabase().clearData()
-

@@ -5,14 +5,14 @@ Feature: Book catalog
     Scenario: View catalog
         Given A catalog
         |Title                                  |Author             |Release year   |
-        |The Hunger Games                       |Suzanne Collins    |2012           |
+        |The Hunger Games                       |Suzanne Collins    |2008           |
         |Harry Potter and the Sorcerer's Stone  |J.K. Rowling       |1998           |
         |To Kill a Mockingbird                  |Harper Lee         |1960           |
         When I view the catalog
         Then The entire catalog is displayed
         |Title                                  |Author             |Release year   |
         |Harry Potter and the Sorcerer's Stone  |J.K. Rowling       |1998           |
-        |The Hunger Games                       |Suzanne Collins    |2012           |
+        |The Hunger Games                       |Suzanne Collins    |2008           |
         |To Kill a Mockingbird                  |Harper Lee         |1960           |
 
         #example needed here

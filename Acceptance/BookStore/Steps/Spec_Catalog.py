@@ -38,9 +38,6 @@ def addBook(context):
 def checkForExtraBook(context):
     assert len(context.bookStore.getCatalog()) == 1
 
-def booksEqual(book, otherBook):
-    return book == otherBook
-
 
 def convertTableToArray(context):
     books = []

@@ -1,3 +1,4 @@
+from Source.Book import Book
 from Source.DatabaseConnection import DatabaseConnection
 import sqlite3
 
@@ -20,9 +21,9 @@ class Sql:
 
         books = []
         for row in rows:
-            book = {}
+            book = Book()
             for i in range(len(columns)):
-                book[columns[i][0]] = row[i]
+                setattr(book, columns[i][0], row[i])
             books.append(book)
 
         return books
@@ -45,7 +46,7 @@ class SqlDatabase(DatabaseConnection):
     def selectAll(self):
         sql = Sql('catalog.db')
         query = '''
-                    SELECT title AS Title, author AS Author, releaseyear AS "Release year" FROM catalog ORDER BY title ASC
+                    SELECT title AS title, author AS author, releaseyear AS "releaseYear" FROM catalog ORDER BY title ASC
                 '''
         return sql.executeCommit(query)
 
@@ -64,7 +65,7 @@ class SqlDatabase(DatabaseConnection):
     def insert(self, books):
         for book in books:
             print("the book: " + str(book))
-            self.insertQuery(book['Title'], book['Author'], book['Release year'])
+            self.insertQuery(book.title, book.author, book.releaseYear)
 
     def insertQuery(self, title, author, releaseYear):
         sql = Sql('catalog.db')
