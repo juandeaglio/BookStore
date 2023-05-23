@@ -24,6 +24,9 @@ Feature: Book catalog
         #example needed here
     Scenario: No duplicates in the catalog
         Given A catalog
+        |Title                                  |Author             |Release year   |
+        |The Hunger Games                       |Suzanne Collins    |2008           |
+        |Harry Potter and the Sorcerer's Stone  |J.K. Rowling       |1998           |
+        |To Kill a Mockingbird                  |Harper Lee         |1960           |
         When I add a duplicate book to the catalog
-        And I save the catalog
         Then There will be no changes to the catalog

@@ -1,42 +1,53 @@
 from behave import given, when, then
 
 from Source.Book import Book
-from Source.Catalog import Catalog
+from Source.PersistentCatalog import PersistentCatalog
 from Source.BookStore import BookStore
 
 
 @given('A catalog')
 def defineCatalog(context):
-    context.bookStore = BookStore(Catalog())
+    context.catalog = PersistentCatalog()
     books = convertTableToArray(context)
-    context.bookStore.addToCatalog(books)
+    context.catalog.add(books)
 
 
 @when('I view the catalog')
 def viewCatalog(context):
-    context.booksInCatalog = context.bookStore.getCatalog()
+    context.booksInCatalog = context.catalog.getAllBooks()
 
 
 @then('The entire catalog is displayed')
 def displayCatalog(context):
     books = convertTableToArray(context)
-    assert books == context.bookStore.getCatalog()
+    assert books == context.booksInCatalog
 
 
 @given('An empty catalog')
 def defineCatalog(context):
-    context.bookStore = BookStore(Catalog())
+    context.catalog = PersistentCatalog()
 
 
 @when('I add a book to the catalog')
 def addBook(context):
     book = Book(title="Harry Potter 1", author="J.K. Rowling", releaseYear="1991")
-    context.bookStore.addToCatalog([book])
+    context.catalog.add([book])
 
 
 @then('There will be one more book in the catalog')
 def checkForExtraBook(context):
-    assert len(context.bookStore.getCatalog()) == 1
+    assert len(context.catalog.getAllBooks()) == 1
+
+
+@when('I add a duplicate book to the catalog')
+def addBook(context):
+    book = Book(title="The Hunger Games", author="Suzanne Collins", releaseYear="2008")
+    context.catalog.add([book])
+
+
+@then('There will be no changes to the catalog')
+def checkForExtraBook(context):
+    assert len(context.catalog.getAllBooks()) == 3
 
 
 def convertTableToArray(context):

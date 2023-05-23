@@ -54,7 +54,11 @@ class SqlDatabase(DatabaseConnection):
         pass
 
     def select(self, book):
-        pass
+        sql = Sql('catalog.db')
+        query = 'SELECT title AS title, author AS author, releaseyear AS "releaseYear" FROM catalog ' \
+                'WHERE title=\'' + book.title + '\' AND author=\'' + book.author + '\' AND releaseyear=\'' \
+                + book.releaseYear + '\''
+        return sql.executeCommit(query)
 
     def selectWhereTitle(self, title):
         pass

@@ -8,8 +8,7 @@ class InMemoryDatabase(DatabaseConnection):
     def insert(self, books):
         oldLen = len(self.books)
         for book in books:
-            if book not in self.books:
-                self.books.append(book)
+            self.books.append(book)
 
         if len(self.books) != oldLen:
             return self.books
