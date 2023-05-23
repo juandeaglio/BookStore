@@ -1,4 +1,4 @@
-from Source.SqlDatabase import SqlDatabase
+from Source.Database.SqlDatabase import SqlDatabase
 
 
 def before_scenario(context, scenario):

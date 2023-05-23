@@ -1,6 +1,3 @@
-from Source.Book import Book
-
-
 class BookStore:
     def __init__(self, catalog):
         self.catalog = catalog

@@ -2,7 +2,7 @@ import unittest
 
 from Source.Book import Book
 from Source.StorageGateway import StorageGateway
-from Source.InMemoryDatabase import InMemoryDatabase
+from Source.Database.InMemoryDatabase import InMemoryDatabase
 
 
 class TestStorageGateway(unittest.TestCase):

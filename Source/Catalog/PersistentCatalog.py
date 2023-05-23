@@ -1,5 +1,5 @@
-from Source.CatalogInterface import CatalogInterface
-from Source.SqlDatabase import SqlDatabase
+from Source.Interfaces.Catalog import CatalogInterface
+from Source.Database.SqlDatabase import SqlDatabase
 
 
 class PersistentCatalog(CatalogInterface):

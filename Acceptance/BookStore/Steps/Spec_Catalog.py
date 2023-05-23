@@ -1,8 +1,7 @@
 from behave import given, when, then
 
 from Source.Book import Book
-from Source.PersistentCatalog import PersistentCatalog
-from Source.BookStore import BookStore
+from Source.Catalog.PersistentCatalog import PersistentCatalog
 
 
 @given('A catalog')

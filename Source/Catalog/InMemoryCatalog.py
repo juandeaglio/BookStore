@@ -1,5 +1,5 @@
-from Source.CatalogInterface import CatalogInterface
-from Source.InMemoryDatabase import InMemoryDatabase
+from Source.Interfaces.Catalog import CatalogInterface
+from Source.Database.InMemoryDatabase import InMemoryDatabase
 
 
 class InMemoryCatalog(CatalogInterface):

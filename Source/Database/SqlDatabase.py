@@ -1,5 +1,5 @@
 from Source.Book import Book
-from Source.DatabaseConnection import DatabaseConnection
+from Source.Interfaces.DatabaseConnection import DatabaseConnection
 import sqlite3
 
 

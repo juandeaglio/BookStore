@@ -1,4 +1,4 @@
-from Source.DatabaseConnection import DatabaseConnection
+from Source.Interfaces.DatabaseConnection import DatabaseConnection
 
 
 class InMemoryDatabase(DatabaseConnection):

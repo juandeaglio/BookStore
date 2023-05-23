@@ -2,7 +2,7 @@ import unittest
 
 from Source.Book import Book
 from Source.BookStore import BookStore
-from Source.InMemoryCatalog import InMemoryCatalog
+from Source.Catalog.InMemoryCatalog import InMemoryCatalog
 
 
 class TestCatalog(unittest.TestCase):
