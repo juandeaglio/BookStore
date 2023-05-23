@@ -11,9 +11,12 @@ def defineCatalog(context):
     context.catalog.add(books)
 
 
-@when('I view the catalog')
+@when('A user views the catalog')
 def viewCatalog(context):
-    context.booksInCatalog = context.catalog.getAllBooks()
+    restGateway = RestGateway()
+    request = restGateway.handleNextRequest()
+    if request:
+        context.booksInCatalog = context.catalog.getAllBooks()
 
 
 @then('The entire catalog is displayed')
@@ -27,10 +30,13 @@ def defineCatalog(context):
     context.catalog = PersistentCatalog()
 
 
-@when('I add a book to the catalog')
+@when('The admin adds a book to the catalog')
 def addBook(context):
-    book = Book(title="Harry Potter 1", author="J.K. Rowling", releaseYear="1991")
-    context.catalog.add([book])
+    restGateway = RestGateway()
+    request = restGateway.handleNextRequest()
+    if request.user.isAdmin():
+        book = Book(title="Harry Potter 1", author="J.K. Rowling", releaseYear="1991")
+        context.catalog.add([book])
 
 
 @then('There will be one more book in the catalog')
@@ -38,10 +44,13 @@ def checkForExtraBook(context):
     assert len(context.catalog.getAllBooks()) == 1
 
 
-@when('I add a duplicate book to the catalog')
+@when('The admin add a duplicate book to the catalog')
 def addBook(context):
-    book = Book(title="The Hunger Games", author="Suzanne Collins", releaseYear="2008")
-    context.catalog.add([book])
+    restGateway = RestGateway()
+    request = restGateway.handleNextRequest()
+    if request.user.isAdmin():
+        book = Book(title="The Hunger Games", author="Suzanne Collins", releaseYear="2008")
+        context.catalog.add([book])
 
 
 @then('There will be no changes to the catalog')
