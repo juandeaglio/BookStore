@@ -8,4 +8,3 @@ class FakeSocketService(SocketService):
     def serve(self, socket):
         super().serve(socket)
         self.connections = super().connections
-        

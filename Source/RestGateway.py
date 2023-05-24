@@ -6,24 +6,22 @@ from abc import ABC, abstractmethod
 
 class RestGateway(ABC):
     def __init__(self):
-        self.client = None
-        self.connection = SimpleSocketServer()
+        pass
 
     def listens(self):
-        self.client = threading.Thread(target=self.connection.listen)
+        pass
 
     def getMessageFromQueue(self):
-        parsedMessage = self.parseMessage(self.connection.receive())
-        return parsedMessage
+        pass
 
     def hasConnection(self):
-        return True
+        pass
 
     def closeConnection(self):
         pass
 
     def parseMessage(self, message):
-        return message
+        pass
 
     @abstractmethod
     def send(self):

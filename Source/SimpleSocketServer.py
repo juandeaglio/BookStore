@@ -25,5 +25,12 @@ class SimpleSocketServer:
         self.running = False
 
     def acceptConnection(self):
-        clientSocket, clientAddr = self.server_socket.accept()
-        self.service.serve(clientSocket)
+        try:
+            clientSocket, clientAddr = self.server_socket.accept()
+            self.service.serve(clientSocket)
+
+        except Exception as inst:
+            print(type(inst))
+            print(inst.args)
+            print(inst)
+

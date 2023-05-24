@@ -24,6 +24,7 @@ class SimpleSocketTest(unittest.TestCase):
         self.server.start()
         clientSocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         clientSocket.connect(("localhost", self.port))
+        clientSocket.close()
         self.server.stop()
         assert 1 == self.service.connections
 
