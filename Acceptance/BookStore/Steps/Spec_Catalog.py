@@ -1,11 +1,16 @@
 from behave import given, when, then
 
+from Source.RestGateway import RestGateway
 from Source.Book import Book
 from Source.Catalog.PersistentCatalog import PersistentCatalog
 
 
 @given('A catalog')
 def defineCatalog(context):
+    context.restGateway = RestGateway()
+    context.restGateway.listens()
+    context.simpleSocketService = SimpleSocketService("127.0.0.1", 9191)
+
     context.catalog = PersistentCatalog()
     books = convertTableToArray(context)
     context.catalog.add(books)
@@ -13,10 +18,9 @@ def defineCatalog(context):
 
 @when('A user views the catalog')
 def viewCatalog(context):
-    restGateway = RestGateway()
-    request = restGateway.handleNextRequest()
-    if request:
-        context.booksInCatalog = context.catalog.getAllBooks()
+    while not context.restGateway.listening:
+        if isinstance(context.restGateway.requestType, GetCatalog()):
+            context.booksInCatalog = context.catalog.getAllBooks()
 
 
 @then('The entire catalog is displayed')
@@ -27,16 +31,19 @@ def displayCatalog(context):
 
 @given('An empty catalog')
 def defineCatalog(context):
+    context.restGateway = RestGateway()
+    context.restGateway.listens()
+    context.simpleSocketService = SimpleSocketService("127.0.0.1", 9191)
+
     context.catalog = PersistentCatalog()
 
 
 @when('The admin adds a book to the catalog')
 def addBook(context):
-    restGateway = RestGateway()
-    request = restGateway.handleNextRequest()
-    if request.user.isAdmin():
-        book = Book(title="Harry Potter 1", author="J.K. Rowling", releaseYear="1991")
-        context.catalog.add([book])
+    while not context.restGateway.listening:
+        if isinstance(context.restGateway.requestType, AddToCatalog("Harry Potter 1", "J.K. Rowling", "1991")):
+            book = Book(context.restGateway.requestBody)
+            context.catalog.add([book])
 
 
 @then('There will be one more book in the catalog')
@@ -46,11 +53,10 @@ def checkForExtraBook(context):
 
 @when('The admin add a duplicate book to the catalog')
 def addBook(context):
-    restGateway = RestGateway()
-    request = restGateway.handleNextRequest()
-    if request.user.isAdmin():
-        book = Book(title="The Hunger Games", author="Suzanne Collins", releaseYear="2008")
-        context.catalog.add([book])
+    while not context.restGateway.listening:
+        if isinstance(context.restGateway.requestType, AddToCatalog("The Hunger Games", "Suzanne Collins", "2008")):
+            book = Book(context.restGateway.requestBody)
+            context.catalog.add([book])
 
 
 @then('There will be no changes to the catalog')
