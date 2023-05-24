@@ -1,5 +1,6 @@
 from behave import given, when, then
 
+from Source.SimpleSocketServer import SimpleSocketServer
 from Source.RestGateway import RestGateway
 from Source.Book import Book
 from Source.Catalog.PersistentCatalog import PersistentCatalog
@@ -9,7 +10,7 @@ from Source.Catalog.PersistentCatalog import PersistentCatalog
 def defineCatalog(context):
     context.restGateway = RestGateway()
     context.restGateway.listens()
-    context.simpleSocketService = SimpleSocketService("127.0.0.1", 9191)
+    context.simpleSocketService = SimpleSocketServer("127.0.0.1", 9191)
 
     context.catalog = PersistentCatalog()
     books = convertTableToArray(context)
@@ -33,7 +34,7 @@ def displayCatalog(context):
 def defineCatalog(context):
     context.restGateway = RestGateway()
     context.restGateway.listens()
-    context.simpleSocketService = SimpleSocketService("127.0.0.1", 9191)
+    context.simpleSocketService = SimpleSocketServer("127.0.0.1", 9191)
 
     context.catalog = PersistentCatalog()
 
