@@ -1,9 +1,12 @@
+from Source.FakeSocketService import FakeSocketService
 from Source.Interfaces.SocketService import SocketService
 import socket
 import threading
 
+
 class SimpleSocketServer:
-    def __init__(self,  port=None, service=None):
+    def __init__(self,  port=8091, service=FakeSocketService()):
+        self.clientThread = None
         self.port = port
         self.service = service
         self.running = None
@@ -13,8 +16,8 @@ class SimpleSocketServer:
         self.server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.server_socket.bind(("localhost", self.port))
         self.server_socket.listen()
-        clientThread = threading.Thread(target=self.acceptConnection)
-        clientThread.start()
+        self.clientThread = threading.Thread(target=self.acceptConnection)
+        self.clientThread.start()
         self.running = True
 
     def isRunning(self):
@@ -25,12 +28,11 @@ class SimpleSocketServer:
         self.running = False
 
     def acceptConnection(self):
-        try:
-            clientSocket, clientAddr = self.server_socket.accept()
-            self.service.serve(clientSocket)
+        clientSocket, clientAddr = self.server_socket.accept()
+        self.service.serve(clientSocket)
 
-        except Exception as inst:
-            print(type(inst))
-            print(inst.args)
-            print(inst)
+    def getConnections(self):
+        while self.clientThread.is_alive():
+            pass
+        return self.service.connections
 

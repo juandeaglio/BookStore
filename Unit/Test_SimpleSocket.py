@@ -1,4 +1,6 @@
 import socket
+import threading
+import time
 import unittest
 
 from Source.SimpleSocketServer import SimpleSocketServer
@@ -24,9 +26,8 @@ class SimpleSocketTest(unittest.TestCase):
         self.server.start()
         clientSocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         clientSocket.connect(("localhost", self.port))
-        clientSocket.close()
+        assert self.server.getConnections() == 1
         self.server.stop()
-        assert 1 == self.service.connections
 
 
 if __name__ == '__main__':

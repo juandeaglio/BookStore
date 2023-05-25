@@ -1,10 +1,12 @@
+import socket
+
 from Source.Interfaces.SocketService import SocketService
 
 
 class FakeSocketService(SocketService):
     def __init__(self):
-        super().__init__()
+        self.connections = 0
 
-    def serve(self, socket):
-        super().serve(socket)
-        self.connections = super().connections
+    def serve(self, clientSocket=socket.socket()):
+        clientSocket.close()
+        self.connections += 1
