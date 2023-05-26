@@ -1,11 +1,9 @@
-from Source.EchoSocketService import EchoSocketService
-from Source.Interfaces.SocketService import SocketService
 import socket
 import threading
 
 
 class SimpleSocketServer:
-    def __init__(self, port=8091, service=EchoSocketService()):
+    def __init__(self, port=8091, service=None):
         self.isServing = False
         self.clientThreads = []
         self.port = port
@@ -36,14 +34,12 @@ class SimpleSocketServer:
             self.service.serve(clientSocket)
             self.isServing = False
 
-
     def getConnections(self):
         while self.isServing:
             pass
         return self.service.connections
 
-    def anyPendingConnections(self):
-        for thread in self.clientThreads:
-            if thread.is_alive():
-                return True
-        return False
+    def waitToStart(self):
+        while not self.running:
+            pass
+        return self.running

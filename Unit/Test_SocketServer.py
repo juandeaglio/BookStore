@@ -1,7 +1,6 @@
 import random
 import socket
 import string
-import threading
 import unittest
 import concurrent.futures
 
@@ -25,6 +24,19 @@ def generateRandomStrings():
 
     return strings
 
+class StoppingSocketTest(unittest.TestCase):
+    def setUp(self):
+        self.port = 8091
+        self.service = ClosingSocketService()
+        self.server = SimpleSocketServer(service=self.service, port=self.port)
+
+    def test_startAndStopServer(self):
+        self.server.start()
+        self.server.waitToStart()
+        assert self.server.isRunning()
+        self.server.stop()
+        assert not self.server.isRunning()
+
 
 class SimpleSocketTest(unittest.TestCase):
     def setUp(self):
@@ -32,23 +44,19 @@ class SimpleSocketTest(unittest.TestCase):
         self.service = ClosingSocketService()
         self.server = SimpleSocketServer(service=self.service, port=self.port)
         self.server.start()
+        self.server.waitToStart()
 
     def tearDown(self):
         self.server.stop()
 
-    def test_startAndStopServer(self):
-        assert self.server.isRunning()
-        self.server.stop()
-        assert not self.server.isRunning()
-
     def test_acceptIncomingConnection(self):
-        createClient(self.port)
+        createClient(self.port).recv(1)
         assert self.server.getConnections() == 1
 
     def test_acceptMultipleIncomingConnection(self):
         expectedConnections = 100
         for i in range(0, expectedConnections):
-            createClient(self.port)
+            createClient(self.port).recv(1)
         assert self.server.getConnections() == expectedConnections
 
 
