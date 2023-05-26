@@ -4,9 +4,9 @@ import string
 import unittest
 import concurrent.futures
 
-from Source.ClosingSocketService import ClosingSocketService
-from Source.SimpleSocketServer import SimpleSocketServer
-from Source.EchoSocketService import EchoSocketService
+from Source.SocketServer.ClosingSocketService import ClosingSocketService
+from Source.SocketServer.SimpleSocketServer import SimpleSocketServer
+from Source.SocketServer.EchoSocketService import EchoSocketService
 
 
 def aggregateServerResponsesToArray(futures):

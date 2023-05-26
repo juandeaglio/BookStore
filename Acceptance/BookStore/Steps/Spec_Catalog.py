@@ -1,6 +1,6 @@
 from behave import given, when, then
 
-from Source.SimpleSocketServer import SimpleSocketServer
+from Source.SocketServer.SimpleSocketServer import SimpleSocketServer
 from Source.RestGateway import RestGateway
 from Source.Book import Book
 from Source.Catalog.PersistentCatalog import PersistentCatalog
