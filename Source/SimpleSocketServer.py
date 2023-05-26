@@ -1,15 +1,16 @@
-from Source.FakeSocketService import FakeSocketService
+from Source.EchoSocketService import EchoSocketService
 from Source.Interfaces.SocketService import SocketService
 import socket
 import threading
 
 
 class SimpleSocketServer:
-    def __init__(self, port=8091, service=FakeSocketService()):
+    def __init__(self, port=8091, service=EchoSocketService()):
+        self.isServing = False
         self.clientThreads = []
         self.port = port
         self.service = service
-        self.running = None
+        self.running = False
         self.server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
     def start(self):
@@ -31,10 +32,13 @@ class SimpleSocketServer:
     def acceptConnection(self):
         while self.running:
             clientSocket, clientAddr = self.server_socket.accept()
+            self.isServing = True
             self.service.serve(clientSocket)
+            self.isServing = False
+
 
     def getConnections(self):
-        while self.anyPendingConnections():
+        while self.isServing:
             pass
         return self.service.connections
 

@@ -4,14 +4,16 @@ import string
 import threading
 import unittest
 import concurrent.futures
+
+from Source.ClosingSocketService import ClosingSocketService
 from Source.SimpleSocketServer import SimpleSocketServer
-from Source.FakeSocketService import FakeSocketService
+from Source.EchoSocketService import EchoSocketService
 
 
 def aggregateServerResponsesToArray(futures):
     responses = []
-    for i in range(0,len(futures)):
-        responses.append(("client"+str(i), futures[i].result().recv(1024).decode("UTF-8")))
+    for i in range(0, len(futures)):
+        responses.append(("client" + str(i), futures[i].result().recv(1024).decode("UTF-8")))
 
     return responses
 
@@ -19,14 +21,15 @@ def aggregateServerResponsesToArray(futures):
 def generateRandomStrings():
     strings = []
     for i in range(0, 10):
-        strings.append(("client"+str(i), ''.join(random.choices(string.ascii_uppercase + string.digits, k=20))))
+        strings.append(("client" + str(i), ''.join(random.choices(string.ascii_uppercase + string.digits, k=20))))
 
     return strings
+
 
 class SimpleSocketTest(unittest.TestCase):
     def setUp(self):
         self.port = 8091
-        self.service = FakeSocketService()
+        self.service = ClosingSocketService()
         self.server = SimpleSocketServer(service=self.service, port=self.port)
         self.server.start()
 
@@ -40,15 +43,24 @@ class SimpleSocketTest(unittest.TestCase):
 
     def test_acceptIncomingConnection(self):
         createClient(self.port)
-        self.server.stop()
         assert self.server.getConnections() == 1
 
     def test_acceptMultipleIncomingConnection(self):
         expectedConnections = 100
         for i in range(0, expectedConnections):
             createClient(self.port)
-        self.server.stop()
         assert self.server.getConnections() == expectedConnections
+
+
+class EchoSocketTest(unittest.TestCase):
+    def setUp(self):
+        self.port = 8091
+        self.service = EchoSocketService()
+        self.server = SimpleSocketServer(service=self.service, port=self.port)
+        self.server.start()
+
+    def tearDown(self):
+        self.server.stop()
 
     def test_sendAndReceiveData(self):
         client = createClientWithMessage("hello", self.port)
@@ -61,7 +73,6 @@ class SimpleSocketTest(unittest.TestCase):
 
             msgs = aggregateServerResponsesToArray(futures)
             assert expectedMsgs == msgs
-
 
 def createClientWithMessage(expectedMessage3="", port=8091):
     client3 = createClient(port)

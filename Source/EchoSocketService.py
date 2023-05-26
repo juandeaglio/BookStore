@@ -3,7 +3,7 @@ import socket
 from Source.Interfaces.SocketService import SocketService
 
 
-class FakeSocketService(SocketService):
+class EchoSocketService(SocketService):
     def __init__(self):
         self.connections = 0
 
