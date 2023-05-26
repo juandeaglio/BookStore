@@ -1,5 +1,4 @@
 import random
-import socket
 import string
 import unittest
 import concurrent.futures
@@ -7,6 +6,7 @@ import concurrent.futures
 from Source.SocketServer.ClosingSocketService import ClosingSocketService
 from Source.SocketServer.SimpleSocketServer import SimpleSocketServer
 from Source.SocketServer.EchoSocketService import EchoSocketService
+from Unit.Client import Client
 
 
 def aggregateServerResponsesToArray(futures):
@@ -23,6 +23,7 @@ def generateRandomStrings():
         strings.append(("client" + str(i), ''.join(random.choices(string.ascii_uppercase + string.digits, k=20))))
 
     return strings
+
 
 class StoppingSocketTest(unittest.TestCase):
     def setUp(self):
@@ -50,13 +51,13 @@ class SimpleSocketTest(unittest.TestCase):
         self.server.stop()
 
     def test_acceptIncomingConnection(self):
-        createClient(self.port).recv(1)
+        Client.createClient(self.port).recv(1)
         assert self.server.getConnections() == 1
 
     def test_acceptMultipleIncomingConnection(self):
         expectedConnections = 100
         for i in range(0, expectedConnections):
-            createClient(self.port).recv(1)
+            Client.createClient(self.port).recv(1)
         assert self.server.getConnections() == expectedConnections
 
 
@@ -71,27 +72,16 @@ class EchoSocketTest(unittest.TestCase):
         self.server.stop()
 
     def test_sendAndReceiveData(self):
-        client = createClientWithMessage("hello", self.port)
+        client = Client.createClientWithMessage("hello", self.port)
         assert client.recv(1024).decode("UTF-8") == "hello"
 
     def test_sendAndReceiveDataMultipleConnections(self):
         expectedMsgs = generateRandomStrings()
         with concurrent.futures.ThreadPoolExecutor() as executor:
-            futures = [executor.submit(createClientWithMessage, param[1]) for param in expectedMsgs]
+            futures = [executor.submit(Client.createClientWithMessage, param[1]) for param in expectedMsgs]
 
             msgs = aggregateServerResponsesToArray(futures)
             assert expectedMsgs == msgs
-
-def createClientWithMessage(expectedMessage3="", port=8091):
-    client3 = createClient(port)
-    client3.send(expectedMessage3.encode("UTF-8"))
-    return client3
-
-
-def createClient(port):
-    clientSocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    clientSocket.connect(("localhost", port))
-    return clientSocket
 
 
 if __name__ == '__main__':
