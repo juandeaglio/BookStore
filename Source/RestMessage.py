@@ -9,10 +9,13 @@ class RestMessage(ABC):
         self.body = body
         self.rawMsg = rawMsg
 
-    def __eq__(self, other):
-        return True
-
-
-class GetCatalogRestMessage:
+    @abstractmethod
     def toBytes(self):
         pass
+
+    @abstractmethod
+    def __eq__(self, other):
+        pass
+
+    def endHTTPMessage(self, paramaters=''):
+        return 'HTTP/1.1\r\n\r\n'

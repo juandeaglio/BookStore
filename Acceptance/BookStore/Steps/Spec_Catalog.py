@@ -1,6 +1,4 @@
 from behave import given, when, then
-
-from Source.RestMessage import RestMessage
 from Source.Book import Book
 from Source.Catalog.PersistentCatalog import PersistentCatalog
 from Acceptance.RestClient import RestClient
@@ -12,18 +10,20 @@ def defineCatalog(context):
     context.bookStore.addToCatalog(books)
 
 
-class GetCatalogRestMessage(RestMessage):
-    def __init__(self):
-        self.method = 'GET'
-        self.body = None
-        self.path = '/catalog'
+def convertJsonToArray(body):
+    books = []
+    for bookData in body:
+        fields = bookData.split(" ")
+        book = Book(title=fields[0], author=fields[1], releaseYear=fields[2])
+        books.append(book)
+
+    return books
 
 
 @when('A user views the catalog')
 def viewCatalog(context):
-    context.client = RestClient.createClientThatGetsCatalog(context.defaultPort)
-    context.client.send(GetCatalogRestMessage())
-    context.booksInCatalog = convertJsonToArray(context.client.getResponse().body)
+    response = RestClient.createClientThatGetsCatalog()
+    context.booksInCatalog = convertJsonToArray(response)
 
 
 @then('The entire catalog is displayed')
@@ -33,16 +33,17 @@ def displayCatalog(context):
     context.server.stop()
 
 
-#TODO re-do below tests to mimic above one.
+# TODO re-do below tests to mimic above one.
 @given('An empty catalog')
 def defineCatalog(context):
-    #context.simpleSocketService = SimpleSocketServer("127.0.0.1", 9191)
+    # context.simpleSocketService = SimpleSocketServer("127.0.0.1", 9191)
     context.catalog = PersistentCatalog()
 
 
 @when('The admin adds a book to the catalog')
 def addBook(context):
-    assert 1==0 # not impelmented
+    assert 1 == 0  # not impelmented
+
 
 @then('There will be one more book in the catalog')
 def checkForExtraBook(context):

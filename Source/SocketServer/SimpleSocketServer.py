@@ -31,6 +31,7 @@ class SimpleSocketServer:
         while self.running:
             clientSocket, clientAddr = self.server_socket.accept()
             self.isServing = True
+            print(str(clientSocket))
             self.service.serve(clientSocket)
             self.isServing = False
 
