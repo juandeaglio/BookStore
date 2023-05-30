@@ -1,18 +1,23 @@
-I recently re-wrote some of my SocketServer unit tests. I implemented a test case to send/receive data and I noticed
-some race condition began to appear more and more frequently. I need to go back thru my commit history and find out
-why it began appearing more frequently. Oh right, now that I think about it had to do with when/how I stopped the
-server. At first, I would stop the server mid-test. Didn't make much sense actually, since the server typically
-keeps running in the background. Once I moved the .stop() call to tearDown(), the bug was introduced. Anyway,
-I had to change the implementation of getConnections() to not be as blocking as it was before. I expect I may need to
-again, but I'll review this another day.
+I began writing the HTTP implementation of SocketService and implemented it in my BDD test case. I got it done,
+but I found myself throwing away attempts in the trash because of how hard to test they would get. I iterated with a
+somewhat simpler attempt at this, where I simply hardcoded a /getCatalog request in my unit tests. Eventually,
+I re-did the unit test to actually make use of the books array in the unit test. I also made a toString() method in
+bookStore so that it will be easier to send this over HTTP.
 
-Anyway, the implementation of the SocketServer works for now, I started re-writing the acceptance tests. I wanted to
-implement some networking in there. I created the foundation for some RestClient, which is just making use of the
-low-level socket client I wrote earlier. I want to stay as native to Java as possible here, so no need for downloading
-the requests library quite yet; not until I need it. Ok, that's it for now. The whole race condition paradox really
-took a lot of my energy out of my day.
+Overall, I'm pretty disappointed with the implementation. Next time, I'm going to have to refactor a ton of stuff.
+I'm probably going to need to implement some tests for bookStore, or remove the class altogether since it really is
+the catalog class underneath. Eventually, it will be something, so maybe I should hold onto it for now.
 
-Next up, REST requests! I'm going to create a bare-bones implementation that takes advantage of the low-level socket
-client I made for unit tests. Hopefully that works. Once that's done, to the webpage we go! Maybe I need to draft that
-sometime soon. But I'm not too worried for now. I can make some really simple HTML page to start, and then make it
-into a dynamic single-page webpage.
+What's worse is the constructor initialization of all these objects. I can't ever remember it and that's a smell that
+it's fairly complicated. Maybe I ought to separate the catalog from the bookstore after all.
+
+BookStore() and
+Catalog()
+might need to be their own objects I reckon.
+
+Another mess is the HTTPSocketService itself. I'm going to have to figure out how to handle different requests.
+As it is now, it's just a dumb hack to receive all the content of the request and not really handle it at all.
+I'm going to have to weigh going from the socket library to perhaps requests, or come up with an interesting way to
+handle the logic of each request and behavior of the response to each request.
+
+Anyway ... refactoring next time, such that hopefully the next BDD case will be smoother.
