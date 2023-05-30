@@ -4,33 +4,32 @@ from Source.Catalog.PersistentCatalog import PersistentCatalog
 from Acceptance.RestClient import RestClient
 
 
-@given('A catalog')
-def defineCatalog(context):
-    books = convertTableToArray(context)
-    context.bookStore.addToCatalog(books)
-
-
-def convertJsonToArray(body):
+def convertContentToArray(body):
     books = []
-    for bookData in body:
-        fields = bookData.split(" ")
+    for line in body:
+        fields = line.split(",")
         book = Book(title=fields[0], author=fields[1], releaseYear=fields[2])
         books.append(book)
 
     return books
 
 
+@given('A catalog')
+def defineCatalog(context):
+    books = convertTableToArray(context)
+    context.bookStore.addToCatalog(books)
+
+
 @when('A user views the catalog')
 def viewCatalog(context):
     response = RestClient.createClientThatGetsCatalog()
-    context.booksInCatalog = convertJsonToArray(response)
+    context.booksInCatalog = convertContentToArray(response)
 
 
 @then('The entire catalog is displayed')
 def displayCatalog(context):
     books = convertTableToArray(context)
     assert books == context.booksInCatalog
-    context.server.stop()
 
 
 # TODO re-do below tests to mimic above one.
@@ -63,6 +62,7 @@ def checkForExtraBook(context):
 def convertTableToArray(context):
     books = []
     for book in context.table:
-        books.append(Book(title=book[0], author=book[1], releaseYear=book[2]))
+        new = Book(title=book[0], author=book[1], releaseYear=book[2])
+
 
     return books

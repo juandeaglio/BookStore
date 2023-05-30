@@ -68,7 +68,7 @@ class SqlDatabase(DatabaseConnection):
 
     def insert(self, books):
         for book in books:
-            print("the book: " + str(book))
+
             self.insertQuery(book.title, book.author, book.releaseYear)
 
     def insertQuery(self, title, author, releaseYear):

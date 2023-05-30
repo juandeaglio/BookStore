@@ -1,7 +1,9 @@
+import re
+
+
 class Book:
     def __init__(self, title="", author="", releaseYear=""):
-        self.title = ""
-        self.setTitle(title)
+        self.title = title
         self.author = author
         self.releaseYear = releaseYear
 
@@ -11,5 +13,5 @@ class Book:
 
         return self.title == other.title and self.author == other.author and self.releaseYear == other.releaseYear
 
-    def setTitle(self, title):
-        self.title = title.replace('\'', '\'\'')
+    def toString(self):
+        return self.title + ", " + self.author + ", " + self.releaseYear

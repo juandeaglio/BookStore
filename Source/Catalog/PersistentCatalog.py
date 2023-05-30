@@ -1,4 +1,4 @@
-from Source.Interfaces.Catalog import CatalogInterface
+from Source.Catalog.Catalog import CatalogInterface
 from Source.Database.SqlDatabase import SqlDatabase
 
 

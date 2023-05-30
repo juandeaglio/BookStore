@@ -1,3 +1,5 @@
+import re
+
 from Source.Interfaces.DatabaseConnection import DatabaseConnection
 
 
@@ -12,7 +14,11 @@ class StorageGateway:
         return False if self.data is None else True
 
     def loadAllToCache(self):
-        return self.dbConnection.selectAll()
+        books = self.dbConnection.selectAll()
+        for book in books:
+            if "\'\'" in book.title:
+                book.title = re.sub("''+", "'", book.title)
+        return books
 
     def loadEntryToCache(self, book):
         return self.dbConnection.select(book)
@@ -23,6 +29,8 @@ class StorageGateway:
 
     def add(self, entries):
         for entry in entries:
+            if "'" in entry.title:
+                entry.title = re.sub("'", "''", entry.title)
             if not self.dbConnection.select(entry):
                 self.dbConnection.insert([entry])
 

@@ -5,6 +5,9 @@ import concurrent.futures
 
 import requests
 
+from Source.Book import Book
+from Source.Catalog.InMemoryCatalog import InMemoryCatalog
+from Source.BookStore import BookStore
 from Source.SocketServer.ClosingSocketService import ClosingSocketService
 from Source.SocketServer.HTTPSocketService import HTTPSocketService
 from Source.SocketServer.SimpleSocketServer import SimpleSocketServer
@@ -87,9 +90,22 @@ class EchoSocketTest(unittest.TestCase):
             assert expectedMsgs == msgs
 
 
+def parse(responseData):
+    string = ''
+    for line in responseData:
+        string+=line +'\n'
+
+    return string
+
+
 class RestSocketTest(unittest.TestCase):
     def setUp(self) -> None:
-        self.service = HTTPSocketService()
+        self.books = [Book("Harry Potter and the Sorcerer's Stone", "J.K. Rowling", "1999"),
+                      Book("Harry Potter Prisoner of Azkaban", "J.K. Rowling", "2001"),
+                      Book("Harry Potter Chamber of Secrets", "J.K. Rowling", "2002")]
+        self.bookStore = BookStore(InMemoryCatalog())
+        self.bookStore.addToCatalog(self.books)
+        self.service = HTTPSocketService(self.bookStore)
         self.server = SimpleSocketServer(service=self.service, port=8091)
         self.server.start()
 
@@ -97,9 +113,10 @@ class RestSocketTest(unittest.TestCase):
         self.server.stop()
 
     def test_sendAndReceiveData(self):
-        expectedResponse = ["Harry Potter and the Sorcerer's Stone", "J.K. Rowling", "1999"]
+        expectedResponse = self.bookStore.getCatalogToString()
         responseData = requests.get("http://127.0.0.1:8091/getCatalog").text.splitlines()
-        assert expectedResponse == responseData
+        parsedData = parse(responseData)
+        assert expectedResponse == parsedData
 
 
 if __name__ == '__main__':
