@@ -1,8 +1,9 @@
 I began writing the HTTP implementation of SocketService and implemented it in my BDD test case. I got it done,
 but I found myself throwing away attempts in the trash because of how hard to test they would get. I iterated with a
-somewhat simpler attempt at this, where I simply hardcoded a /getCatalog request in my unit tests. Eventually,
-I re-did the unit test to actually make use of the books array in the unit test. I also made a toString() method in
-bookStore so that it will be easier to send this over HTTP.
+somewhat simpler attempt at this, where I simply hardcoded a response to the /getCatalog request in my unit tests.
+Eventually, I re-did the unit test to actually make use of the books array in the unit test and create a response
+dynamically using some toString() method I made in bookStore when fetching a catalog so that it will be easier to send
+this over HTTP.
 
 Overall, I'm pretty disappointed with the implementation. Next time, I'm going to have to refactor a ton of stuff.
 I'm probably going to need to implement some tests for bookStore, or remove the class altogether since it really is
@@ -18,6 +19,8 @@ might need to be their own objects I reckon.
 Another mess is the HTTPSocketService itself. I'm going to have to figure out how to handle different requests.
 As it is now, it's just a dumb hack to receive all the content of the request and not really handle it at all.
 I'm going to have to weigh going from the socket library to perhaps requests, or come up with an interesting way to
-handle the logic of each request and behavior of the response to each request.
+handle the logic of each request and behavior of the response to each request. I think it won't be all that bad to
+come up with handcrafted logic for each request, I'll only have two pages to worry about for now, and maybe some
+additional behavior while visiting the catalog, but that's all.
 
 Anyway ... refactoring next time, such that hopefully the next BDD case will be smoother.
