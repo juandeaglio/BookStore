@@ -39,7 +39,6 @@ class StoppingSocketTest(unittest.TestCase):
 
     def test_startAndStopServer(self):
         self.server.start()
-        self.server.waitToStart()
         assert self.server.isRunning()
         self.server.stop()
         assert not self.server.isRunning()
@@ -51,7 +50,6 @@ class SimpleSocketTest(unittest.TestCase):
         self.service = ClosingSocketService()
         self.server = SimpleSocketServer(service=self.service, port=self.port)
         self.server.start()
-        self.server.waitToStart()
 
     def tearDown(self):
         self.server.stop()
