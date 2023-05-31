@@ -40,8 +40,3 @@ class SimpleSocketServer:
         while self.isServing:
             pass
         return self.service.connections
-
-    def waitToStart(self):
-        while not self.running:
-            pass
-        return self.running

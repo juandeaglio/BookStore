@@ -83,15 +83,15 @@ class EchoSocketTest(unittest.TestCase):
         expectedMsgs = generateRandomStrings()
         with concurrent.futures.ThreadPoolExecutor() as executor:
             futures = [executor.submit(Client.createClientWithMessage, param[1]) for param in expectedMsgs]
-
             msgs = aggregateServerResponsesToArray(futures)
-            assert expectedMsgs == msgs
+
+        assert expectedMsgs == msgs
 
 
 def parse(responseData):
     string = ''
     for line in responseData:
-        string+=line +'\n'
+        string += line + '\n'
 
     return string
 
@@ -114,8 +114,7 @@ class RestSocketTest(unittest.TestCase):
     def test_sendAndReceiveData(self):
         expectedResponse = self.bookStore.getCatalogToString()
         responseData = requests.get("http://127.0.0.1:8091/getCatalog").text.splitlines()
-        parsedData = parse(responseData)
-        assert expectedResponse == parsedData
+        assert expectedResponse == parse(responseData)
 
 
 if __name__ == '__main__':
