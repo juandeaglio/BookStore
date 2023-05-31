@@ -6,7 +6,8 @@ class Catalog:
         self.storageGateway = StorageGateway(dbConnection)
 
     def add(self, books):
-        self.storageGateway.add(books)
+        if books is not None and len(books) > 0:
+            self.storageGateway.add(books)
 
     def removeAllByTitle(self, title):
         for book in self.getAllBooks():
@@ -18,3 +19,10 @@ class Catalog:
 
     def getSizeOfCatalog(self):
         return len(self.getAllBooks())
+
+    def getCatalogToString(self):
+        catalog = ''
+        for book in self.getAllBooks():
+            catalog += book.title + ", " + book.author + ", " + book.releaseYear + '\n'
+
+        return catalog

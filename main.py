@@ -1,16 +1,33 @@
 # This is a sample Python script.
+from Acceptance.RestClient import RestClient
+from Source.Book import Book
+from Source.BookStore import BookStore
+from Source.Catalog.InMemoryCatalog import InMemoryCatalog
+from Source.SocketServer.HTTPSocketService import HTTPSocketService
+from Source.SocketServer.SimpleSocketServer import SimpleSocketServer
+
 
 # Press Shift+F10 to execute it or replace it with your code.
 # Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
 
 
-def print_hi(name):
-    # Use a breakpoint in the code line below to debug your script.
-    print(f'Hi, {name}')  # Press Ctrl+F8 to toggle the breakpoint.
+def sendRestFromClientHandleRestWithServer(name):
+    books = [Book('The Hunger Games', 'Suzanne Collins', '2008'),
+             Book('Harry Potter and the Sorcerer\'s Stone', 'J.K. Rowling', '1998'),
+             Book('To Kill a Mockingbird', 'Harper Lee', '1960')]
+    defaultPort = 8091
+    catalog = InMemoryCatalog()
+    catalog.add(books)
+    service = HTTPSocketService(catalog)
+    server = SimpleSocketServer(service=service, port=defaultPort)
+    server.start()
+    response = RestClient.createClientThatGetsCatalog()
+    print(str(response))
+    server.stop()
 
 
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':
-    print_hi('PyCharm')
+    sendRestFromClientHandleRestWithServer('PyCharm')
 
 # See PyCharm help at https://www.jetbrains.com/help/pycharm/

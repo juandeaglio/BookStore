@@ -8,8 +8,8 @@ from Source.SocketServer.SimpleSocketServer import SimpleSocketServer
 def before_scenario(context, scenario):
     clearDatabase()
     context.defaultPort = 8091
-    context.bookStore = BookStore(PersistentCatalog())
-    context.service = HTTPSocketService(context.bookStore)
+    context.catalog = PersistentCatalog()
+    context.service = HTTPSocketService(context.catalog)
     context.server = SimpleSocketServer(service=context.service, port=context.defaultPort)
     context.server.start()
 

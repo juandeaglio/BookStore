@@ -17,7 +17,7 @@ def convertContentToArray(body):
 @given('A catalog')
 def defineCatalog(context):
     books = convertTableToArray(context)
-    context.bookStore.addToCatalog(books)
+    context.catalog.add(books)
 
 
 @when('A user views the catalog')
@@ -35,8 +35,7 @@ def displayCatalog(context):
 # TODO re-do below tests to mimic above one.
 @given('An empty catalog')
 def defineCatalog(context):
-    # context.simpleSocketService = SimpleSocketServer("127.0.0.1", 9191)
-    context.catalog = PersistentCatalog()
+    context.books = []
 
 
 @when('The admin adds a book to the catalog')

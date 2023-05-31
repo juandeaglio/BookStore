@@ -5,6 +5,7 @@ import concurrent.futures
 
 import requests
 
+from Acceptance.RestClient import RestClient
 from Source.Book import Book
 from Source.Catalog.InMemoryCatalog import InMemoryCatalog
 from Source.BookStore import BookStore
@@ -102,19 +103,24 @@ class RestSocketTest(unittest.TestCase):
         self.books = [Book("Harry Potter and the Sorcerer's Stone", "J.K. Rowling", "1999"),
                       Book("Harry Potter Prisoner of Azkaban", "J.K. Rowling", "2001"),
                       Book("Harry Potter Chamber of Secrets", "J.K. Rowling", "2002")]
-        self.bookStore = BookStore(InMemoryCatalog())
-        self.bookStore.addToCatalog(self.books)
-        self.service = HTTPSocketService(self.bookStore)
-        self.server = SimpleSocketServer(service=self.service, port=8091)
+        self.catalog = InMemoryCatalog()
+        self.catalog.add(self.books)
+        self.service = HTTPSocketService(self.catalog)
+        self.port = 8091
+        self.server = SimpleSocketServer(service=self.service, port=self.port)
         self.server.start()
 
     def tearDown(self):
         self.server.stop()
 
     def test_sendAndReceiveData(self):
-        expectedResponse = self.bookStore.getCatalogToString()
+        expectedResponse = self.catalog.getCatalogToString()
         responseData = requests.get("http://127.0.0.1:8091/getCatalog").text.splitlines()
         assert expectedResponse == parse(responseData)
+
+    def test_clientRetrieveCatalog(self):
+        response = RestClient.createClientThatGetsCatalog(self.port)
+        assert len(response) > 0
 
 
 if __name__ == '__main__':

@@ -9,7 +9,10 @@ class HTTPSocketService(SocketService):
         self.connections = 0
 
     def serve(self, clientSocket=socket.socket()):
-        request = clientSocket.recv(1024)
+        page = ""
+        while "\r\n\r\n" not in page:
+            buf = clientSocket.recv(1024).decode("UTF-8")
+            page += buf
         content = self.bookStore.getCatalogToString()
         response = "HTTP/1.1 200 OK\n" + "Content-Length: " + \
                    str(len(content)) + "\n" + \

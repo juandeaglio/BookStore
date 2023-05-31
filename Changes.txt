@@ -7,3 +7,11 @@ response which contains the necessary data needed to present to users.
 
 Once I've set up some sort of frontend, i.e. basic catalog fetches, I'll apply a Continuous Delivery pipeline to all of
 this.
+
+Future plans aside,
+I've been trying to wrap my head around this race condition issue that doesn't appear in the unit tests. So... I need to
+replicate the environment more accurately within the unit test. And reproduce the issue to find if any exceptions are
+being thrown in unit test.
+
+While trying to wrap my head around this, I've realized my structure is too cognitively intensive. I need to map out
+the solution and see if it looks strange from a simple sketch diagram.
