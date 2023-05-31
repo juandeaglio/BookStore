@@ -28,6 +28,7 @@ class SimpleSocketServer:
         self.running = False
 
     def acceptConnection(self):
+        # TODO socket exception in BDD test case.
         while self.running:
             clientSocket, clientAddr = self.server_socket.accept()
             self.isServing = True

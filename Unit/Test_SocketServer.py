@@ -98,6 +98,7 @@ def parse(responseData):
     return string
 
 
+# TODO not a small enough test
 class RestSocketTest(unittest.TestCase):
     def setUp(self) -> None:
         self.books = [Book("Harry Potter and the Sorcerer's Stone", "J.K. Rowling", "1999"),

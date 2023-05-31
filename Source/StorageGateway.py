@@ -16,9 +16,13 @@ class StorageGateway:
     def loadAllToCache(self):
         books = self.dbConnection.selectAll()
         for book in books:
-            if "\'\'" in book.title:
-                book.title = re.sub("''+", "'", book.title)
+            self.cleanDoubleQuotesFromTitle(book)
         return books
+
+    def cleanDoubleQuotesFromTitle(self, book):
+        # SQL requirement for quotes in field (must be double-quoted)
+        if "\'\'" in book.title:
+            book.title = re.sub("''+", "'", book.title)
 
     def loadEntryToCache(self, book):
         return self.dbConnection.select(book)
@@ -29,10 +33,17 @@ class StorageGateway:
 
     def add(self, entries):
         for entry in entries:
-            if "'" in entry.title:
-                entry.title = re.sub("'", "''", entry.title)
-            if not self.dbConnection.select(entry):
-                self.dbConnection.insert([entry])
+            self.replaceSingleQuoteWithDouble(entry)
+            self.addUniqueEntry(entry)
+
+    def addUniqueEntry(self, entry):
+        if not self.dbConnection.select(entry):
+            self.dbConnection.insert([entry])
+
+    def replaceSingleQuoteWithDouble(self, entry):
+        # SQL requirement for quotes in field.
+        if "'" in entry.title:
+            entry.title = re.sub("'", "''", entry.title)
 
     def doesBookExist(self, entry):
         return self.loadEntryToCache(entry) is not None

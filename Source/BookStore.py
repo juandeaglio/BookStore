@@ -16,7 +16,7 @@ class BookStore:
 
     def getCatalogToString(self):
         catalog = ''
-        for book in self.catalog.getAllBooks():
+        for book in self.getCatalog():
             catalog += book.title + ", " + book.author + ", " + book.releaseYear + '\n'
 
         return catalog

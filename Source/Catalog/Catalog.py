@@ -1,8 +1,8 @@
 from Source.StorageGateway import StorageGateway
 
 
-class CatalogInterface:
-    def __init__(self, dbConnection):
+class Catalog:
+    def __init__(self, dbConnection=None):
         self.storageGateway = StorageGateway(dbConnection)
 
     def add(self, books):
