@@ -1,5 +1,5 @@
 # This is a sample Python script.
-from Acceptance.RestClient import RestClient
+from Acceptance.TestRestClient import TestRestClient
 from Source.Book import Book
 from Source.BookStore import BookStore
 from Source.Catalog.InMemoryCatalog import InMemoryCatalog
@@ -21,7 +21,7 @@ def sendRestFromClientHandleRestWithServer(name):
     service = HTTPSocketService(catalog)
     server = SimpleSocketServer(service=service, port=defaultPort)
     server.start()
-    response = RestClient.createClientThatGetsCatalog()
+    response = TestRestClient.createClientThatGetsCatalog()
     print(str(response))
     server.stop()
 

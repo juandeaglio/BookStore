@@ -1,11 +1,12 @@
 import random
+import socket
 import string
 import unittest
 import concurrent.futures
 
 import requests
 
-from Acceptance.RestClient import RestClient
+from Acceptance.TestRestClient import TestRestClient
 from Source.Book import Book
 from Source.Catalog.InMemoryCatalog import InMemoryCatalog
 from Source.BookStore import BookStore
@@ -114,13 +115,17 @@ class RestSocketTest(unittest.TestCase):
         self.server.stop()
 
     def test_sendAndReceiveData(self):
-        expectedResponse = self.catalog.getCatalogToString()
+        expectedResponse = self.catalog.toString()
         responseData = requests.get("http://127.0.0.1:8091/getCatalog").text.splitlines()
         assert expectedResponse == parse(responseData)
 
-    def test_clientRetrieveCatalog(self):
-        response = RestClient.createClientThatGetsCatalog(self.port)
-        assert len(response) > 0
+    def test_sendRequestWhileClosing(self):
+        self.server.stop()
+        try:
+            TestRestClient.createClientThatGetsCatalog()
+        except requests.exceptions.ConnectTimeout as e:
+            print(str(e))
+        self.assertRaises(requests.exceptions.ConnectTimeout, TestRestClient.createClientThatGetsCatalog)
 
 
 if __name__ == '__main__':

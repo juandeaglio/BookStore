@@ -1,7 +1,7 @@
 from behave import given, when, then
 from Source.Book import Book
 from Source.Catalog.PersistentCatalog import PersistentCatalog
-from Acceptance.RestClient import RestClient
+from Acceptance.TestRestClient import TestRestClient
 
 
 def convertContentToArray(body):
@@ -22,7 +22,7 @@ def defineCatalog(context):
 
 @when('A user views the catalog')
 def viewCatalog(context):
-    response = RestClient.createClientThatGetsCatalog()
+    response = TestRestClient.createClientThatGetsCatalog()
     context.booksInCatalog = convertContentToArray(response)
 
 

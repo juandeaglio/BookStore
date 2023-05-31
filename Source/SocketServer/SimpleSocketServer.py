@@ -24,17 +24,21 @@ class SimpleSocketServer:
         return self.running
 
     def stop(self):
-        self.server_socket.close()
-        self.running = False
+        if self.running:
+            self.server_socket.close()
+            self.running = False
 
     def acceptConnection(self):
         # TODO socket exception in BDD test case.
         while self.running:
-            clientSocket, clientAddr = self.server_socket.accept()
-            self.isServing = True
-            self.service.serve(clientSocket)
-            self.isServing = False
-
+            try:
+                clientSocket, clientAddr = self.server_socket.accept()
+                self.isServing = True
+                self.service.serve(clientSocket)
+                self.isServing = False
+            except OSError as e:
+                if e.errno == 10038 and self.running:
+                    raise
     def getConnections(self):
         while self.isServing:
             pass

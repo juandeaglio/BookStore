@@ -20,7 +20,7 @@ class Catalog:
     def getSizeOfCatalog(self):
         return len(self.getAllBooks())
 
-    def getCatalogToString(self):
+    def toString(self):
         catalog = ''
         for book in self.getAllBooks():
             catalog += book.title + ", " + book.author + ", " + book.releaseYear + '\n'
