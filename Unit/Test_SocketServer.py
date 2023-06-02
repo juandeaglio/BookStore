@@ -8,7 +8,6 @@ from Source.SocketServer.ClosingSocketService import ClosingSocketService
 from Source.SocketServer.SimpleSocketServer import SimpleSocketServer
 from Source.SocketServer.EchoSocketService import EchoSocketService
 from Unit.Client import Client
-from Unit.TestClientSocket import TestClientSocket
 
 
 def generateRandomStrings():
@@ -53,12 +52,18 @@ class SimpleSocketTest(unittest.TestCase):
         assert self.server.getConnections() == expectedConnections
 
     def test_sendAndReceiveDataMultipleConnections(self):
-        expectedMsgs = 10
-        totalMsgsCompleted = expectedMsgs
+        expectedMsgs = generateRandomStrings()
+        totalMsgsCompleted = 0
 
-        for i in range(0, expectedMsgs):
-            self.service.serve(TestClientSocket())
+        with concurrent.futures.ThreadPoolExecutor() as executor:
+            futures = [executor.submit(Client.createClientWithMessage, param[1]) for param in expectedMsgs]
 
+            for future in futures:
+                while not future.done():
+                    pass
+                totalMsgsCompleted += 1
+
+        time.sleep(0.2)
         assert self.server.getConnections() == totalMsgsCompleted
 
 
