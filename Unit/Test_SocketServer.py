@@ -1,17 +1,9 @@
 import random
-import socket
 import string
 import unittest
 import concurrent.futures
 
-import requests
-
-from Acceptance.TestRestClient import TestRestClient
-from Source.Book import Book
-from Source.Catalog.InMemoryCatalog import InMemoryCatalog
-from Source.BookStore import BookStore
 from Source.SocketServer.ClosingSocketService import ClosingSocketService
-from Source.SocketServer.HTTPSocketService import HTTPSocketService
 from Source.SocketServer.SimpleSocketServer import SimpleSocketServer
 from Source.SocketServer.EchoSocketService import EchoSocketService
 from Unit.Client import Client
@@ -96,36 +88,6 @@ def parse(responseData):
         string += line + '\n'
 
     return string
-
-
-# TODO not a small enough test
-class RestSocketTest(unittest.TestCase):
-    def setUp(self) -> None:
-        self.books = [Book("Harry Potter and the Sorcerer's Stone", "J.K. Rowling", "1999"),
-                      Book("Harry Potter Prisoner of Azkaban", "J.K. Rowling", "2001"),
-                      Book("Harry Potter Chamber of Secrets", "J.K. Rowling", "2002")]
-        self.catalog = InMemoryCatalog()
-        self.catalog.add(self.books)
-        self.service = HTTPSocketService(self.catalog)
-        self.port = 8091
-        self.server = SimpleSocketServer(service=self.service, port=self.port)
-        self.server.start()
-
-    def tearDown(self):
-        self.server.stop()
-
-    def test_sendAndReceiveData(self):
-        expectedResponse = self.catalog.toString()
-        responseData = requests.get("http://127.0.0.1:8091/getCatalog").text.splitlines()
-        assert expectedResponse == parse(responseData)
-
-    def test_sendRequestWhileClosing(self):
-        self.server.stop()
-        try:
-            TestRestClient.createClientThatGetsCatalog()
-        except requests.exceptions.ConnectTimeout as e:
-            print(str(e))
-        self.assertRaises(requests.exceptions.ConnectTimeout, TestRestClient.createClientThatGetsCatalog)
 
 
 if __name__ == '__main__':
