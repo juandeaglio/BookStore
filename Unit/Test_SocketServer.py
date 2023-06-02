@@ -1,6 +1,5 @@
 import random
 import string
-import time
 import unittest
 import concurrent.futures
 
@@ -8,6 +7,14 @@ from Source.SocketServer.ClosingSocketService import ClosingSocketService
 from Source.SocketServer.SimpleSocketServer import SimpleSocketServer
 from Source.SocketServer.EchoSocketService import EchoSocketService
 from Unit.Client import Client
+
+
+def aggregateServerResponsesToArray(futures):
+    responses = []
+    for i in range(0, len(futures)):
+        responses.append(("client" + str(i), futures[i].result().recv(1024).decode("UTF-8")))
+
+    return responses
 
 
 def generateRandomStrings():
@@ -51,21 +58,6 @@ class SimpleSocketTest(unittest.TestCase):
             Client.createClient(self.port).recv(1)
         assert self.server.getConnections() == expectedConnections
 
-    def test_sendAndReceiveDataMultipleConnections(self):
-        expectedMsgs = generateRandomStrings()
-        totalMsgsCompleted = 0
-
-        with concurrent.futures.ThreadPoolExecutor() as executor:
-            futures = [executor.submit(Client.createClientWithMessage, param[1]) for param in expectedMsgs]
-
-            for future in futures:
-                while not future.done():
-                    pass
-                totalMsgsCompleted += 1
-
-        time.sleep(0.2)
-        assert self.server.getConnections() == totalMsgsCompleted
-
 
 class EchoSocketTest(unittest.TestCase):
     def setUp(self):
@@ -80,6 +72,14 @@ class EchoSocketTest(unittest.TestCase):
     def test_sendAndReceiveData(self):
         client = Client.createClientWithMessage("hello", self.port)
         assert client.recv(1024).decode("UTF-8") == "hello"
+
+    def test_sendAndReceiveDataMultipleConnections(self):
+        expectedMsgs = generateRandomStrings()
+        with concurrent.futures.ThreadPoolExecutor() as executor:
+            futures = [executor.submit(Client.createClientWithMessage, param[1]) for param in expectedMsgs]
+            msgs = aggregateServerResponsesToArray(futures)
+
+        assert expectedMsgs == msgs
 
 
 def parse(responseData):

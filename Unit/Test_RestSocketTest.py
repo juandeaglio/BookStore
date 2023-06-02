@@ -1,5 +1,7 @@
 import unittest
+
 import requests
+
 from Acceptance.TestRestClient import TestRestClient
 from Source.Book import Book
 from Source.Catalog.InMemoryCatalog import InMemoryCatalog
