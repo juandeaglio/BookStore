@@ -23,17 +23,11 @@ class StorageGateway:
     def add(self, entries):
         if entries is not None:
             for entry in entries:
-                self.replaceSingleQuoteWithDouble(entry)
                 self.addUniqueEntry(entry)
 
     def addUniqueEntry(self, entry):
         if not self.dbConnection.select(entry):
             self.dbConnection.insertBooksIntoCatalogTable([entry])
-
-    def replaceSingleQuoteWithDouble(self, entry):
-        # SQL requirement for single quote character ' in field.
-        if "'" in entry.title:
-            entry.title = re.sub("'", "''", entry.title)
 
     def doesBookExist(self, entry):
         return self.loadEntryToCache(entry) is not None

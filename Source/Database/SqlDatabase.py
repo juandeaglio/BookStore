@@ -87,7 +87,13 @@ class SqlDatabase(DatabaseConnection):
 
     def insertBooksIntoCatalogTable(self, books):
         for book in books:
+            self.replaceSingleQuoteWithDouble(book)
             self.insertQuery(book.title, book.author, book.releaseYear)
+
+    def replaceSingleQuoteWithDouble(self, entry):
+        # SQL requirement for single quote character ' in field.
+        if "'" in entry.title:
+            entry.title = re.sub("'", "''", entry.title)
 
     def insertQuery(self, title, author, releaseYear):
         database = BooksToSql('catalog.db')
