@@ -8,7 +8,7 @@ class StorageGateway:
             self.dbConnection = databasePipe
 
     def save(self, books):
-        return self.dbConnection.insert(books)
+        return self.dbConnection.insertBooksIntoCatalogTable(books)
 
     def fetchBooksFromDatabase(self):
         return self.dbConnection.selectAll()
@@ -28,7 +28,7 @@ class StorageGateway:
 
     def addUniqueEntry(self, entry):
         if not self.dbConnection.select(entry):
-            self.dbConnection.insert([entry])
+            self.dbConnection.insertBooksIntoCatalogTable([entry])
 
     def replaceSingleQuoteWithDouble(self, entry):
         # SQL requirement for single quote character ' in field.

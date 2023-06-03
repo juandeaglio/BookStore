@@ -3,7 +3,7 @@ from abc import ABC, abstractmethod
 
 class DatabaseConnection(ABC):
     @abstractmethod
-    def insert(self, books):
+    def insertBooksIntoCatalogTable(self, books):
         pass
 
     @abstractmethod
@@ -11,17 +11,11 @@ class DatabaseConnection(ABC):
         pass
 
     @abstractmethod
-    def delete(self, entry):
-        pass
-
-    @abstractmethod
     def select(self, book):
         pass
 
-    @abstractmethod
-    def selectWhereTitle(self, title):
+    def delete(self, entry):
         pass
 
-    @abstractmethod
     def deleteWhereTitle(self, title):
         pass

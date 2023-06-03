@@ -5,7 +5,7 @@ class InMemoryDatabase(DatabaseConnection):
     def __init__(self):
         self.books = []
 
-    def insert(self, books):
+    def insertBooksIntoCatalogTable(self, books):
         oldLen = len(self.books)
         for book in books:
             self.books.append(book)
