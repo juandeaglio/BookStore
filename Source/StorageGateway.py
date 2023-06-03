@@ -35,9 +35,10 @@ class StorageGateway:
             self.dbConnection.delete(entry)
 
     def add(self, entries):
-        for entry in entries:
-            self.replaceSingleQuoteWithDouble(entry)
-            self.addUniqueEntry(entry)
+        if entries is not None:
+            for entry in entries:
+                self.replaceSingleQuoteWithDouble(entry)
+                self.addUniqueEntry(entry)
 
     def addUniqueEntry(self, entry):
         if not self.dbConnection.select(entry):

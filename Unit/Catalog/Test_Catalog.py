@@ -25,7 +25,7 @@ class TestCatalog(unittest.TestCase):
         self.catalog.add([self.books[0]])
         assert len(self.catalog.getAllBooks()) == 3
 
-    def test_addNoNoneToCatalog(self):
+    def test_addNoneToCatalog(self):
         self.catalog.add(None)
         assert len(self.catalog.getAllBooks()) == 0
 
