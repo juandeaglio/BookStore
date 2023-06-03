@@ -11,21 +11,7 @@ class StorageGateway:
         return self.dbConnection.insert(books)
 
     def fetchBooksFromDatabase(self):
-        books = self.dbConnection.selectAll()
-        for book in books:
-            self.cleanDoubleQuotesFromTitle(book)
-        return books
-
-    def cleanDoubleQuotesFromTitle(self, book):
-        # SQL requirement for quotes in field (must be double-quoted)
-        if self.titleHasDoubleQuote(book):
-            self.removeDuplicateQuotes(book)
-
-    def removeDuplicateQuotes(self, book):
-        book.title = re.sub("''+", "'", book.title)
-
-    def titleHasDoubleQuote(self, book):
-        return "\'\'" in book.title
+        return self.dbConnection.selectAll()
 
     def loadEntryToCache(self, book):
         return self.dbConnection.select(book)

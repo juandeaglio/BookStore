@@ -38,10 +38,6 @@ class TestCatalog(unittest.TestCase):
         self.catalog.removeAllByTitle("Harry Potter")
         assert len(self.catalog.getAllBooks()) == 2
 
-    def test_removeExtraQuotesWhenGettingCatalog(self):
-        self.catalog.add(self.books+[Book("Harry''s Potter", "J.K. Rowling", "1999")])
-        assert self.catalog.getAllBooks()[1].title == "Harry's Potter"
-
     def test_catalogBooksAreSorted(self):
         self.catalog.add(self.books)
         expectedSorted = [self.books[1], self.books[0], self.books[2]]
