@@ -15,7 +15,7 @@ class Catalog:
                 self.storageGateway.removeEntryByTitle(title)
 
     def getAllBooks(self):
-        return self.storageGateway.loadAllToCache()
+        return self.storageGateway.fetchBooksFromDatabase()
 
     def getSizeOfCatalog(self):
         return len(self.getAllBooks())

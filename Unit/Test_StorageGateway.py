@@ -14,15 +14,15 @@ class TestStorageGateway(unittest.TestCase):
         self.storageGateway.save(self.books)
 
     def test_retrieveCatalog(self):
-        numOfBooks = len(self.storageGateway.loadAllToCache())
+        numOfBooks = len(self.storageGateway.fetchBooksFromDatabase())
         assert len(self.books) == numOfBooks
 
     def test_removeEntryFromCatalog(self):
-        numOfBooks = len(self.storageGateway.loadAllToCache())
+        numOfBooks = len(self.storageGateway.fetchBooksFromDatabase())
         self.storageGateway.removeEntry(self.books[len(self.books)-1])
-        assert len(self.storageGateway.loadAllToCache()) == numOfBooks - 1
+        assert len(self.storageGateway.fetchBooksFromDatabase()) == numOfBooks - 1
 
     def test_addEntryToCatalog(self):
-        numOfBooks = len(self.storageGateway.loadAllToCache())
+        numOfBooks = len(self.storageGateway.fetchBooksFromDatabase())
         self.storageGateway.add([Book('Catching Fire', 'Suzanne Collins', '2009')])
-        assert len(self.storageGateway.loadAllToCache()) == numOfBooks + 1
+        assert len(self.storageGateway.fetchBooksFromDatabase()) == numOfBooks + 1

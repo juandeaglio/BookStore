@@ -1,19 +1,16 @@
 import re
-
 from Source.Interfaces.DatabaseConnection import DatabaseConnection
 
 
 class StorageGateway:
     def __init__(self, databasePipe):
-        self.data = []
         if isinstance(databasePipe, DatabaseConnection):
             self.dbConnection = databasePipe
 
     def save(self, books):
-        self.data = self.dbConnection.insert(books)
-        return False if self.data is None else True
+        return self.dbConnection.insert(books)
 
-    def loadAllToCache(self):
+    def fetchBooksFromDatabase(self):
         books = self.dbConnection.selectAll()
         for book in books:
             self.cleanDoubleQuotesFromTitle(book)
@@ -21,8 +18,14 @@ class StorageGateway:
 
     def cleanDoubleQuotesFromTitle(self, book):
         # SQL requirement for quotes in field (must be double-quoted)
-        if "\'\'" in book.title:
-            book.title = re.sub("''+", "'", book.title)
+        if self.titleHasDoubleQuote(book):
+            self.removeDuplicateQuotes(book)
+
+    def removeDuplicateQuotes(self, book):
+        book.title = re.sub("''+", "'", book.title)
+
+    def titleHasDoubleQuote(self, book):
+        return "\'\'" in book.title
 
     def loadEntryToCache(self, book):
         return self.dbConnection.select(book)
@@ -41,7 +44,7 @@ class StorageGateway:
             self.dbConnection.insert([entry])
 
     def replaceSingleQuoteWithDouble(self, entry):
-        # SQL requirement for quotes in field.
+        # SQL requirement for single quote character ' in field.
         if "'" in entry.title:
             entry.title = re.sub("'", "''", entry.title)
 
