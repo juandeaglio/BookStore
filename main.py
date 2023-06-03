@@ -1,9 +1,8 @@
 # This is a sample Python script.
 from Acceptance.TestRestClient import TestRestClient
 from Source.Book import Book
-from Source.BookStore import BookStore
 from Source.Catalog.InMemoryCatalog import InMemoryCatalog
-from Source.SocketServer.HTTPSocketService import HTTPSocketService
+from Source.SocketServer.Services.HTTPSocketService import HTTPSocketService
 from Source.SocketServer.SimpleSocketServer import SimpleSocketServer
 
 

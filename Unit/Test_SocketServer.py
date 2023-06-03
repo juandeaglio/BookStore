@@ -3,9 +3,9 @@ import string
 import unittest
 import concurrent.futures
 
-from Source.SocketServer.ClosingSocketService import ClosingSocketService
+from Source.SocketServer.Services.ClosingSocketService import ClosingSocketService
 from Source.SocketServer.SimpleSocketServer import SimpleSocketServer
-from Source.SocketServer.EchoSocketService import EchoSocketService
+from Source.SocketServer.Services.EchoSocketService import EchoSocketService
 from Unit.Client import Client
 
 
@@ -26,12 +26,10 @@ def generateRandomStrings():
 
 
 class StoppingSocketTest(unittest.TestCase):
-    def setUp(self):
+    def test_startAndStopServer(self):
         self.port = 8091
         self.service = ClosingSocketService()
         self.server = SimpleSocketServer(service=self.service, port=self.port)
-
-    def test_startAndStopServer(self):
         self.server.start()
         assert self.server.isRunning()
         self.server.stop()
@@ -75,11 +73,14 @@ class EchoSocketTest(unittest.TestCase):
 
     def test_sendAndReceiveDataMultipleConnections(self):
         expectedMsgs = generateRandomStrings()
+        msgs = self.createNAmountClients(expectedMsgs)
+        assert expectedMsgs == msgs
+
+    def createNAmountClients(self, expectedMsgs):
         with concurrent.futures.ThreadPoolExecutor() as executor:
             futures = [executor.submit(Client.createClientWithMessage, param[1]) for param in expectedMsgs]
             msgs = aggregateServerResponsesToArray(futures)
-
-        assert expectedMsgs == msgs
+        return msgs
 
 
 def parse(responseData):
