@@ -4,5 +4,4 @@ from Source.Database.SqlDatabase import SqlDatabase
 
 class PersistentCatalog(Catalog):
     def __init__(self):
-        dbConnection = SqlDatabase()
-        super().__init__(dbConnection)
+        super().__init__(SqlDatabase())

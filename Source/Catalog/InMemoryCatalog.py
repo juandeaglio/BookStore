@@ -4,5 +4,4 @@ from Source.Database.InMemoryDatabase import InMemoryDatabase
 
 class InMemoryCatalog(Catalog):
     def __init__(self):
-        dbConnection = InMemoryDatabase()
-        super().__init__(dbConnection)
+        super().__init__(InMemoryDatabase())
