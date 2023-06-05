@@ -1,5 +1,18 @@
 Feature: Book catalog
 
+    Scenario: View a catalog through webpage
+        Given A catalog webpage
+        |Title                                  |Author             |Release year   |
+        |The Hunger Games                       |Suzanne Collins    |2008           |
+        |Harry Potter and the Sorcerer's Stone  |J.K. Rowling       |1998           |
+        |To Kill a Mockingbird                  |Harper Lee         |1960           |
+        When The catalog is retrieved
+        Then The entire catalog is displayed on the webpage
+        |Title                                  |Author             |Release year   |
+        |Harry Potter and the Sorcerer's Stone  |J.K. Rowling       |1998           |
+        |The Hunger Games                       |Suzanne Collins    |2008           |
+        |To Kill a Mockingbird                  |Harper Lee         |1960           |
+
     Scenario: View a persistent catalog
         Given A catalog
         |Title                                  |Author             |Release year   |

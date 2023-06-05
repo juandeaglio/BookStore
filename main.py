@@ -1,5 +1,5 @@
 # This is a sample Python script.
-from Acceptance.TestRestClient import TestRestClient
+from Acceptance.MockWebPage.TestRestClient import TestRestClient
 from Source.Book import Book
 from Source.Catalog.InMemoryCatalog import InMemoryCatalog
 from Source.SocketServer.Services.HTTPSocketService import HTTPSocketService

@@ -1,16 +1,17 @@
 from behave import given, when, then
+from Acceptance.BookStore.Steps.ContextTable import convertTableToArray
+from Acceptance.BookStore.Steps.HTTPContent import convertContentToArray
 from Source.Book import Book
-from Acceptance.TestRestClient import TestRestClient
+from Acceptance.MockWebPage.TestRestClient import TestRestClient
 
 
-def convertContentToArray(body):
-    books = []
-    for line in body:
-        fields = line.split(",")
-        book = Book(title=fields[0], author=fields[1], releaseYear=fields[2])
-        books.append(book)
-
-    return books
+def arraysOfBooksAreTheSame(books, booksInCatalog):
+    for book, otherBook in zip(books, booksInCatalog):
+        if book != otherBook:
+            print("1: " + book.title + " " + book.author + " " + book.releaseYear)
+            print("2: " + otherBook.title + " " + otherBook.author + " " + otherBook.releaseYear)
+            return False
+    return True
 
 
 @given('A catalog')
@@ -25,18 +26,8 @@ def viewCatalog(context):
     context.booksInCatalog = convertContentToArray(response)
 
 
-def arraysOfBooksAreTheSame(books, booksInCatalog):
-    for book, otherBook in zip(books, booksInCatalog):
-        if book != otherBook:
-            print("1: " + book.title + " " + book.author + " " + book.releaseYear)
-            print("2: " + otherBook.title + " " + otherBook.author + " " + otherBook.releaseYear)
-            return False
-    return True
-
-
 @then('The entire catalog is displayed')
 def displayCatalog(context):
-    print("vs. ")
     books = convertTableToArray(context)
     assert arraysOfBooksAreTheSame(books, context.booksInCatalog)
 
@@ -76,10 +67,3 @@ def checkForExtraBook(context):
     assert len(expectedBooks) == len(context.booksInCatalog)
 
 
-def convertTableToArray(context):
-    books = []
-    for book in context.table:
-        new = Book(title=book[0], author=book[1], releaseYear=book[2])
-        books.append(new)
-
-    return books
