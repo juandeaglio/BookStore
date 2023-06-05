@@ -1,0 +1,58 @@
+<html>
+    <head>
+        <title> Book Catalog </title>
+        <style>
+            /* Add some spacing between table rows */
+            tr {
+                margin-bottom: 10px;
+            }
+
+            /* Apply "card" styling to each table row */
+            tr {
+                display: inline-block;
+                padding: 10px;
+                border: 1px solid #ccc;
+                border-radius: 5px;
+                background-color: #f5f5f5;
+            }
+        </style>
+    </head>
+
+    <body>
+        <h1> Book Catalog</h1>
+        <table>
+            <thead>
+                <tr>
+                    <th>Title</th>
+                    <th>Author</th>
+                    <th>Release Year</th>
+                </tr>
+            </thead>
+            <tbody id="testTableBody">
+
+            </tbody>
+        </table>
+    </body>
+</html>
+<script>
+    const items = [
+        "Harry Potter 1,J.K. Rowling,1998",
+        "Harry Potter Two,J.K. Rowling,2000",
+    ];
+    function loadTableData(items)
+    {
+        const table = document.getElementById("testTableBody");
+        items.forEach( line =>
+        {
+            elements = line.split(",");
+            let row = table.insertRow();
+            for(let i = 0; i < elements.length; i++)
+            {
+                item = elements[i];
+                let column = row.insertCell(i);
+                column.innerHTML = item;
+            }
+        });
+    }
+    loadTableData(items);
+</script>
