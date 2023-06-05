@@ -1,5 +1,4 @@
 import re
-
 from Source.Book import Book
 from Source.Interfaces.DatabaseConnection import DatabaseConnection
 import sqlite3
@@ -80,9 +79,11 @@ class SqlDatabase(DatabaseConnection):
 
     def select(self, book):
         database = BooksToSql('catalog.db')
+        parsedBook = self.replaceSingleQuoteWithDouble(book)
         query = 'SELECT title AS title, author AS author, releaseyear AS "releaseYear" FROM catalog ' \
-                'WHERE title=\'' + book.title + '\' AND author=\'' + book.author + '\' AND releaseyear=\'' \
-                + book.releaseYear + '\''
+                'WHERE title=\'' + parsedBook.title + '\' AND author=\'' + parsedBook.author + '\' AND releaseyear=\'' \
+                + parsedBook.releaseYear + '\''
+
         return database.queryCatalogBySQL(query)
 
     def insertBooksIntoCatalogTable(self, books):
@@ -92,8 +93,10 @@ class SqlDatabase(DatabaseConnection):
 
     def replaceSingleQuoteWithDouble(self, entry):
         # SQL requirement for single quote character ' in field.
-        if "'" in entry.title:
+        if "'" in entry.title and "''" not in entry.title:
             entry.title = re.sub("'", "''", entry.title)
+
+        return entry
 
     def insertQuery(self, title, author, releaseYear):
         database = BooksToSql('catalog.db')

@@ -13,13 +13,6 @@ Feature: Book catalog
         |The Hunger Games                       |Suzanne Collins    |2008           |
         |To Kill a Mockingbird                  |Harper Lee         |1960           |
 
-        #example needed here
-    Scenario: Add to persistent catalog
-        Given An empty catalog
-        When The admin adds a book to the catalog
-        Then There will be one more book in the catalog
-
-        #example needed here
     Scenario: No duplicates in the catalog
         Given A catalog
         |Title                                  |Author             |Release year   |
@@ -28,3 +21,12 @@ Feature: Book catalog
         |To Kill a Mockingbird                  |Harper Lee         |1960           |
         When The admin add a duplicate book to the catalog
         Then There will be no changes to the catalog
+        |Title                                  |Author             |Release year   |
+        |The Hunger Games                       |Suzanne Collins    |2008           |
+        |Harry Potter and the Sorcerer's Stone  |J.K. Rowling       |1998           |
+        |To Kill a Mockingbird                  |Harper Lee         |1960           |
+
+    Scenario: Add to persistent catalog
+        Given An empty catalog
+        When The admin adds a book to the catalog
+        Then There will be one more book in the catalog

@@ -20,6 +20,6 @@ class Catalog:
     def toString(self):
         catalog = ''
         for book in self.getAllBooks():
-            catalog += book.title + ", " + book.author + ", " + book.releaseYear + '\n'
+            catalog += book.title + "," + book.author + "," + book.releaseYear + '\n'
 
         return catalog
