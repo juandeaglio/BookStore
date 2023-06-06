@@ -1,17 +1,8 @@
-Refactored some unit tests and implementations within those unit tests.
-I'm about to start the SimpleSocketServer refactoring, if there is anything I can improve upon.
+I've finished the BDD test cases for adding stuff to a catalog. Now I'm creating a frontend and spitballing some ideas
+for creating a mock of my book store webpage.
 
-I've also done a little research & decided I'll separate the backend of this project from the frontend, which
-has accidentally occurred anyway. Django will send REST requests to all this code I've written here and get a REST
-response which contains the necessary data needed to present to users.
+I'm going to implement some unit tests, so I can get a better idea of how to iteratively put together the correct
+layout that I want. I'm also going to experiment with some different HTML elements such that I can create a clean
+modern UI to display a catalog and extrapolate that to other pages.
 
-Once I've set up some sort of frontend, i.e. basic catalog fetches, I'll apply a Continuous Delivery pipeline to all of
-this.
-
-Future plans aside,
-I've been trying to wrap my head around this race condition issue that doesn't appear in the unit tests. So... I need to
-replicate the environment more accurately within the unit test. And reproduce the issue to find if any exceptions are
-being thrown in unit test.
-
-While trying to wrap my head around this, I've realized my structure is too cognitively intensive. I need to map out
-the solution and see if it looks strange from a simple sketch diagram.
+Next up, unit testing my frontend code (not the APIs).
