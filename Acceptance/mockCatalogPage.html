@@ -1,6 +1,6 @@
 <html>
     <head>
-        <title> Book Catalog </title>
+        <title>Book Catalog</title>
         <style>
             /* Add some spacing between table rows */
             tr {
@@ -9,50 +9,128 @@
 
             /* Apply "card" styling to each table row */
             tr {
-                display: inline-block;
+                display: flex;
+                align-items: center;
                 padding: 10px;
                 border: 1px solid #ccc;
                 border-radius: 5px;
                 background-color: #f5f5f5;
             }
+
+            /* Left side (title, author, release year) */
+            .card-left {
+                display: flex;
+                flex-direction: column;
+                width: 50%;
+                margin-right: 10px;
+            }
+
+            /* Title styling */
+            .card-title {
+                font-size: 18px;
+                font-weight: bold;
+            }
+
+            /* Author styling */
+            .card-author {
+                font-size: 14px;
+            }
+
+            /* Release year styling */
+            .card-release-year {
+                font-size: 14px;
+            }
+
+            /* Right side (book cover) */
+            .card-right {
+                width: 50%;
+                text-align: right;
+            }
+
+            /* Book cover styling */
+            .card-book-cover {
+                max-width: 100%;
+                max-height: 100px;
+                object-fit: contain;
+            }
         </style>
     </head>
 
     <body>
-        <h1> Book Catalog</h1>
+        <h1>Book Catalog</h1>
         <table>
             <thead>
                 <tr>
-                    <th>Title</th>
-                    <th>Author</th>
-                    <th>Release Year</th>
+                    <td class="card-left">
+                        <div class="card-title">Book Title</div>
+                        <div class="card-author">Author Name</div>
+                        <div class="card-release-year">2023</div>
+                    </td>
+                    <td class="card-right">
+                        <img class="card-book-cover" src="book_cover.jpg" alt="Book Cover">
+                    </td>
                 </tr>
             </thead>
-            <tbody id="testTableBody"></tbody>
+            <tbody id="testTableBody">
+                <!-- Table rows will be dynamically added here -->
+            </tbody>
         </table>
     </body>
 </html>
 
 <script>
+/*
+<tr>
+    <td class="card-left">
+        <div class="card-title">Book Title</div>
+        <div class="card-author">Author Name</div>
+        <div class="card-release-year">2023</div>
+    </td>
+    <td class="card-right">
+        <img class="card-book-cover" src="book_cover.jpg" alt="Book Cover">
+    </td>
+</tr>
+*/
     const items = [
         "Harry Potter 1,J.K. Rowling,1998",
         "Harry Potter Two,J.K. Rowling,2000",
     ];
+    function constructLeftHalfCard(book)
+    {
+        let leftHalf = [];
+        headers = ["title", "author", "release-year"]
+        elements = book.split(",");
+        for(let i = 0; i < elements.length; i++)
+        {
+            var div = document.createElement("div");
+            div.classList.add("card-" + headers[i])
+            div.innerHTML = elements[i]
+            leftHalf.push(div);
+        }
+        return leftHalf;
+    }
     function loadTableData(items)
     {
         const table = document.getElementById("testTableBody");
         items.forEach( line =>
         {
-            elements = line.split(",");
             let row = table.insertRow();
-            for(let i = 0; i < elements.length; i++)
+            let column = row.insertCell(0);
+            column.classList.add("card-left")
+            constructLeftHalfCard(line).forEach( div =>
             {
-                item = elements[i];
-                let column = row.insertCell(i);
-                column.innerHTML = item;
-            }
+                column.appendChild(div);
+            });
+            column = row.insertCell(1);
+            let img = document.createElement("img");
+            img.src = "bookcover.jpg"
+            img.alt = "Book cover title"
+            img.class = "card-book-cover"
+            column.appendChild(img)
+            column.classList.add("card-right")
         });
     }
+
     async function getCatalog()
     {
         let data = "";
