@@ -20,8 +20,12 @@ def sendRestFromClientHandleRestWithServer(name):
     service = HTTPSocketService(catalog)
     server = SimpleSocketServer(service=service, port=defaultPort)
     server.start()
-    response = TestRestClient.createClientThatGetsCatalog()
-    print(str(response))
+    lastCount = 0
+    while server.getConnections() <= 0:
+        if lastCount != server.getConnections():
+            print("Connections: " + str(server.getConnections()))
+            print("Body: " + str(server.service.lastResponse))
+            lastCount += 1
     server.stop()
 
 

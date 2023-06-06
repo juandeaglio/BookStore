@@ -26,8 +26,9 @@ class RestSocketTest(unittest.TestCase):
         self.server.stop()
 
     def test_sendAndReceiveData(self):
-        expectedHTTP = bytes("HTTP/1.1 200 OK\n" + "Content-Length: " + \
-                             str(len(self.catalog.toString())) + "\n" + \
+        expectedHTTP = bytes("HTTP/1.1 200 OK\n" + "Access-Control-Allow-Origin: *\n" + "Content-Type: text/plain\n"
+                             + "Content-Length: " +
+                             str(len(self.catalog.toString())) + "\n" +
                              "\n" + self.catalog.toString(), "UTF-8")
         self.service.serve(TestClientSocket())
         responseData = self.service.lastResponse

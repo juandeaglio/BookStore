@@ -28,12 +28,11 @@
                     <th>Release Year</th>
                 </tr>
             </thead>
-            <tbody id="testTableBody">
-
-            </tbody>
+            <tbody id="testTableBody"></tbody>
         </table>
     </body>
 </html>
+
 <script>
     const items = [
         "Harry Potter 1,J.K. Rowling,1998",
@@ -54,5 +53,23 @@
             }
         });
     }
-    loadTableData(items);
+    async function getCatalog()
+    {
+        let data = "";
+        fetch("http://127.0.0.1:8091/").then(response => response.text()).then((text) =>
+        {
+            console.log(text.split("\n"));
+            loadTableData(text.split("\n"));
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+    }
+    function start()
+    {
+        getCatalog();
+    }
+    (async() => {
+        let data = await start();
+    })();
 </script>
