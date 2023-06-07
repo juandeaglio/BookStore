@@ -21,7 +21,7 @@ def sendRestFromClientHandleRestWithServer(name):
     server = SimpleSocketServer(service=service, port=defaultPort)
     server.start()
     lastCount = 0
-    while server.getConnections() <= 0:
+    while server.getConnections() <= 20:
         if lastCount != server.getConnections():
             print("Connections: " + str(server.getConnections()))
             print("Body: " + str(server.service.lastResponse))

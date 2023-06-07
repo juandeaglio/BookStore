@@ -1,8 +1,8 @@
-I've finished the BDD test cases for adding stuff to a catalog. Now I'm creating a frontend and spitballing some ideas
-for creating a mock of my book store webpage.
+Further modified the styling of the webpage. Added some mock pictures. I want to create a multi-line title, each
+title line is limited to 22 characters, or simply just figure out some way to cut off excessively long titles
+so that the spans don't grow larger than the picture size. Probably requires some HTML/JS or CSS work.
 
-I'm going to implement some unit tests, so I can get a better idea of how to iteratively put together the correct
-layout that I want. I'm also going to experiment with some different HTML elements such that I can create a clean
-modern UI to display a catalog and extrapolate that to other pages.
-
-Next up, unit testing my frontend code (not the APIs).
+Next is to create a navbar which allows us to navigate the store. I want each book in the catalog to re-direct to the
+store and allow you to add them to the cart. I think I might end my work at the catalog. I want to begin working on
+some sort of blog page and finally actually build out the portfolio which links to either of these projects along
+with my personal experience.
