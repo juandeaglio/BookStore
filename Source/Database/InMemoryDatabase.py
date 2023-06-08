@@ -16,7 +16,9 @@ class InMemoryDatabase(DatabaseConnection):
             return None
 
     def selectAll(self):
-        self.books = sorted(self.books, key=lambda book: book.title)
+        self.books = sorted(self.books,
+                            key=lambda book: book.title if "The" not in book.title[0:4]
+                            else book.title[4:])
         return self.books
 
     def delete(self, entry):

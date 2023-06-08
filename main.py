@@ -13,7 +13,15 @@ from Source.SocketServer.SimpleSocketServer import SimpleSocketServer
 def sendRestFromClientHandleRestWithServer(name):
     books = [Book('The Hunger Games', 'Suzanne Collins', '2008'),
              Book('Harry Potter and the Sorcerer\'s Stone', 'J.K. Rowling', '1998'),
-             Book('To Kill a Mockingbird', 'Harper Lee', '1960')]
+             Book('To Kill a Mockingbird', 'Harper Lee', '1960'),
+             Book('The Lord of the Rings', 'J.R.R. Tolkien', '1954'),
+             Book('The Great Gatsby', 'F. Scott Fitzgerald', '1925'),
+             Book('Price and Prejudice', 'Jane Austen', '1813'),
+             Book('Oedipus Rex (The Theban Plays, #1)', 'Sophocles', '1956'),
+             Book('Moby-Dick', 'Herman Melville', '1851'),
+             Book('The Adventures of Tom Sawyer', 'Mark Twain', '1876'),
+             Book('The Canterbury Tales', 'Geoffrey Chaucer', '1392'),
+             Book('Frankenstein: The 1818 Text', 'Mary Wollstonecraft Shelley', '1818')]
     defaultPort = 8091
     catalog = InMemoryCatalog()
     catalog.add(books)

@@ -41,6 +41,8 @@ class TestCatalog(unittest.TestCase):
     def test_catalogBooksAreSorted(self):
         self.catalog.add(self.books)
         expectedSorted = [self.books[1], self.books[0], self.books[2]]
+        print(expectedSorted[0].title, expectedSorted[1].title, expectedSorted[2].title)
+        print(self.catalog.getAllBooks()[0].title, self.catalog.getAllBooks()[1].title, self.catalog.getAllBooks()[2].title)
         assert expectedSorted == self.catalog.getAllBooks()
 
 

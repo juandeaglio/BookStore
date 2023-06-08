@@ -5,64 +5,72 @@
     </head>
 
     <body>
-        <div class="Navigaton">
+        <div class="nav top-nav">
             <ul>
-                <li>Catalog</li>
-                <li>Store</li>
-                <li>About</li>
+                <li><a href="google.com">Catalog</a></li>
+                <li><a href="google.com">Store</a></li>
+                <li><a href="google.com">About</a></li>
+                <span class="branding">
+                    Book Haven
+                </span>
             </ul>
+            <div class="content-header category">
+                Classic Top Sellers
+            </div>
         </div>
-        <div id="testTableBody" class="container">
+
+        <div class="container table">
             <!-- Cards will be dynamically added here -->
         </div>
     </body>
 </html>
 
 <script>
-    function constructbottomHalfCard(elements)
+    function constructBottomHalfCard(elements)
     {
         let bottomHalf = [];
         headers = ["title", "author", "release-year"]
         for(let i = 0; i < elements.length; i++)
         {
             var div = document.createElement("div");
-
-            div.innerHTML = elements[i]
-            bottomHalf.push(div);
-            if (i < elements.length-3)
+            if (headers[i] == "title")
             {
-                div.classList.add("card-" + headers[0])
-                div.id = headers[0] + i
+                if (elements[i].length > 20)
+                    div.innerHTML = elements[i].substring(0,20) + "...";
+                else
+                    div.innerHTML = elements[i]
             }
             else
             {
-                div.classList.add("card-" + headers[i])
+                div.innerHTML = elements[i];
             }
+            bottomHalf.push(div);
+            div.classList.add("card-" + headers[i])
         }
         return bottomHalf;
     }
-    function loadTableData(items)
+    function buildTable(items)
     {
-        const table = document.getElementById("testTableBody");
+        const table = document.getElementsByClassName("table")[0];
         items.forEach( line =>
         {
             let wholeCard = document.createElement("span");
-            let bottomHalf = document.createElement("span");
+            let bottomHalf = document.createElement("div");
             bottomHalf.classList.add("card-bottom");
             bookAttributes = line.split(",");
-            constructbottomHalfCard(bookAttributes).forEach( div =>
+            constructBottomHalfCard(bookAttributes).forEach( div =>
             {
                 bottomHalf.appendChild(div);
             });
-            topHalf = document.createElement("span");
+            topHalf = document.createElement("div");
             let img = document.createElement("img");
             img.src = "file:///D:/PyCharmProjs/BookStore/Acceptance/"+bookAttributes[0]+".jpg";
             img.alt = "Book cover title";
-            img.class = "card-book-cover";
+            img.classList.add("card-book-cover");
             topHalf.appendChild(img);
             topHalf.classList.add("card-top");
-            wholeCard.appendChild(bottomHalf);
             wholeCard.appendChild(topHalf);
+            wholeCard.appendChild(bottomHalf);
             wholeCard.classList.add("card");
             table.appendChild(wholeCard);
         });
@@ -73,7 +81,7 @@
         fetch("http://127.0.0.1:8091/").then(response => response.text()).then((text) =>
         {
             console.log(text.split("\n"));
-            loadTableData(text.split("\n"));
+            buildTable(text.split("\n"));
         })
         .catch(error => {
             console.error('Error:', error);
