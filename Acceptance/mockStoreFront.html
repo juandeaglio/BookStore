@@ -56,87 +56,10 @@
                     </div>
                 </span>
             <div class="content-header category">
-                Classic Top Sellers
+                Books For Sale
             </div>
         </div>
 
 
-        <div class="container table">
-            <!-- Cards will be dynamically added here -->
-        </div>
     </body>
 </html>
-
-
-<script>
-    function constructBottomHalfCard(elements)
-    {
-        let bottomHalf = [];
-        headers = ["title", "author", "release-year"]
-        for(let i = 0; i < elements.length; i++)
-        {
-            var div = document.createElement("div");
-            if (headers[i] == "title")
-            {
-                if (elements[i].length > 20)
-                    div.innerHTML = elements[i].substring(0,20) + "...";
-                else
-                    div.innerHTML = elements[i]
-            }
-            else
-            {
-                div.innerHTML = elements[i];
-            }
-            bottomHalf.push(div);
-            div.classList.add("card-" + headers[i])
-        }
-        return bottomHalf;
-    }
-    function buildTable(items)
-    {
-        const table = document.getElementsByClassName("table")[0];
-        items.forEach( line =>
-        {
-            let wholeCard = document.createElement("span");
-            let bottomHalf = document.createElement("div");
-            bottomHalf.classList.add("card-bottom");
-            bookAttributes = line.split(",");
-            constructBottomHalfCard(bookAttributes).forEach( div =>
-            {
-                bottomHalf.appendChild(div);
-            });
-            topHalf = document.createElement("div");
-            let img = document.createElement("img");
-            img.src = "file:///D:/PyCharmProjs/BookStore/Acceptance/bookImages/"+bookAttributes[0]+".jpg";
-            img.alt = "Book cover title";
-            img.classList.add("card-book-cover");
-            let btn = document.createElement("button");
-            btn.innerHTML = "add to cart";
-            btn.classList.add("card-add-to-cart-button");
-            topHalf.appendChild(img);
-            topHalf.appendChild(btn);
-            topHalf.classList.add("card-top");
-            wholeCard.appendChild(topHalf);
-            wholeCard.appendChild(bottomHalf);
-            wholeCard.classList.add("card");
-            table.appendChild(wholeCard);
-        });
-    }
-    async function getCatalog()
-    {
-        let data = "";
-        fetch("http://127.0.0.1:8091/").then(response => response.text()).then((text) =>
-        {
-            console.log(text.split("\n"));
-            buildTable(text.split("\n"));
-        })
-        .catch(error => {
-            console.error('Error:', error);
-        });
-    }
-    function start()
-    {
-        getCatalog();
-    }
-    let data = start();
-</script>

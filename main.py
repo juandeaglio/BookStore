@@ -25,6 +25,23 @@ def sendRestFromClientHandleRestWithServer(name):
     defaultPort = 8091
     catalog = InMemoryCatalog()
     catalog.add(books)
+    booksArr = []
+    with open("books/books.txt") as books:
+        i = 0
+        for line in books:
+            line = line.strip()
+            if i % 4 == 0:
+                title = line
+            elif i % 4 == 2:
+                author = line
+            elif i % 4 == 3:
+                releaseYear = line
+            i += 1
+            if i % 4 == 0:
+                booksArr.append(Book(title, author, releaseYear))
+
+    catalog.add(booksArr)
+
     service = HTTPSocketService(catalog)
     server = SimpleSocketServer(service=service, port=defaultPort)
     server.start()
