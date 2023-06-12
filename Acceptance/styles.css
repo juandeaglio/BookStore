@@ -1,0 +1,224 @@
+*{
+    font-family: Montserrat;
+}
+html, body {
+    margin: 0;
+    padding: 0;
+    background-color: #fff;
+}
+
+.nav{
+    margin: 0;
+    padding: 0;
+    color: #fff;
+}
+
+.top-nav{
+    width: 100%;
+    text-align: left;
+    margin: 0;
+}
+
+.nav ul {
+    margin-top:1%;
+}
+.nav li{
+    display: inline;
+    margin: 10px;
+    font-size: 2vw;
+    font-weight: lighter;
+    padding: 0.2em;
+}
+.nav li:hover
+{
+    background-color: rgba(255,255,255,0.3)
+}
+.nav a{
+    text-decoration: none;
+    color: #555;
+    font-weight: lighter;
+}
+.branding{
+    position: absolute;
+    right: 0;
+    font-size: 2vw;
+    font-weight: lighter;
+    text-align:right;
+    width: 30vw;
+    height: 5vw;
+}
+.business-name
+{
+    color:#555;
+    font-weight: bold;
+    font-style: italic;
+}
+.container.logo{
+    margin-top: 0;
+    justify-content: center;
+    padding: 0;
+    background-color: transparent;
+}
+.logo
+{
+    font-size: 2vw;
+    text-align: center;
+}
+.cart{
+    float: right
+}
+.cart-box {
+    margin-top:5vw;
+    display: inline-block;
+    flex-direction: column;
+    width:auto;
+    height:auto;
+    background-color: rgba(225, 225, 225, 0.5);
+    border-radius: 5%;
+    box-shadow: 1px 2px 8px 4px #a2a2a2;
+}
+.container.checkout
+{
+    right: 0;
+    bottom: 0;
+    padding: 0;
+    background-color: transparent;
+}
+.cart-item-line
+{
+    display:block;
+    box-sizing:border-box;
+    margin: 10px;
+}
+.cart-item-title
+{
+    margin-right: 0;
+    margin-top: auto;
+    margin-bottom: auto;
+}
+.cart-item-line img
+{
+    object-fit: cover;
+    width:7vw;
+    height:7vw;
+    margin:5px;
+    margin-right: 0;
+}
+.cart-order-information
+{
+    text-align: right;
+    right: 0;
+    bottom: 3vw;
+    color:#000;
+    font-size: 1vw;
+    font-weight: bold;
+}
+
+.cart-checkout{
+    float:right;
+    border-radius: 15%;
+    font-size: 0.95vw;
+    font-weight: bold;
+    padding: 0;
+    border-color: transparent;
+    background-color: rgba(255, 100, 00, 0.9);
+    cursor: pointer;
+}
+.cart-checkout:hover{
+    background-color: rgba(200,225,255,0.6);
+    cursor:pointer;
+}
+.content-header{
+    color: #555;
+    text-align: center;
+    margin-top: 2%;
+    margin-bottom: 1%;
+    font-size: 2vw;
+    font-weight: lighter;
+}
+
+.container {
+    background-color: #222222;
+    max-width: 70%;
+    padding: 0 0% 0%;
+    margin: 0 auto;
+}
+.table
+{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-content: center;
+    background-color: rgba(240,240,240,0.8);
+    box-shadow: 1px 2px 8px 4px #a2a2a2;
+}
+/* Apply "card" styling to each table row */
+.card {
+    display: flex;
+    flex-direction: column;
+    width: fit-content;
+    border: 5px solid;
+    background-color: #222222;
+    border-color: #222222;
+    margin: 10px;
+    border-radius: 8px;
+}
+
+/* Calculate the max height based on half of the width */
+.card:before {
+    content: "";
+    display: block;
+}
+
+/* Left side (title, author, release year) */
+.card-bottom {
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    text-align: center;
+    color: #bbb;
+    height: auto;
+    margin: 0.5em;
+    font-size: 0.9vw;
+}
+
+/* Title styling */
+.card-title {
+    font-size: 0.8vw;
+    font-weight: bold;
+}
+.card-author
+{
+    font-size: 0.6vw;
+}
+.card-release-year
+{
+    font-size: 0.6vw;
+}
+
+/* Right side (book cover) */
+.card-top {
+    display: flex;
+    align-self: center;
+    margin: 0;
+}
+
+/* Book cover styling */
+.card-book-cover {
+    object-fit: cover;
+    width: 10vw;
+    height: 10vw;
+    margin: 0;
+    border-radius: 5%;
+}
+.card-add-to-cart-button button{
+    position: absolute;
+    top: 0;
+    left: 0;
+    opacity:0;
+}
+
+.card-top:hover .card-add-to-cart-button{
+    opacity: 1;
+    padding: 5;
+}

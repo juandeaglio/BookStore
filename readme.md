@@ -1,3 +1,5 @@
+![alt text](http://url/to/img.png)
+
 # Commands you can run in base project directory:
 ## To run behave tests:
 behave .\Acceptance\BookStore\ --no-capture --no-capture-stderr #this just spits everything out to terminal)\
