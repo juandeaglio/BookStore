@@ -5,6 +5,7 @@ import requests
 from Acceptance.MockWebPage.TestRestClient import TestRestClient
 from Source.Book import Book
 from Source.Catalog.InMemoryCatalog import InMemoryCatalog
+from Source.Response import Response
 from Source.Server.Services.HTTPSocketService import HTTPSocketService
 from Source.Server.SimpleSocketServer import SimpleSocketServer
 from Unit.TestClientSocket import TestClientSocket
@@ -26,13 +27,11 @@ class RestSocketTest(unittest.TestCase):
         self.server.stop()
 
     def test_sendAndReceiveData(self):
-        expectedHTTP = bytes("HTTP/1.1 200 OK\n" + "Access-Control-Allow-Origin: *\n" + "Content-Type: text/plain\n"
-                             + "Content-Length: " +
-                             str(len(self.catalog.toString())) + "\n" +
-                             "\n" + self.catalog.toString(), "UTF-8")
+        expectedHTTP = Response(body=self.catalog.toString())
         self.service.serve(TestClientSocket())
         responseData = self.service.lastResponse
-        assert expectedHTTP == responseData
+        actualResponse = Response(raw=responseData)
+        assert expectedHTTP.body == actualResponse.body
 
     def test_sendRequestWhileClosing(self):
         self.server.stop()

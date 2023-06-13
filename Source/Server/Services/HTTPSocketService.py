@@ -25,6 +25,7 @@ class HTTPSocketService(SocketService):
         clientSocket.close()
 
         self.connections += 1
+        return
 
     def discardRequest(self, clientSocket):
         page = ""
