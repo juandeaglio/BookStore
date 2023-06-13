@@ -31,7 +31,7 @@ class RestSocketTest(unittest.TestCase):
         self.service.serve(TestClientSocket())
         responseData = self.service.lastResponse
         actualResponse = Response(raw=responseData)
-        assert expectedHTTP.body == actualResponse.body
+        assert expectedHTTP == actualResponse
 
     def test_sendRequestWhileClosing(self):
         self.server.stop()
