@@ -3,9 +3,9 @@ import string
 import unittest
 import concurrent.futures
 
-from Source.SocketServer.Services.ClosingSocketService import ClosingSocketService
-from Source.SocketServer.SimpleSocketServer import SimpleSocketServer
-from Source.SocketServer.Services.EchoSocketService import EchoSocketService
+from Source.Server.Services.ClosingSocketService import ClosingSocketService
+from Source.Server.SimpleSocketServer import SimpleSocketServer
+from Source.Server.Services.EchoSocketService import EchoSocketService
 from Unit.Client import Client
 
 

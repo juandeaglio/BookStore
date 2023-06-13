@@ -1,8 +1,10 @@
 import socket
 import threading
 
+from Source.Interfaces.Server import Server
 
-class SimpleSocketServer:
+
+class SimpleSocketServer(Server):
     def __init__(self, port=8091, service=None):
         self.isServing = False
         self.clientThreads = []

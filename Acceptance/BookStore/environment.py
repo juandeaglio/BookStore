@@ -1,7 +1,7 @@
-from Source.SocketServer.Services.HTTPSocketService import HTTPSocketService
+from Source.Server.Services.HTTPSocketService import HTTPSocketService
 from Source.Catalog.PersistentCatalog import PersistentCatalog
 from Source.Database.SqlDatabase import SqlDatabase
-from Source.SocketServer.SimpleSocketServer import SimpleSocketServer
+from Source.Server.SimpleSocketServer import SimpleSocketServer
 
 
 def before_scenario(context, scenario):

@@ -5,8 +5,8 @@ import requests
 from Acceptance.MockWebPage.TestRestClient import TestRestClient
 from Source.Book import Book
 from Source.Catalog.InMemoryCatalog import InMemoryCatalog
-from Source.SocketServer.Services.HTTPSocketService import HTTPSocketService
-from Source.SocketServer.SimpleSocketServer import SimpleSocketServer
+from Source.Server.Services.HTTPSocketService import HTTPSocketService
+from Source.Server.SimpleSocketServer import SimpleSocketServer
 from Unit.TestClientSocket import TestClientSocket
 
 
