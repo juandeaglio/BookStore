@@ -63,6 +63,7 @@ class Response:
         self.statusCode.number = int(startLine.split(" ")[1])
         self.statusCode.message = startLine.split(" ")[1] + " " + startLine.split(" ")[2]
 
+    #TODO: Write a better test.
     def __eq__(self, other):
         if self.body == other.body:
             return True

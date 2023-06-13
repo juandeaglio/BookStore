@@ -26,11 +26,21 @@ class RestSocketTest(unittest.TestCase):
     def tearDown(self):
         self.server.stop()
 
+    def test_sendAndReceiveDataBytesOnly(self):
+        expectedHTTP = bytes("HTTP/1.1 200 OK\n" + "Access-Control-Allow-Origin: *\n" + "Content-Type: text/plain\n"
+                             + "Content-Length: " +
+                             str(len(self.catalog.toString())) + "\n" +
+                             "\n" + self.catalog.toString(), "UTF-8")
+        self.service.serve(TestClientSocket())
+        responseData = self.service.lastResponse
+        assert expectedHTTP == responseData
+
     def test_sendAndReceiveData(self):
         expectedHTTP = Response(body=self.catalog.toString())
         self.service.serve(TestClientSocket())
         responseData = self.service.lastResponse
         actualResponse = Response(raw=responseData)
+        # TODO: Write a better test. (only tests body)
         assert expectedHTTP == actualResponse
 
     def test_sendRequestWhileClosing(self):
