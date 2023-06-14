@@ -30,17 +30,31 @@ class Response:
         if isinstance(params, dict):
             self.responseHeaders = params
 
+    def parseWithoutStringIO(self, httpData):
+        startLine = httpData.strip()
+        self.setVersion(startLine)
+        self.setStatusCode(startLine)
     def parseRaw(self, rawBytes):
         if isinstance(rawBytes, bytes):
-            stringLines = io.StringIO(rawBytes.decode("UTF-8"))
-            startLine = stringLines.readline()
-            self.setVersion(startLine)
-            self.setStatusCode(startLine)
-            bodyHeadersLine = self.parseRequestHeaders(stringLines)
-            body = self.parseResponseHeaders(bodyHeadersLine, stringLines)
+            stringIOResponse = io.StringIO(rawBytes.decode("UTF-8"))
+            httpData = self.convertToStringArray(io.StringIO(rawBytes.decode("UTF-8")))
+            self.parseWithoutStringIO(httpData)
+            stringIOResponse.readline()
+            bodyHeadersLine = self.stringsToDictionary(stringIOResponse)
+            body = self.parseResponseHeaders(bodyHeadersLine, stringIOResponse)
             self.parseContentLength(body)
-            assert stringLines.readline() == '\n'
-            self.parseBody(stringLines.read())
+            assert stringIOResponse.readline() == '\n'
+            self.parseBody(stringIOResponse.read())
+
+    def convertToStringArray(self, stringIOResponse):
+        return stringIOResponse.readline()
+
+    def stringsToDictionary(self, byteData):
+        requestHeadersLine = byteData.readline().strip()
+        while "Content" not in requestHeadersLine:
+            requestHeadersLine = self.parseLineIntoHeader(byteData, requestHeadersLine, self.requestHeaders)
+
+        return requestHeadersLine
 
     def parseBody(self, data):
         self.body = data
@@ -55,12 +69,6 @@ class Response:
 
         return bodyHeadersLine
 
-    def parseRequestHeaders(self, byteData):
-        requestHeadersLine = byteData.readline().strip()
-        while "Content" not in requestHeadersLine:
-            requestHeadersLine = self.parseLineIntoHeader(byteData, requestHeadersLine, self.requestHeaders)
-
-        return requestHeadersLine
 
     @staticmethod
     def parseLineIntoHeader(byteData, requestHeadersLine, headers):
@@ -81,3 +89,4 @@ class Response:
         return self.body == other.body and self.responseHeaders == other.responseHeaders and \
                self.requestHeaders == other.requestHeaders and self.version == other.version and \
                self.statusCode == other.statusCode
+
