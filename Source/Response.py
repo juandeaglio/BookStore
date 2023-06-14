@@ -12,20 +12,33 @@ class StatusCode:
 
 class Response:
     def __init__(self, body=None, raw=None, start=None, requestParams=None, responseParams=None):
-        self.requestHeaders = {} if requestParams is None else requestParams
-        self.responseHeaders = {} if responseParams is None else responseParams
+        self.responseHeaders = {}
+        self.requestHeaders = {}
+        self.setRequestHeader(requestParams)
+        self.setResponseHeader(responseParams)
         self.version = None
         self.statusCode = StatusCode()
         self.body = ""
+
         if raw is not None:
             self.parseRaw(raw)
         if body is not None:
             self.body = body
-            content = str(self.responseHeaders)
-            self.responseHeaders['Content-Length'] = "157"
+            
+        self.responseHeaders['Content-Length'] = str(len(self.body))
+
         if start is not None:
             self.parseStartLine(start)
 
+    def setRequestHeader(self, params):
+        self.requestHeaders = {}
+        if isinstance(params, dict):
+            self.requestHeaders = params
+
+    def setResponseHeader(self, params):
+        self.responseHeaders = {}
+        if isinstance(params, dict):
+            self.responseHeaders = params
 
     def parseRaw(self, rawBytes):
         byteData = io.StringIO(rawBytes.decode("UTF-8"))
