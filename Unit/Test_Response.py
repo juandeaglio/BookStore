@@ -24,10 +24,18 @@ class ResponseTest(unittest.TestCase):
 
         assert response.statusCode == expectedStatusCode
 
+    def test_responseWithRequestParameters(self):
+        response = Response(requestParams={"cors": "*"})
+        assert response.requestHeaders['cors'] == "*"
+
+    def test_responseWithResponseParameters(self):
+        response = Response(responseParams={"cors": "*"})
+        assert response.responseHeaders['cors'] == "*"
+
     def test_differentResponsesNotEqual(self):
         response1 = Response(start="HTTP/2.1 404 NOT FOUND", body="Hello1234", requestParams={"cors": "*"},
                              responseParams={"content-type": "json"})
-        response2 = Response(start="HTTP/1.1 200 OK", body="Hello123", requestParams={"cors":"none"},
+        response2 = Response(start="HTTP/1.1 200 OK", body="Hello123", requestParams={"cors": "none"},
                     responseParams={"content-type": "plaintext"})
 
         assert response1 != response2

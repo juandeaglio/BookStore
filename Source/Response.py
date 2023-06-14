@@ -11,11 +11,12 @@ class StatusCode:
 
 
 class Response:
-    def __init__(self, body=None, raw=None, start=None):
-        self.requestHeaders = {"Access-Control-Allow-Origin": ""}
-        self.responseHeaders = {"Content-Type": "", "Content-Length": 0}
+    def __init__(self, body=None, raw=None, start=None, requestParams={}, responseParams={}):
+        self.requestHeaders = requestParams
+        self.responseHeaders = responseParams
         self.version = None
         self.statusCode = StatusCode()
+        self.contentLength = 0
         self.body = ""
         if raw is not None:
             self.parseRaw(raw)
@@ -58,7 +59,7 @@ class Response:
     @staticmethod
     def parseLineIntoHeader(byteData, requestHeadersLine, headers):
         header = requestHeadersLine.split(":")
-        headers[header[0]] = header[1]
+        headers[header[0].strip()] = header[1].strip()
         requestHeadersLine = byteData.readline().strip()
         return requestHeadersLine
 
@@ -68,9 +69,7 @@ class Response:
         self.statusCode.number = int(startLine.split(" ")[1])
         self.statusCode.message = startLine.split(" ")[1] + " " + startLine.split(" ")[2]
 
-
-    #TODO: Write a better test.
     def __eq__(self, other):
-        if self.body == other.body:
-            return True
-        return False
+        return self.body == other.body and self.responseHeaders == other.responseHeaders and \
+               self.requestHeaders == other.requestHeaders and self.version == other.version and \
+               self.statusCode == other.statusCode and self.contentLength == other.contentLength
