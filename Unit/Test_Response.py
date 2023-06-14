@@ -1,6 +1,6 @@
 import unittest
 from Source.Response import Response
-from Source.Response import StatusCode
+from Source.StatusCode import StatusCode
 
 
 class ResponseTest(unittest.TestCase):
@@ -17,38 +17,28 @@ class ResponseTest(unittest.TestCase):
 
         assert response1 != response2
 
+
+class RawResponseTest(unittest.TestCase):
+    def setUp(self) -> None:
+        self.bytesResponse = Response(raw=bytes("HTTP/1.1 200 OK\n" + "Access-Control-Allow-Origin: *\n"
+                                                + "Content-Type: text/plain\n" + "Content-Length: "
+                                                + str(len("hello")) + "\n" + "\n" + "hello", "UTF-8"))
     def test_rawHasSameVersion(self):
-        bytesResponse = Response(raw=bytes("HTTP/1.1 200 OK\n" + "Access-Control-Allow-Origin: *\n"
-                                           + "Content-Type: text/plain\n" + "Content-Length: " + str(len("hello")) +
-                                           "\n" + "\n" + "hello", "UTF-8"))
         regularResponse = Response(start="HTTP/1.1 200 OK")
 
-        assert regularResponse.statusCode == bytesResponse.statusCode
-        assert regularResponse.version == bytesResponse.version
+        assert regularResponse.statusCode == self.bytesResponse.statusCode
+        assert regularResponse.version == self.bytesResponse.version
 
     def test_rawHasSameRequestParameters(self):
-        bytesResponse = Response(raw=bytes("HTTP/1.1 200 OK\n" + "Access-Control-Allow-Origin: *\n"
-                                           + "Content-Type: text/plain\n" + "Content-Length: " + str(len("hello")) +
-                                           "\n" + "\n" + "hello", "UTF-8"))
         regularResponse = Response(requestParams={"Access-Control-Allow-Origin": "*"})
-
-        assert regularResponse.requestHeaders == bytesResponse.requestHeaders
+        assert regularResponse.requestHeaders == self.bytesResponse.requestHeaders
 
     def test_rawHasSameResponseParameters(self):
-        bytesResponse = Response(raw=bytes("HTTP/1.1 200 OK\n" + "Access-Control-Allow-Origin: *\n"
-                                           + "Content-Type: text/plain\n" + "Content-Length: " + str(len("hello")) +
-                                           "\n" + "\n" + "hello", "UTF-8"))
         regularResponse = Response(responseParams={"Content-Type": "text/plain"}, body="Hello")
-
-        assert regularResponse.responseHeaders == bytesResponse.responseHeaders
+        assert regularResponse.responseHeaders == self.bytesResponse.responseHeaders
 
     def test_rawHasSameBody(self):
-        bytesResponse = Response(raw=bytes("HTTP/1.1 200 OK\n" + "Access-Control-Allow-Origin: *\n"
-                                           + "Content-Type: text/plain\n" + "Content-Length: " + str(len("hello")) +
-                                           "\n" + "\n" + "hello", "UTF-8"))
         regularResponse = Response(body="hello")
 
-        assert regularResponse.body == bytesResponse.body
-        assert regularResponse.responseHeaders['Content-Length'] == bytesResponse.responseHeaders['Content-Length']
-
-
+        assert regularResponse.body == self.bytesResponse.body
+        assert regularResponse.responseHeaders['Content-Length'] == self.bytesResponse.responseHeaders['Content-Length']

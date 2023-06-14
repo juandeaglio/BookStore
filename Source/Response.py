@@ -1,13 +1,6 @@
 import io
 
-
-class StatusCode:
-    def __init__(self):
-        self.number = -1
-        self.message = ""
-
-    def __eq__(self, other):
-        return self.number == other.number and self.message == other.message
+from Source.StatusCode import StatusCode
 
 
 class Response:
@@ -20,15 +13,12 @@ class Response:
         self.statusCode = StatusCode()
         self.body = ""
 
-        if raw is not None:
-            self.parseRaw(raw)
+        self.parseRaw(raw)
         if body is not None:
             self.body = body
-            
         self.responseHeaders['Content-Length'] = str(len(self.body))
-
-        if start is not None:
-            self.parseStartLine(start)
+        self.setVersion(start)
+        self.setStatusCode(start)
 
     def setRequestHeader(self, params):
         self.requestHeaders = {}
@@ -41,13 +31,16 @@ class Response:
             self.responseHeaders = params
 
     def parseRaw(self, rawBytes):
-        byteData = io.StringIO(rawBytes.decode("UTF-8"))
-        self.parseStartLine(byteData.readline())
-        bodyHeadersLine = self.parseRequestHeaders(byteData)
-        body = self.parseResponseHeaders(bodyHeadersLine, byteData)
-        self.parseContentLength(body)
-        assert byteData.readline() == '\n'
-        self.parseBody(byteData.read())
+        if isinstance(rawBytes, bytes):
+            stringLines = io.StringIO(rawBytes.decode("UTF-8"))
+            startLine = stringLines.readline()
+            self.setVersion(startLine)
+            self.setStatusCode(startLine)
+            bodyHeadersLine = self.parseRequestHeaders(stringLines)
+            body = self.parseResponseHeaders(bodyHeadersLine, stringLines)
+            self.parseContentLength(body)
+            assert stringLines.readline() == '\n'
+            self.parseBody(stringLines.read())
 
     def parseBody(self, data):
         self.body = data
@@ -76,11 +69,13 @@ class Response:
         requestHeadersLine = byteData.readline().strip()
         return requestHeadersLine
 
-    def parseStartLine(self, text):
-        startLine = text.strip()
-        self.version = startLine.split(" ")[0]
-        self.statusCode.number = int(startLine.split(" ")[1])
-        self.statusCode.message = startLine.split(" ")[1] + " " + startLine.split(" ")[2]
+    def setVersion(self, text):
+        if isinstance(text, str):
+            self.version = text.split(" ")[0]
+
+    def setStatusCode(self, text):
+        if isinstance(text, str):
+            self.statusCode = StatusCode(startLine=text.strip())
 
     def __eq__(self, other):
         return self.body == other.body and self.responseHeaders == other.responseHeaders and \
