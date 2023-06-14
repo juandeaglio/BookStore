@@ -9,13 +9,20 @@ class ResponseTest(unittest.TestCase):
         response2 = Response()
         assert response1 == response2
 
+    def test_responseWithVersion(self):
+        response = Response(start="HTTP/1.1 200 OK")
+        expectedVersion = "HTTP/1.1"
+
+        assert response.version == expectedVersion
+        
+
     def test_responseWithStatusCode(self):
         response = Response(start="HTTP/1.1 200 OK")
         expectedStatusCode = StatusCode()
         expectedStatusCode.message = "200 OK"
         expectedStatusCode.number = 200
 
-        assert response.statusCode == response.statusCode
+        assert response.statusCode == expectedStatusCode
 
     def test_differentResponsesNotEqual(self):
         response1 = Response(start="HTTP/2.1 404 NOT FOUND", body="Hello1234", requestParams={"cors": "*"},
