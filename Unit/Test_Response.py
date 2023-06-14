@@ -10,10 +10,8 @@ class ResponseTest(unittest.TestCase):
         assert response1 == response2
 
     def test_differentResponsesNotEqual(self):
-        response1 = Response(start="HTTP/2.1 404 NOT FOUND", body="Hello1234", requestParams={"cors": "*"},
-                             responseParams={"content-type": "json"})
-        response2 = Response(start="HTTP/1.1 200 OK", body="Hello123", requestParams={"cors": "none"},
-                             responseParams={"content-type": "plaintext"})
+        response1 = Response(start="HTTP/2.1 404 NOT FOUND", body="Hello1234", parameters={"cors": "*", "content-type": "json"})
+        response2 = Response(start="HTTP/1.1 200 OK", body="Hello123", parameters={"cors": "none", "content-type": "plaintext"})
 
         assert response1 != response2
 
@@ -29,16 +27,13 @@ class RawResponseTest(unittest.TestCase):
         assert regularResponse.statusCode == self.bytesResponse.statusCode
         assert regularResponse.version == self.bytesResponse.version
 
-    def test_rawHasSameRequestParameters(self):
-        regularResponse = Response(requestParams={"Access-Control-Allow-Origin": "*"})
-        assert regularResponse.requestHeaders == self.bytesResponse.requestHeaders
-
-    def test_rawHasSameResponseParameters(self):
-        regularResponse = Response(responseParams={"Content-Type": "text/plain"}, body="Hello")
-        assert regularResponse.responseHeaders == self.bytesResponse.responseHeaders
+    def test_rawHasSameParameters(self):
+        regularResponse = \
+            Response(parameters={"Access-Control-Allow-Origin": "*", "Content-Type": "text/plain"}, body="hello")
+        assert regularResponse.headers == self.bytesResponse.headers
 
     def test_rawHasSameBody(self):
         regularResponse = Response(body="hello")
 
         assert regularResponse.body == self.bytesResponse.body
-        assert regularResponse.responseHeaders['Content-Length'] == self.bytesResponse.responseHeaders['Content-Length']
+        assert regularResponse.headers['Content-Length'] == self.bytesResponse.headers['Content-Length']

@@ -4,11 +4,9 @@ from Source.StatusCode import StatusCode
 
 
 class Response:
-    def __init__(self, body=None, raw=None, start=None, requestParams=None, responseParams=None):
-        self.responseHeaders = {}
-        self.requestHeaders = {}
-        self.setRequestHeader(requestParams)
-        self.setResponseHeader(responseParams)
+    def __init__(self, body=None, raw=None, start=None, parameters=None):
+        self.headers = {}
+        self.setHeaders(parameters)
         self.version = None
         self.statusCode = StatusCode()
         self.body = ""
@@ -16,22 +14,17 @@ class Response:
         self.parseRaw(raw)
         if body is not None:
             self.body = body
-        self.responseHeaders['Content-Length'] = str(len(self.body))
+        self.headers['Content-Length'] = str(len(self.body))
         self.setVersion(start)
         self.setStatusCode(start)
 
-    def setRequestHeader(self, params):
-        self.requestHeaders = {}
+    def setHeaders(self, params):
+        self.headers = {}
         if isinstance(params, dict):
-            self.requestHeaders = params
-
-    def setResponseHeader(self, params):
-        self.responseHeaders = {}
-        if isinstance(params, dict):
-            self.responseHeaders = params
+            self.headers = params
 
     def parseWithoutStringIO(self, httpData):
-        startLine = httpData.strip()
+        startLine = httpData[0].strip()
         self.setVersion(startLine)
         self.setStatusCode(startLine)
     def parseRaw(self, rawBytes):
@@ -47,35 +40,35 @@ class Response:
             self.parseBody(stringIOResponse.read())
 
     def convertToStringArray(self, stringIOResponse):
-        return stringIOResponse.readline()
+        return stringIOResponse.readlines()
 
     def stringsToDictionary(self, byteData):
-        requestHeadersLine = byteData.readline().strip()
-        while "Content" not in requestHeadersLine:
-            requestHeadersLine = self.parseLineIntoHeader(byteData, requestHeadersLine, self.requestHeaders)
+        headersLine = byteData.readline().strip()
+        while "Content" not in headersLine:
+            headersLine = self.parseLineIntoHeader(byteData, headersLine, self.headers)
 
-        return requestHeadersLine
+        return headersLine
 
     def parseBody(self, data):
         self.body = data
-        assert len(data) == int(self.responseHeaders["Content-Length"])
+        assert len(data) == int(self.headers["Content-Length"])
 
     def parseContentLength(self, bodyHeadersLine):
-        self.responseHeaders[bodyHeadersLine.split(":")[0]] = bodyHeadersLine.split(":")[1].strip()
+        self.headers[bodyHeadersLine.split(":")[0]] = bodyHeadersLine.split(":")[1].strip()
 
     def parseResponseHeaders(self, bodyHeadersLine, byteData):
         while "Content-Length" not in bodyHeadersLine:
-            bodyHeadersLine = self.parseLineIntoHeader(byteData, bodyHeadersLine, self.responseHeaders)
+            bodyHeadersLine = self.parseLineIntoHeader(byteData, bodyHeadersLine, self.headers)
 
         return bodyHeadersLine
 
 
     @staticmethod
-    def parseLineIntoHeader(byteData, requestHeadersLine, headers):
-        header = requestHeadersLine.split(":")
+    def parseLineIntoHeader(byteData, headersLine, headers):
+        header = headersLine.split(":")
         headers[header[0].strip()] = header[1].strip()
-        requestHeadersLine = byteData.readline().strip()
-        return requestHeadersLine
+        headersLine = byteData.readline().strip()
+        return headersLine
 
     def setVersion(self, text):
         if isinstance(text, str):
@@ -86,7 +79,7 @@ class Response:
             self.statusCode = StatusCode(startLine=text.strip())
 
     def __eq__(self, other):
-        return self.body == other.body and self.responseHeaders == other.responseHeaders and \
-               self.requestHeaders == other.requestHeaders and self.version == other.version and \
+        return self.body == other.body and self.headers == other.headers and \
+               self.headers == other.headers and self.version == other.version and \
                self.statusCode == other.statusCode
 
