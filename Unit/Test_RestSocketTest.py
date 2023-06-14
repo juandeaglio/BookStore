@@ -36,11 +36,9 @@ class RestSocketTest(unittest.TestCase):
         assert expectedHTTP == responseData
 
     def test_sendAndReceiveData(self):
-        expectedHTTP = Response(raw=bytes("HTTP/1.1 200 OK\n" + "Access-Control-Allow-Origin: *\n" +
-                                          "Content-Type: text/plain\n" + "Content-Length: " +
-                                          str(len(self.catalog.toString())) + "\n" +
-                                          "\n" +
-                                          self.catalog.toString(), "UTF-8"))
+        expectedHTTP = Response(start="HTTP/1.1 200 OK", requestParams={"Access-Control-Allow-Origin": "*"},
+                                responseParams={"Content-Type": "text/plain"}, body=self.catalog.toString())
+
         self.service.serve(TestClientSocket())
         responseData = self.service.lastResponse
         actualResponse = Response(raw=responseData)

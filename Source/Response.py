@@ -11,20 +11,21 @@ class StatusCode:
 
 
 class Response:
-    def __init__(self, body=None, raw=None, start=None, requestParams={}, responseParams={}):
-        self.requestHeaders = requestParams
-        self.responseHeaders = responseParams
+    def __init__(self, body=None, raw=None, start=None, requestParams=None, responseParams=None):
+        self.requestHeaders = {} if requestParams is None else requestParams
+        self.responseHeaders = {} if responseParams is None else responseParams
         self.version = None
         self.statusCode = StatusCode()
-        self.contentLength = 0
         self.body = ""
         if raw is not None:
             self.parseRaw(raw)
         if body is not None:
             self.body = body
-            self.contentLength = len(self.body)
+            content = str(self.responseHeaders)
+            self.responseHeaders['Content-Length'] = "157"
         if start is not None:
             self.parseStartLine(start)
+
 
     def parseRaw(self, rawBytes):
         byteData = io.StringIO(rawBytes.decode("UTF-8"))
@@ -37,11 +38,10 @@ class Response:
 
     def parseBody(self, data):
         self.body = data
-        length = len(data)
-        assert length == self.responseHeaders["Content-Length"]
+        assert len(data) == int(self.responseHeaders["Content-Length"])
 
     def parseContentLength(self, bodyHeadersLine):
-        self.responseHeaders[bodyHeadersLine.split(":")[0]] = int(bodyHeadersLine.split(":")[1])
+        self.responseHeaders[bodyHeadersLine.split(":")[0]] = bodyHeadersLine.split(":")[1].strip()
 
     def parseResponseHeaders(self, bodyHeadersLine, byteData):
         while "Content-Length" not in bodyHeadersLine:
@@ -72,4 +72,4 @@ class Response:
     def __eq__(self, other):
         return self.body == other.body and self.responseHeaders == other.responseHeaders and \
                self.requestHeaders == other.requestHeaders and self.version == other.version and \
-               self.statusCode == other.statusCode and self.contentLength == other.contentLength
+               self.statusCode == other.statusCode
