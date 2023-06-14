@@ -6,9 +6,12 @@ class StatusCode:
         self.number = -1
         self.message = ""
 
+    def __eq__(self, other):
+        return self.number == other.number and self.message == other.message
+
 
 class Response:
-    def __init__(self, body=None, raw=None):
+    def __init__(self, body=None, raw=None, start=None):
         self.requestHeaders = {"Access-Control-Allow-Origin": ""}
         self.responseHeaders = {"Content-Type": "", "Content-Length": 0}
         self.version = None
@@ -19,19 +22,21 @@ class Response:
         if body is not None:
             self.body = body
             self.contentLength = len(self.body)
+        if start is not None:
+            self.parseStartLine(start)
 
     def parseRaw(self, rawBytes):
         byteData = io.StringIO(rawBytes.decode("UTF-8"))
-        self.parseStartLine(byteData)
+        self.parseStartLine(byteData.readline())
         bodyHeadersLine = self.parseRequestHeaders(byteData)
         body = self.parseResponseHeaders(bodyHeadersLine, byteData)
         self.parseContentLength(body)
         assert byteData.readline() == '\n'
-        self.parseBody(byteData)
+        self.parseBody(byteData.read())
 
-    def parseBody(self, byteData):
-        self.body = byteData.read()
-        length = len(self.body)
+    def parseBody(self, data):
+        self.body = data
+        length = len(data)
         assert length == self.responseHeaders["Content-Length"]
 
     def parseContentLength(self, bodyHeadersLine):
@@ -57,11 +62,12 @@ class Response:
         requestHeadersLine = byteData.readline().strip()
         return requestHeadersLine
 
-    def parseStartLine(self, byteData):
-        startLine = byteData.readline().strip()
+    def parseStartLine(self, text):
+        startLine = text.strip()
         self.version = startLine.split(" ")[0]
         self.statusCode.number = int(startLine.split(" ")[1])
         self.statusCode.message = startLine.split(" ")[1] + " " + startLine.split(" ")[2]
+
 
     #TODO: Write a better test.
     def __eq__(self, other):
