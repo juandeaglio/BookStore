@@ -5,6 +5,7 @@ from Source.Catalog.InMemoryCatalog import InMemoryCatalog
 from Source.Server.Services.HTTPSocketService import HTTPSocketService
 from Source.Server.SimpleSocketServer import SimpleSocketServer
 
+
 def sendRestFromClientHandleRestWithServer(name):
     books = [Book('The Hunger Games', 'Suzanne Collins', '2008'),
              Book('Harry Potter and the Sorcerer\'s Stone', 'J.K. Rowling', '1998'),

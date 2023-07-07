@@ -23,23 +23,23 @@
                         <span class="cart-order-information">
                             <div class="cart-item-line">
                                 <div class="cart-item-title">Frankenstein: The 18...</div>
-                                <img src="some item">
+                                <img src="some item" alt="Nothing">
                             </div>
                             <div class="cart-item-line">
                                 <div class="cart-item-title">The Great Gatsby</div>
-                                <img src="some item">
+                                <img src="some item" alt="Nothing">
                             </div>
                             <div class="cart-item-line">
                                 <div class="cart-item-title">Harry Potter and the...</div>
-                                <img src="some item">
+                                <img src="some item" alt="Nothing">
                             </div>
                             <div class="cart-item-line">
                                 <div class="cart-item-title">Price and Prejudice.</div>
-                                <img src="some item">
+                                <img src="some item" alt="Nothing">
                             </div>
                             <div class="cart-item-line">
                                 <div class="cart-item-title">To Kill a Mockingbir...</div>
-                                <img src="some item">
+                                <img src="some item" alt="Nothing">
                             </div>
                             <div class="cart-total-price">
                             <div class="cart-total-items">
@@ -125,7 +125,7 @@
     async function getCatalog()
     {
         let data = "";
-        fetch("http://127.0.0.1:8091/").then(response => response.text()).then((text) =>
+        fetch("http://127.0.0.1:8091/getCatalog").then(response => response.text()).then((text) =>
         {
             console.log(text.split("\n"));
             buildTable(text.split("\n"));

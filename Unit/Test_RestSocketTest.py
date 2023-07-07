@@ -11,6 +11,11 @@ from Source.Server.SimpleSocketServer import SimpleSocketServer
 from Unit.TestClientSocket import TestClientSocket
 
 
+class PageLoader:
+    def __init__(self, file):
+        self.htmlAsString = open(file, "r").read()
+
+
 class RestSocketTest(unittest.TestCase):
     def setUp(self) -> None:
         self.books = [Book("Harry Potter and the Sorcerer's Stone", "J.K. Rowling", "1999"),
@@ -26,21 +31,22 @@ class RestSocketTest(unittest.TestCase):
     def tearDown(self):
         self.server.stop()
 
-    def test_sendAndReceiveDataBytesOnly(self):
-        expectedHTTP = bytes("HTTP/1.1 200 OK\n" + "Access-Control-Allow-Origin: *\n" + "Content-Type: text/plain\n"
-                             + "Content-Length: " +
-                             str(len(self.catalog.toString())) + "\n" +
-                             "\n" + self.catalog.toString(), "UTF-8")
-        self.service.serve(TestClientSocket())
-        responseData = self.service.lastResponse
-        assert expectedHTTP == responseData
-
-    def test_sendAndReceiveData(self):
+    def test_sendAndReceiveCatalog(self):
         expectedHTTP = Response(start="HTTP/1.1 200 OK",
                                 parameters={"Access-Control-Allow-Origin": "*", "Content-Type": "text/plain"},
                                 body=self.catalog.toString())
 
-        self.service.serve(TestClientSocket())
+        self.service.serve(TestClientSocket("/getCatalog"))
+        responseData = self.service.lastResponse
+        actualResponse = Response(raw=responseData)
+        assert expectedHTTP == actualResponse
+
+    def test_sendAndReceiveAbout(self):
+        expectedHTTP = Response(start="HTTP/1.1 200 OK",
+                                parameters={"Access-Control-Allow-Origin": "*", "Content-Type": "text/html"},
+                                body=PageLoader("./Source/Static/about.html").htmlAsString)
+
+        self.service.serve(TestClientSocket("/about"))
         responseData = self.service.lastResponse
         actualResponse = Response(raw=responseData)
         assert expectedHTTP == actualResponse
