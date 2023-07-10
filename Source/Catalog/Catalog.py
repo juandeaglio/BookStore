@@ -23,3 +23,11 @@ class Catalog:
             catalog += book.title + "," + book.author + "," + book.releaseYear + '\n'
 
         return catalog
+
+    def getAllBooksJson(self):
+        jsonList = []
+        for book in self.getAllBooks():
+            jsonList.append(book.to_json())
+
+        return jsonList
+

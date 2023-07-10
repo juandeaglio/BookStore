@@ -15,3 +15,11 @@ class Book:
 
     def toString(self):
         return self.title + ", " + self.author + ", " + self.releaseYear
+
+    def to_json(self):
+        variableDictionary = {
+            "title": self.title,
+            "author": self.author,
+            "releaseYear": self.releaseYear
+        }
+        return variableDictionary

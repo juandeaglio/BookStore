@@ -24,12 +24,16 @@ def defineCatalog(context):
 def viewCatalog(context):
     response = TestRestClient.createClientThatGetsCatalog()
     context.booksInCatalog = convertContentToArray(response)
+    response = TestRestClient.createClientThatGetsCatalogAsJson()
+    context.jsonCatalog = convertContentToJson(response)
 
 
 @then('The entire catalog is displayed')
 def displayCatalog(context):
     books = convertTableToArray(context)
+    jsonBooks = convertTableToJson(context)
     assert arraysOfBooksAreTheSame(books, context.booksInCatalog)
+    assert jsonOfBooksAreSame(jsonBooks, context.jsonCatalog)
 
 
 # TODO re-do below tests to mimic above one.

@@ -1,7 +1,6 @@
 import unittest
 
 from Source.Book import Book
-from Source.BookStore import BookStore
 from Source.Catalog.InMemoryCatalog import InMemoryCatalog
 
 
@@ -15,6 +14,10 @@ class TestCatalog(unittest.TestCase):
     def test_getAllBooksInCatalog(self):
         self.catalog.add(self.books)
         assert len(self.catalog.getAllBooks()) == len(self.books)
+
+    def test_getAllBooksInCatalogAsJson(self):
+        self.catalog.add(self.books)
+        assert len(self.catalog.getAllBooksJson()) == len(self.books)
 
     def test_addBooksToCatalog(self):
         self.catalog.add(self.books)
