@@ -1,8 +1,11 @@
+import time
+
 from behave import given, when, then
 from Acceptance.BookStore.Steps.ContextTable import convertTableToArray
 from Acceptance.BookStore.Steps.HTTPContent import convertContentToArray
 from Source.Book import Book
 from Acceptance.MockWebPage.TestRestClient import TestRestClient
+from Source.Catalog.InMemoryCatalog import InMemoryCatalog
 
 
 def arraysOfBooksAreTheSame(books, booksInCatalog):
@@ -16,24 +19,33 @@ def arraysOfBooksAreTheSame(books, booksInCatalog):
 
 @given('A catalog')
 def defineCatalog(context):
+    print(context.catalog.getSizeOfCatalog())
     context.booksFromContext = convertTableToArray(context)
+    time.sleep(5)
     context.catalog.add(context.booksFromContext)
+    print(context.catalog.getSizeOfCatalog())
+
+
 
 
 @when('A user views the catalog')
 def viewCatalog(context):
-    response = TestRestClient.createClientThatGetsCatalog()
-    context.booksInCatalog = convertContentToArray(response)
     response = TestRestClient.createClientThatGetsCatalogAsJson()
-    context.jsonCatalog = convertContentToJson(response)
+    context.jsonCatalog = response
+    print(context.catalog.getSizeOfCatalog())
 
 
 @then('The entire catalog is displayed')
 def displayCatalog(context):
     books = convertTableToArray(context)
-    jsonBooks = convertTableToJson(context)
-    assert arraysOfBooksAreTheSame(books, context.booksInCatalog)
-    assert jsonOfBooksAreSame(jsonBooks, context.jsonCatalog)
+    fakeCatalog = InMemoryCatalog()
+    fakeCatalog.add(books)
+    books = fakeCatalog.getAllBooksJson()
+    jsonBooks = context.jsonCatalog
+    print(jsonBooks)
+    print('-------VS.--------')
+    print(books)
+    assert jsonBooks == books
 
 
 # TODO re-do below tests to mimic above one.

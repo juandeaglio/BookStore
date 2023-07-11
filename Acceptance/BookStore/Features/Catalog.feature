@@ -39,9 +39,9 @@ Feature: Book catalog
         |Harry Potter and the Sorcerer's Stone  |J.K. Rowling       |1998           |
         |To Kill a Mockingbird                  |Harper Lee         |1960           |
 
-    Scenario: Search the catalog by title and author
+    Scenario: Search the catalog by title or author
         Given A catalog
-        When A user searches for a word/author in search bar
+        When A user searches for a word or author in search bar
         Then Relevant results are displayed
 
     Scenario: Purchase books

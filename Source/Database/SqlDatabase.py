@@ -81,7 +81,7 @@ class SqlDatabase(DatabaseConnection):
         database = BooksToSql('catalog.db')
         parsedBook = self.replaceSingleQuoteWithDouble(book)
         query = 'SELECT title AS title, author AS author, releaseyear AS "releaseYear" FROM catalog ' \
-                'WHERE title=\'' + parsedBook.title + '\' AND author=\'' + parsedBook.author + '\' AND releaseyear=\'' \
+                'WHERE title LIKE \'%' + parsedBook.title + '%\' AND author=\'' + parsedBook.author + '\' AND releaseyear=\'' \
                 + parsedBook.releaseYear + '\''
 
         return database.queryCatalogBySQL(query)
@@ -93,10 +93,11 @@ class SqlDatabase(DatabaseConnection):
 
     def replaceSingleQuoteWithDouble(self, entry):
         # SQL requirement for single quote character ' in field.
+        newEntry = entry
         if "'" in entry.title and "''" not in entry.title:
-            entry.title = re.sub("'", "''", entry.title)
+            newEntry.title = re.sub("'", "''", entry.title)
 
-        return entry
+        return newEntry
 
     def insertQuery(self, title, author, releaseYear):
         database = BooksToSql('catalog.db')

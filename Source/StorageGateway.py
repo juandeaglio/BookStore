@@ -6,9 +6,6 @@ class StorageGateway:
         if isinstance(databasePipe, DatabaseConnection):
             self.dbConnection = databasePipe
 
-    def save(self, books):
-        return self.dbConnection.insertBooksIntoCatalogTable(books)
-
     def fetchBooksFromDatabase(self):
         return self.dbConnection.selectAll()
 
@@ -25,7 +22,8 @@ class StorageGateway:
                 self.addUniqueEntry(entry)
 
     def addUniqueEntry(self, entry):
-        if not self.dbConnection.select(entry):
+        result = self.dbConnection.select(entry)
+        if not result:
             self.dbConnection.insertBooksIntoCatalogTable([entry])
 
     def doesBookExist(self, entry):
