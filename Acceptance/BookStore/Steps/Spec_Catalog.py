@@ -19,11 +19,8 @@ def arraysOfBooksAreTheSame(books, booksInCatalog):
 
 @given('A catalog')
 def defineCatalog(context):
-    print(context.catalog.getSizeOfCatalog())
     context.booksFromContext = convertTableToArray(context)
-    time.sleep(5)
     context.catalog.add(context.booksFromContext)
-    print(context.catalog.getSizeOfCatalog())
 
 
 
@@ -32,7 +29,6 @@ def defineCatalog(context):
 def viewCatalog(context):
     response = TestRestClient.createClientThatGetsCatalogAsJson()
     context.jsonCatalog = response
-    print(context.catalog.getSizeOfCatalog())
 
 
 @then('The entire catalog is displayed')
@@ -42,9 +38,6 @@ def displayCatalog(context):
     fakeCatalog.add(books)
     books = fakeCatalog.getAllBooksJson()
     jsonBooks = context.jsonCatalog
-    print(jsonBooks)
-    print('-------VS.--------')
-    print(books)
     assert jsonBooks == books
 
 
