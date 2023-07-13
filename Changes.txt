@@ -1,8 +1,30 @@
-Further modified the styling of the webpage. Added some mock pictures. I want to create a multi-line title, each
-title line is limited to 22 characters, or simply just figure out some way to cut off excessively long titles
-so that the spans don't grow larger than the picture size. Probably requires some HTML/JS or CSS work.
+It's been a while since I've created an update on the progress of this project.
 
-Next is to create a navbar which allows us to navigate the store. I want each book in the catalog to re-direct to the
-store and allow you to add them to the cart. I think I might end my work at the catalog. I want to begin working on
-some sort of blog page and finally actually build out the portfolio which links to either of these projects along
-with my personal experience.
+I decided to reflect on my usage of HTML + CSS for this project. I did learn a great deal of the very fine-grained and
+fundamental aspects of the front-end, but I was somewhat dissatisfied with the accidental complexity of having to figure
+out how to handle API communication between the front and backend while using these pages I created. Besides that, it
+just looked plain ugly. I ended up switching to tailwind static pages and I'm pretty satisfied. I even used A.I. to
+create a simple web logo for my website.
+
+I dropped the pretty boring HTML+CSS approach and my own custom webserver code on the backend. Now, I have:
+Django and React. I'm somewhat disappointed with React. It has pretty ugly code where you kind of mix all this
+HTML with Javascript and end up with something called JSX. It's really handy to make a quick and dirty page, but I feel
+that it  has a lot of ugliness to it since it increases the cognitive load of having to manage multiple languages.
+Though, in my case, using React is pretty harmless since I only have to mess with the Javascript from a very brief
+perspective which is lovely enough. The less Javascript I deal with, the happier I am. It took me around 30m-1hr to
+re-make the entire page using Tailwind + react that I had spent multiple days creating in HTML + CSS. Good riddance.
+Django surprisingly ties in quite nicely. I had only realized that there was an alternative framework named Flask
+only after I started using Django (woops). Flask would've been just as nice, I suspect, since I hardly even make use
+of the models library in Django (Although, I do use it for authentication now.)
+
+Since I dropped my custom webserver, testing has become slightly more complicated on the integration end. I'm certainly
+feeling the pain of not applying CD principles to my approach. I could've gained a huge advantage had I set up a
+pipeline earlier now that I have to distinguish between test vs. production environments in the case of CSRF
+configuration on Django along with other things like an admin user that runs during test. I'm somewhat nervous about
+my admin login that I created within my code which basically only executes on a toggle flag that indicates that the
+build time is being done in a testing stage. Unit testing is really simple though, and so is integration once you
+configure everything so that security doesn't really get in the way of your API calls.
+
+OK, well I'll give it another thought whenever I decide to go through the CD pipeline phase (probably once I pass
+all my fundamental tests). I've reached quite a happy spot in the dev process. I want to finish up my "add book as
+admin" scenario and then move onto refactoring the latest changes.
