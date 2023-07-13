@@ -41,7 +41,22 @@ def displayCatalog(context):
     assert jsonBooks == books
 
 
-# TODO re-do below tests to mimic above one.
+@given('A user has admin permissions')
+def createAdminUser(context):
+    #add user as admin
+    pass
+
+@when('A user logs in as an admin')
+def loginAsAdmin(context):
+    context.session = TestRestClient.loginAsAdmin()
+
+
+@then('The user can access admin pages')
+def loggedInAsAdmin(context):
+    success = context.session[1]
+    assert 200 == success
+
+
 @given('An empty catalog')
 def defineCatalog(context):
     context.catalog.add([])
@@ -49,14 +64,13 @@ def defineCatalog(context):
 
 @when('The admin adds a book to the catalog')
 def addBook(context):
-    book = Book(title="Some Harry Potter Book, I think.", author="Just Kidding Rowling", releaseYear="1998")
-    context.catalog.add([book])
+    TestRestClient.asAdminAddBook()
 
 
 @then('There will be one more book in the catalog')
 def checkForExtraBook(context):
-    response = TestRestClient.createClientThatGetsCatalog()
-    context.booksInCatalog = convertContentToArray(response)
+    response = TestRestClient.createClientThatGetsCatalogAsJson()
+    context.booksInCatalog = response
 
     assert 1 == len(context.booksInCatalog)
 
