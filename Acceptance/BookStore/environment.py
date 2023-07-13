@@ -6,7 +6,7 @@ from Source.Database.SqlDatabase import SqlDatabase
 
 
 def startDjangoServer(context):
-    context.p = subprocess.Popen("./venv/Scripts/python.exe manage.py runserver 8091")
+    context.p = subprocess.Popen("./venv/Scripts/python.exe manage.py runserver 8091 --noreload")
 
 
 def before_scenario(context, scenario):
@@ -20,10 +20,12 @@ def before_scenario(context, scenario):
 def stopDjangoServer(context):
     if context.p and context.p.poll:
         context.p.terminate()
+        context.p.kill()
 
 
 def after_feature(context, scenario):
-    stopDjangoServer(context)
+    #stopDjangoServer(context)
+    pass
 
 
 def after_scenario(context, scenario):
