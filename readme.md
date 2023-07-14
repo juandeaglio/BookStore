@@ -10,7 +10,9 @@ Used Javascript + HTML + CSS for the webpage.
 Store page and shopping cart are not implemented yet.
 
 ### To run behave tests:
-Run in base project directory
+python integrationTests.py
+****
+Alternatively, run in base project directory
 ****
 behave .\Acceptance\BookStore\ --no-capture --no-capture-stderr #this just spits everything out to terminal)\
 behave -f allure_behave.formatter:AllureFormatter -o allure_reports/ .\Acceptance\BookStore\ #prints in terminal but generates a report, viewable by below allure cmd
@@ -18,3 +20,10 @@ behave -f allure_behave.formatter:AllureFormatter -o allure_reports/ .\Acceptanc
 Run in base project directory
 ****
 allure serve allure_reports
+
+#### How I use Behave:
+There's a lot of detailed stuff in environments.py that have details on how tests must start, particularly since
+there is some coupling with the tests and the Django webserver. None of the tests have any Django code in them, so the
+test cases themselves don't directly depend on anything I write in Django, all that matters is that the API provides the
+expected response. Ideally, environments.py will at most start the Django server in the background and that's all.
+Whereas the tests themselves, it's mostly a pretty quickly-written HTTP client written with the 'requests' library.
