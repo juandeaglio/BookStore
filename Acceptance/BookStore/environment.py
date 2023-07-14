@@ -7,8 +7,7 @@ from Source.Database.SqlDatabase import SqlDatabase
 
 def startDjangoServer(context):
     print(os.getcwd())
-    context.p = subprocess.Popen("./venv/Scripts/python.exe manage.py runserver 8091 "
-                                 "--noreload --settings=catalog_service.settings_development")
+    context.p = subprocess.Popen("./venv/Scripts/python.exe startDjangoWithTestUser.py")
 
 
 def before_scenario(context, scenario):
