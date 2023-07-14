@@ -14,7 +14,9 @@ python integrationTests.py
 ****
 Alternatively, run in base project directory
 ****
-behave .\Acceptance\BookStore\ --no-capture --no-capture-stderr #this just spits everything out to terminal)\
+behave .\Acceptance\BookStore\ --no-capture --no-capture-stderr #this just spits everything out to terminal)
+behave .\Acceptance\BookStore\ --no-capture --no-capture-stderr -n "Name of Test Scenario as seen in any .feature"
+behave .\Acceptance\BookStore\ --no-capture --no-capture-stderr -n "View a persistent catalog"
 behave -f allure_behave.formatter:AllureFormatter -o allure_reports/ .\Acceptance\BookStore\ #prints in terminal but generates a report, viewable by below allure cmd
 ### To view BDD test results (opens your web browser to view results):
 Run in base project directory
