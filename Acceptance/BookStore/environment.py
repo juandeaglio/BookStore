@@ -1,38 +1,40 @@
 import os
 import signal
 import subprocess
+import sys
 import time
 
 from Source.Catalog.PersistentCatalog import PersistentCatalog
 from Source.Database.SqlDatabase import SqlDatabase
 
 
+def before_all(context):
+    startDjangoServer(context)
+
 def startDjangoServer(context):
-    context.p = subprocess.Popen("./venv/Scripts/python.exe startDjangoWithTestUser.py")
+    context.process = subprocess.Popen("./venv/Scripts/python.exe startDjangoWithTestUser.py")
 
 
 def before_scenario(context, scenario):
     clearDatabase()
     context.defaultPort = 8091
     context.catalog = PersistentCatalog()
-    startDjangoServer(context)
 
 
 def stopDjangoServer(context):
-    if context.p:
-        context.p.terminate()
-        context.p.kill()
-        os.kill(context.p.pid, signal.CTRL_C_EVENT)
-        del context.p
-
-
-def after_feature(context, scenario):
-    pass
-
+    if context.process:
+        context.process.terminate()
+        context.process.kill()
 
 def after_scenario(context, scenario):
     time.sleep(1)
+
+
+def after_all(context):
     stopDjangoServer(context)
+    os.kill(context.process.pid, signal.CTRL_C_EVENT)
+    #subprocess.Popen("powershell ./kilLTestServer.ps1", shell=True, stdout=sys.stdout, stderr=sys.stderr).communicate()
+    print("Done")
 
 
 def clearDatabase():

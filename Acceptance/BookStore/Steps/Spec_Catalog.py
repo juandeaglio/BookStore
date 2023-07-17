@@ -8,21 +8,10 @@ from Acceptance.MockWebPage.TestRestClient import TestRestClient
 from Source.Catalog.InMemoryCatalog import InMemoryCatalog
 
 
-def arraysOfBooksAreTheSame(books, booksInCatalog):
-    for book, otherBook in zip(books, booksInCatalog):
-        if book != otherBook:
-            print("1: " + book.title + " " + book.author + " " + book.releaseYear)
-            print("2: " + otherBook.title + " " + otherBook.author + " " + otherBook.releaseYear)
-            return False
-    return True
-
-
 @given('A catalog')
 def defineCatalog(context):
     context.booksFromContext = convertTableToArray(context)
     context.catalog.add(context.booksFromContext)
-
-
 
 
 @when('A user views the catalog')
