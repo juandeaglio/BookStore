@@ -25,17 +25,20 @@ Feature: Book catalog
         |Harry Potter and the Sorcerer's Stone  |J.K. Rowling       |1998           |
         |To Kill a Mockingbird                  |Harper Lee         |1960           |
 
-
     Scenario: Log in as admin
         Given A user has admin permissions
         When A user logs in as an admin
         Then The user can access admin pages
 
-
     Scenario: Add to persistent catalog
         Given An empty catalog
         When The admin adds a book to the catalog
         Then There will be one more book in the catalog
+
+    Scenario: Deny unauthorized user from adding book
+        Given An empty catalog
+        When An unauthorized user try to add a book to the catalog
+        Then The user will be denied and the catalog is still empty
 
     Scenario: Search the catalog by title or author
         Given A catalog

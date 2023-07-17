@@ -2,6 +2,7 @@ import json
 import os
 
 from django.contrib.auth import authenticate, login
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.shortcuts import render
 from django.http import HttpResponse
@@ -51,7 +52,15 @@ def createTestCatalogAdminUser(request):
             User.objects.create_user(username=os.environ.get('TESTUSERNAME'), password=os.environ.get('TESTPW'))
 
 
+@login_required
 def addBook(request):
-    return None
+    if request.method == "POST":
+        title = request.POST.get("title")
+        author = request.POST.get("author")
+        releaseYear = request.POST.get("releaseYear")
+        catalog = PersistentCatalog()
+        catalog.add([Book(title=title, author=author, releaseYear=releaseYear)])
+        return HttpResponse(status=200)
+    return HttpResponse("Not found", status=404)
 
 
