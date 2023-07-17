@@ -5,6 +5,10 @@ from Source.Book import Book
 
 class TestRestClient:
     clientTimeout = 1
+    userCreds = {
+        'username': 'username',
+        'password': 'creativepassword'
+    }
 
     @staticmethod
     def getRequest(port, endpoint):
@@ -27,7 +31,7 @@ class TestRestClient:
         return r.json()
 
     @staticmethod
-    def createClientSession(port, userCreds, endpoint):
+    def createClientSession(port=8091, userCreds=None, endpoint=None):
         with requests.session() as s:
             p = s.post(url="http://localhost:" + str(port) + "/" + endpoint, data=userCreds,
                        timeout=TestRestClient.clientTimeout)
@@ -35,26 +39,25 @@ class TestRestClient:
         return s
 
     @staticmethod
-    def sendPostFromSession(port, userCreds, endpoint, existingSession=requests.session()):
-        statusCode = existingSession.post(url="http://localhost:" + str(port) + "/" + endpoint, data=userCreds,
-                                          timeout=TestRestClient.clientTimeout).status_code
+    def sendPostFromSession(port=8091, payload=None, endpoint=None, session=requests.session()):
+        statusCode = session.post(url="http://localhost:" + str(port) + "/" + endpoint, data=payload,
+                                  timeout=TestRestClient.clientTimeout).status_code
         print("Log in status: " + str(statusCode))
         return statusCode
 
     @staticmethod
-    def createClientAsAdminAddBook(port=8091, book=None):
-        userCreds = {
-            'username': 'username',
-            'password': 'creativepassword'
-        }
-        with TestRestClient.createClientSession(port, userCreds, "catalog_service/login/") as loggedInSession:
+    def createClientAsAdminAddBook(book=None):
+
+        with TestRestClient.createClientSession(endpoint="catalog_service/login/",
+                                                userCreds=TestRestClient.userCreds) as loggedInSession:
             bookDetails = {
                 'title': book.title,
                 'author': book.author,
                 'releaseYear': book.releaseYear
             }
-            statusCode = TestRestClient.sendPostFromSession(port, bookDetails,
-                                                            "catalog_service/addBook/", loggedInSession)
+            statusCode = TestRestClient.sendPostFromSession(payload=bookDetails,
+                                                            endpoint="catalog_service/addBook/",
+                                                            session=loggedInSession)
             print("Book addition status: " + str(statusCode))
         return statusCode
 
