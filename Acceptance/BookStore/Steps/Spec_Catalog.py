@@ -60,12 +60,9 @@ def addBook(context):
 @then('There will be no changes to the catalog')
 def checkForExtraBook(context):
     response = TestRestClient.createClientThatGetsCatalogAsJson()
-    context.booksInCatalog = response
     books = convertTableToArray(context)
-    fakeCatalog = InMemoryCatalog()
-    fakeCatalog.add(books)
-    books = fakeCatalog.getAllBooksJson()
+    books = createExpectedJson(books)
 
-    assert len(books) == len(context.booksInCatalog)
+    assert len(books) == len(response)
 
 
