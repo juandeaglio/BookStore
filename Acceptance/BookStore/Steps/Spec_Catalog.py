@@ -8,6 +8,13 @@ from Acceptance.MockWebPage.TestRestClient import TestRestClient
 from Source.Catalog.InMemoryCatalog import InMemoryCatalog
 
 
+def createExpectedJson(books):
+    fakeCatalog = InMemoryCatalog()
+    fakeCatalog.add(books)
+    books = fakeCatalog.getAllBooksJson()
+    return books
+
+
 @given('A catalog')
 def defineCatalog(context):
     context.booksFromContext = convertTableToArray(context)
@@ -23,9 +30,7 @@ def viewCatalog(context):
 @then('The entire catalog is displayed')
 def displayCatalog(context):
     books = convertTableToArray(context)
-    fakeCatalog = InMemoryCatalog()
-    fakeCatalog.add(books)
-    books = fakeCatalog.getAllBooksJson()
+    books = createExpectedJson(books)
     jsonBooks = context.jsonCatalog
     assert jsonBooks == books
 
@@ -53,7 +58,7 @@ def defineCatalog(context):
 
 @when('The admin adds a book to the catalog')
 def addBook(context):
-    TestRestClient.asAdminAddBook()
+    assert TestRestClient.asAdminAddBook() == 200
 
 
 @then('There will be one more book in the catalog')

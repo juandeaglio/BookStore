@@ -33,7 +33,6 @@ def after_scenario(context, scenario):
 def after_all(context):
     stopDjangoServer(context)
     os.kill(context.process.pid, signal.CTRL_C_EVENT)
-    #subprocess.Popen("powershell ./kilLTestServer.ps1", shell=True, stdout=sys.stdout, stderr=sys.stderr).communicate()
     print("Done")
 
 
