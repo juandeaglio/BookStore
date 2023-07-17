@@ -27,24 +27,36 @@ class TestRestClient:
         return r.json()
 
     @staticmethod
+    def createClientSession(port, userCreds, endpoint):
+        with requests.session() as s:
+            p = s.post(url="http://localhost:" + str(port) + "/" + endpoint, data=userCreds,
+                       timeout=TestRestClient.clientTimeout)
+            print("Log in status: " + str(p.status_code))
+        return s
+
+    @staticmethod
+    def sendPostFromSession(port, userCreds, endpoint, existingSession=requests.session()):
+        statusCode = existingSession.post(url="http://localhost:" + str(port) + "/" + endpoint, data=userCreds,
+                                          timeout=TestRestClient.clientTimeout).status_code
+        print("Log in status: " + str(statusCode))
+        return statusCode
+
+    @staticmethod
     def createClientAsAdminAddBook(port=8091, book=None):
-        with TestRestClient.createClientAsAdmin()[0] as s:
-            if book is None:
-                bookDetails = {
-                    'title': 'Some harry Potter Book',
-                    'author': 'J.K. ROWling',
-                    'releaseYear': '1899'
-                }
-            else:
-                bookDetails = {
-                    'title': book.title,
-                    'author': book.author,
-                    'releaseYear': book.releaseYear
-                }
-            r = s.post(url="http://localhost:" + str(port)
-                           + "/catalog_service/addBook/", data=bookDetails, timeout=TestRestClient.clientTimeout)
-            print("Book addition status: " + str(r.status_code))
-        return r.status_code
+        userCreds = {
+            'username': 'username',
+            'password': 'creativepassword'
+        }
+        with TestRestClient.createClientSession(port, userCreds, "catalog_service/login/") as loggedInSession:
+            bookDetails = {
+                'title': book.title,
+                'author': book.author,
+                'releaseYear': book.releaseYear
+            }
+            statusCode = TestRestClient.sendPostFromSession(port, bookDetails,
+                                                            "catalog_service/addBook/", loggedInSession)
+            print("Book addition status: " + str(statusCode))
+        return statusCode
 
     @staticmethod
     def createClientAsAdmin(port=8091):
@@ -52,10 +64,4 @@ class TestRestClient:
             'username': 'username',
             'password': 'creativepassword'
         }
-        with requests.session() as s:
-            p = s.post(url="http://localhost:" + str(port)
-                           + "/catalog_service/login/", data=userCreds,
-                       timeout=TestRestClient.clientTimeout)
-            print("Log in status: " + str(p.status_code))
-
-        return s, p.status_code
+        return TestRestClient.sendPostFromSession(port, userCreds, "catalog_service/login/")

@@ -42,13 +42,12 @@ def createAdminUser(context):
 
 @when('A user logs in as an admin')
 def loginAsAdmin(context):
-    context.session = TestRestClient.createClientAsAdmin()
+    context.statusCode = TestRestClient.createClientAsAdmin()
 
 
 @then('The user can access admin pages')
 def loggedInAsAdmin(context):
-    success = context.session[1]
-    assert 200 == success
+    assert 200 == context.statusCode
 
 
 @when('The admin add a duplicate book to the catalog')
