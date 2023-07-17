@@ -54,7 +54,7 @@ def loggedInAsAdmin(context):
 @when('The admin add a duplicate book to the catalog')
 def addBook(context):
     alreadyAddedBook = context.booksFromContext[0]
-    context.catalog.add([alreadyAddedBook])
+    assert TestRestClient.asAdminAddBook(book=alreadyAddedBook) == 200
 
 
 @then('There will be no changes to the catalog')

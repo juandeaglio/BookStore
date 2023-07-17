@@ -1,5 +1,7 @@
 import requests
 
+from Source.Book import Book
+
 
 class TestRestClient:
     clientTimeout = 1
@@ -20,14 +22,20 @@ class TestRestClient:
         return r.json()
 
     @staticmethod
-    def asAdminAddBook(port=8091):
+    def asAdminAddBook(port=8091, book=None):
         with TestRestClient.loginAsAdmin()[0] as s:
-            bookDetails = {
-                'title': 'Some harry Potter Book',
-                'author': 'J.K. ROWling',
-                'releaseYear': '1899'
-            }
-
+            if book is None:
+                bookDetails = {
+                    'title': 'Some harry Potter Book',
+                    'author': 'J.K. ROWling',
+                    'releaseYear': '1899'
+                }
+            else:
+                bookDetails = {
+                    'title': book.title,
+                    'author': book.author,
+                    'releaseYear': book.releaseYear
+                }
             r = s.post(url="http://localhost:" + str(port)
                            + "/catalog_service/addBook/", data=bookDetails, timeout=TestRestClient.clientTimeout)
             print("Book addition status: " + str(r.status_code))
