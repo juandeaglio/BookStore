@@ -5,25 +5,30 @@ from Source.Book import Book
 
 class TestRestClient:
     clientTimeout = 1
+
+    @staticmethod
+    def getRequest(port, endpoint):
+        r = requests.get(url="http://127.0.0.1:" + str(port) + "/" + endpoint, timeout=TestRestClient.clientTimeout)
+        return r
+
     @staticmethod
     def createClientThatGetsCatalog(port=8091):
-        r = requests.get(url="http://127.0.0.1:" + str(port) + "/getCatalog", timeout=TestRestClient.clientTimeout)
+        r = TestRestClient.getRequest(port, "getCatalog")
         return r.text.splitlines()
 
     @staticmethod
     def createClientForAboutPage(port=8091):
-        r = requests.get(url="http://127.0.0.1:" + str(port) + "/about", timeout=TestRestClient.clientTimeout)
+        r = TestRestClient.getRequest(port, "about")
         return r.text
 
     @staticmethod
     def createClientThatGetsCatalogAsJson(port=8091):
-        r = requests.get(url="http://localhost:" + str(port)
-                             + "/catalog_service/fetchCatalog", timeout=TestRestClient.clientTimeout)
+        r = TestRestClient.getRequest(port, "catalog_service/fetchCatalog")
         return r.json()
 
     @staticmethod
-    def asAdminAddBook(port=8091, book=None):
-        with TestRestClient.loginAsAdmin()[0] as s:
+    def createClientAsAdminAddBook(port=8091, book=None):
+        with TestRestClient.createClientAsAdmin()[0] as s:
             if book is None:
                 bookDetails = {
                     'title': 'Some harry Potter Book',
@@ -39,10 +44,10 @@ class TestRestClient:
             r = s.post(url="http://localhost:" + str(port)
                            + "/catalog_service/addBook/", data=bookDetails, timeout=TestRestClient.clientTimeout)
             print("Book addition status: " + str(r.status_code))
-            return r.status_code
+        return r.status_code
 
     @staticmethod
-    def loginAsAdmin(port=8091):
+    def createClientAsAdmin(port=8091):
         userCreds = {
             'username': 'username',
             'password': 'creativepassword'
@@ -53,4 +58,4 @@ class TestRestClient:
                        timeout=TestRestClient.clientTimeout)
             print("Log in status: " + str(p.status_code))
 
-            return s, p.status_code
+        return s, p.status_code

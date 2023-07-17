@@ -1,7 +1,6 @@
 import os
 import signal
 import subprocess
-import sys
 import time
 
 from Source.Catalog.PersistentCatalog import PersistentCatalog

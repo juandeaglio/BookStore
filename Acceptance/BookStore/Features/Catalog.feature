@@ -39,6 +39,10 @@ Feature: Book catalog
 
     Scenario: Search the catalog by title or author
         Given A catalog
+        |Title                                  |Author             |Release year   |
+        |The Hunger Games                       |Suzanne Collins    |2008           |
+        |Harry Potter and the Sorcerer's Stone  |J.K. Rowling       |1998           |
+        |To Kill a Mockingbird                  |Harper Lee         |1960           |
         When A user searches for a word or author in search bar
         Then Relevant results are displayed
 

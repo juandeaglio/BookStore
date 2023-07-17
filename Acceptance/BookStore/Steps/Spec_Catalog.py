@@ -42,7 +42,7 @@ def createAdminUser(context):
 
 @when('A user logs in as an admin')
 def loginAsAdmin(context):
-    context.session = TestRestClient.loginAsAdmin()
+    context.session = TestRestClient.createClientAsAdmin()
 
 
 @then('The user can access admin pages')
@@ -54,7 +54,7 @@ def loggedInAsAdmin(context):
 @when('The admin add a duplicate book to the catalog')
 def addBook(context):
     alreadyAddedBook = context.booksFromContext[0]
-    assert TestRestClient.asAdminAddBook(book=alreadyAddedBook) == 200
+    assert TestRestClient.createClientAsAdminAddBook(book=alreadyAddedBook) == 200
 
 
 @then('There will be no changes to the catalog')

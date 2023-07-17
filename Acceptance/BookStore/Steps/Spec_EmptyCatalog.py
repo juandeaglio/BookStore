@@ -15,7 +15,7 @@ def defineCatalog(context):
 
 @when('The admin adds a book to the catalog')
 def addBook(context):
-    assert TestRestClient.asAdminAddBook() == 200
+    assert TestRestClient.createClientAsAdminAddBook() == 200
 
 
 @then('There will be one more book in the catalog')
