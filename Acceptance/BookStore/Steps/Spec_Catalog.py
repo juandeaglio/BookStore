@@ -51,24 +51,6 @@ def loggedInAsAdmin(context):
     assert 200 == success
 
 
-@given('An empty catalog')
-def defineCatalog(context):
-    context.catalog.add([])
-
-
-@when('The admin adds a book to the catalog')
-def addBook(context):
-    assert TestRestClient.asAdminAddBook() == 200
-
-
-@then('There will be one more book in the catalog')
-def checkForExtraBook(context):
-    response = TestRestClient.createClientThatGetsCatalogAsJson()
-    context.booksInCatalog = response
-
-    assert 1 == len(context.booksInCatalog)
-
-
 @when('The admin add a duplicate book to the catalog')
 def addBook(context):
     alreadyAddedBook = context.booksFromContext[0]
