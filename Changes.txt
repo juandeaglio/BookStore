@@ -1,30 +1,17 @@
-It's been a while since I've created an update on the progress of this project.
+Continuing the development. I managed to fix a glaring issue with the acceptance tests. No longer will any behave
+test scenarios generate obscene amounts of python processes, each of them a webserver. I simply only turn on the
+server once for the entire run. I might need to backtrack on this and actually just do it per feature. Yes, I like that.
+Anyway, that's fixed and the API testing can commence.
 
-I decided to reflect on my usage of HTML + CSS for this project. I did learn a great deal of the very fine-grained and
-fundamental aspects of the front-end, but I was somewhat dissatisfied with the accidental complexity of having to figure
-out how to handle API communication between the front and backend while using these pages I created. Besides that, it
-just looked plain ugly. I ended up switching to tailwind static pages and I'm pretty satisfied. I even used A.I. to
-create a simple web logo for my website.
-
-I dropped the pretty boring HTML+CSS approach and my own custom webserver code on the backend. Now, I have:
-Django and React. I'm somewhat disappointed with React. It has pretty ugly code where you kind of mix all this
-HTML with Javascript and end up with something called JSX. It's really handy to make a quick and dirty page, but I feel
-that it  has a lot of ugliness to it since it increases the cognitive load of having to manage multiple languages.
-Though, in my case, using React is pretty harmless since I only have to mess with the Javascript from a very brief
-perspective which is lovely enough. The less Javascript I deal with, the happier I am. It took me around 30m-1hr to
-re-make the entire page using Tailwind + react that I had spent multiple days creating in HTML + CSS. Good riddance.
-Django surprisingly ties in quite nicely. I had only realized that there was an alternative framework named Flask
-only after I started using Django (woops). Flask would've been just as nice, I suspect, since I hardly even make use
-of the models library in Django (Although, I do use it for authentication now.)
-
-Since I dropped my custom webserver, testing has become slightly more complicated on the integration end. I'm certainly
-feeling the pain of not applying CD principles to my approach. I could've gained a huge advantage had I set up a
-pipeline earlier now that I have to distinguish between test vs. production environments in the case of CSRF
-configuration on Django along with other things like an admin user that runs during test. I'm somewhat nervous about
-my admin login that I created within my code which basically only executes on a toggle flag that indicates that the
-build time is being done in a testing stage. Unit testing is really simple though, and so is integration once you
-configure everything so that security doesn't really get in the way of your API calls.
-
-OK, well I'll give it another thought whenever I decide to go through the CD pipeline phase (probably once I pass
-all my fundamental tests). I've reached quite a happy spot in the dev process. I want to finish up my "add book as
-admin" scenario and then move onto refactoring the latest changes.
+I ended up implementing the addBook API which requires authentication. Works like a charm I think, for a single book
+anyway. Don't know if I will need an API for addition tons of books yet, probably not (YAGNI). I'll have a go at
+refactoring the API tomorrow to handle JSON too. Additionally, I'll probably refactor the client code to send JSON
+instead of sending args in the URL as parameters (looks lame). Anyway, lots of good progress. At this point, I want to
+implement delete and then lastly implement a search functionality + shopping cart. At that point, I will be very
+confident with this fairly simple webpage I've been working on, and can move onto my other projects in my portfolio.
+Eventually, I want to move it all to a CD pipeline and develop with that continuous feedback loop.
+It will be a challenge to do this for the first time given that I have an entire project developed in Windows under me.
+It should be fun the first time, and at the very least show me the huge reason of why implementing the CD pipeline is
+very important for a project that's larger than a few functions and classes, especially when any amount of I/O becomes
+involved! I bet I'll actually hate myself for NOT going into CD as soon as I had my first integration tests up (oh well).
+As an additional challenge, I can port the CD pipeline to a Linux docker pod.
