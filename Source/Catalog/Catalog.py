@@ -1,3 +1,4 @@
+from Source.Book import Book
 from Source.StorageGateway import StorageGateway
 
 
@@ -6,7 +7,10 @@ class Catalog:
         self.storageGateway = StorageGateway(dbConnection)
 
     def add(self, books):
-        self.storageGateway.add(books)
+        if isinstance(books, Book):
+            self.storageGateway.addUniqueEntry(books)
+        else:
+            self.storageGateway.add(books)
 
     def removeAllByTitle(self, title):
         self.storageGateway.removeEntryByTitle(title)

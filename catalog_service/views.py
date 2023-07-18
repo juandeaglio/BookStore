@@ -55,12 +55,17 @@ def createTestCatalogAdminUser(request):
 @login_required
 def addBook(request):
     if request.method == "POST":
-        title = request.POST.get("title")
-        author = request.POST.get("author")
-        releaseYear = request.POST.get("releaseYear")
+        book = makeBookFromRequest(request)
         catalog = PersistentCatalog()
-        catalog.add([Book(title=title, author=author, releaseYear=releaseYear)])
+        catalog.add(book)
         return HttpResponse(status=200)
     return HttpResponse("Not found", status=404)
+
+
+def makeBookFromRequest(request):
+    title = request.POST.get("title")
+    author = request.POST.get("author")
+    releaseYear = request.POST.get("releaseYear")
+    return Book(title, author, releaseYear)
 
 
