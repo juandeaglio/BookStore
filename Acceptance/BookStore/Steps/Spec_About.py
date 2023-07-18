@@ -9,7 +9,7 @@ def defineCatalog(context):
 
 @when('A user requests the about page')
 def viewCatalog(context):
-    response = TestRestClient.createClientForAboutPage()
+    response = TestRestClient().createClientForAboutPage()
     context.aboutPageReceived = response
 
 
