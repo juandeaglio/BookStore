@@ -69,3 +69,10 @@ def makeBookFromRequest(request):
     return Book(title, author, releaseYear)
 
 
+def searchBooks(request):
+    if request.method == "GET":
+        title = request.GET.get("title")
+        catalog = PersistentCatalog()
+        books = catalog.findBooks(title)
+
+        return HttpResponse(json.dumps(books), content_type="application/json")

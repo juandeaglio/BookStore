@@ -4,11 +4,30 @@ from Source.Book import Book
 from Source.Catalog.InMemoryCatalog import InMemoryCatalog
 
 
+def sortBooksByTitle(books):
+    titles = arrayFromTitles(books)
+    titles.sort()
+    return titles
 
-class CatalogWithThreeBooks(unittest.TestCase):
+
+def createListOfTitles(books):
+    titles = arrayFromTitles(books)
+    return titles
+
+
+def arrayFromTitles(books):
+    titles = []
+    for book in books:
+        titles.append(book.title)
+    return titles
+
+
+class CatalogWithInitialAmountOfBooks(unittest.TestCase):
     def setUp(self):
         self.books = [Book('The Hunger Games', 'Suzanne Collins', '2008'),
                       Book('Harry Potter and the Sorcerer\'s Stone', 'J.K. Rowling', '1998'),
+                      Book('Harry Potter and the Chamber of Secrets', 'J.K. Rowling', '1999'),
+                      Book('Harry Potter and the Prisoner of Azkaban', 'J.K. Rowling', '1999'),
                       Book('To Kill a Mockingbird', 'Harper Lee', '1960')]
         self.catalog = InMemoryCatalog()
         self.catalog.add(self.books)
@@ -20,18 +39,23 @@ class CatalogWithThreeBooks(unittest.TestCase):
         assert len(self.catalog.getAllBooksJson()) == len(self.books)
 
     def test_addBooksToCatalog(self):
-        assert self.catalog.getSizeOfCatalog() == 3
+        assert self.catalog.getSizeOfCatalog() == len(self.books)
 
     def test_addDuplicateToCatalog(self):
-        assert self.catalog.getSizeOfCatalog() == 3
+        assert self.catalog.getSizeOfCatalog() == len(self.books)
 
     def test_removeBookFromCatalogByName(self):
+        oldLength = self.catalog.getSizeOfCatalog()
         self.catalog.removeAllByTitle("Harry Potter")
-        assert self.catalog.getSizeOfCatalog() == 2
+        assert self.catalog.getSizeOfCatalog() == oldLength - 1
 
     def test_catalogBooksAreSorted(self):
-        expectedSorted = [self.books[1], self.books[0], self.books[2]]
-        assert expectedSorted == self.catalog.getAllBooks()
+        expectedSortOrder = sortBooksByTitle(self.books)
+        actualSortOrder = createListOfTitles(self.catalog.getAllBooks())
+        assert expectedSortOrder == actualSortOrder
+
+    def test_search_books(self):
+            assert False
 
 
 class CatalogWithVariableAmountOfBooks(unittest.TestCase):
