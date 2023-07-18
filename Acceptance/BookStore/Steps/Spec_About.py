@@ -1,8 +1,5 @@
 from behave import given, when, then
-from Acceptance.BookStore.Steps.ContextTable import convertTableToArray
-from Acceptance.BookStore.Steps.HTTPContent import convertContentToArray
-from Source.Book import Book
-from Acceptance.MockWebPage.TestRestClient import TestRestClient
+from Acceptance.TestRestClient import TestRestClient
 
 
 @given('An about page')

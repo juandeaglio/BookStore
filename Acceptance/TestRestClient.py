@@ -47,18 +47,12 @@ class TestRestClient:
 
     @staticmethod
     def createClientAsAdminAddBook(book=None):
-
         with TestRestClient.createClientSession(endpoint="catalog_service/login/",
                                                 userCreds=TestRestClient.userCreds) as loggedInSession:
-            bookDetails = {
-                'title': book.title,
-                'author': book.author,
-                'releaseYear': book.releaseYear
-            }
+            bookDetails = book.to_json()
             statusCode = TestRestClient.sendPostFromSession(payload=bookDetails,
                                                             endpoint="catalog_service/addBook/",
                                                             session=loggedInSession)
-            print("Book addition status: " + str(statusCode))
         return statusCode
 
     @staticmethod

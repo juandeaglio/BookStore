@@ -1,11 +1,6 @@
-import time
-
 from behave import given, when, then
-from Acceptance.BookStore.Steps.ContextTable import convertTableToArray
-from Acceptance.BookStore.Steps.HTTPContent import convertContentToArray
 from Source.Book import Book
-from Acceptance.MockWebPage.TestRestClient import TestRestClient
-from Source.Catalog.InMemoryCatalog import InMemoryCatalog
+from Acceptance.TestRestClient import TestRestClient
 
 
 @given('An empty catalog')

@@ -1,5 +1,4 @@
 # This is a python webserver that serves a list of books to a web browser client.
-from Acceptance.MockWebPage.TestRestClient import TestRestClient
 from Source.Book import Book
 from Source.Catalog.InMemoryCatalog import InMemoryCatalog
 from Source.Server.Services.HTTPSocketService import HTTPSocketService

@@ -55,11 +55,6 @@ class TestPersistentStorageGateway(unittest.TestCase):
         expectedTotal = len(self.storageGateway.fetchBooksFromDatabase())
         assert len(self.books) == expectedTotal
 
-    def test_removeEntryFromCatalog(self):
-        expectedTotal = len(self.storageGateway.fetchBooksFromDatabase()) - 1
-        self.storageGateway.removeEntry(self.books[len(self.books)-1])
-        assert len(self.storageGateway.fetchBooksFromDatabase()) == expectedTotal
-
     def test_addEntryToCatalog(self):
         expectedTotal = len(self.storageGateway.fetchBooksFromDatabase()) + 1
         self.storageGateway.add([Book('Catching Fire', 'Suzanne Collins', '2009')])

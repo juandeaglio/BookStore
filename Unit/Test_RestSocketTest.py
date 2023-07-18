@@ -2,7 +2,7 @@ import unittest
 
 import requests
 
-from Acceptance.MockWebPage.TestRestClient import TestRestClient
+from Acceptance.TestRestClient import TestRestClient
 from Source.Book import Book
 from Source.Catalog.InMemoryCatalog import InMemoryCatalog
 from Source.Response import Response
