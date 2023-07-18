@@ -40,14 +40,19 @@ Feature: Book catalog
         When An unauthorized user try to add a book to the catalog
         Then The user will be denied and the catalog is still empty
 
-    Scenario: Search the catalog by title or author
+    Scenario: Search the catalog by title
         Given A catalog
-        |Title                                  |Author             |Release year   |
-        |The Hunger Games                       |Suzanne Collins    |2008           |
-        |Harry Potter and the Sorcerer's Stone  |J.K. Rowling       |1998           |
-        |To Kill a Mockingbird                  |Harper Lee         |1960           |
-        When A user searches for a word or author in search bar
+        |Title                                      |Author             |Release year   |
+        |The Hunger Games                           |Suzanne Collins    |2008           |
+        |Harry Potter and the Sorcerer's Stone      |J.K. Rowling       |1998           |
+        |Harry Potter and the Chamber of Secrets    |J.K. Rowling       |1999           |
+        |Harry Potter and the Prisoner of Azkaban   |J.K. Rowling       |1999           |
+        |To Kill a Mockingbird                      |Harper Lee         |1960           |
+        When A user searches for Harry Potter
         Then Relevant results are displayed
+        |Harry Potter and the Sorcerer's Stone      |J.K. Rowling       |1998           |
+        |Harry Potter and the Chamber of Secrets    |J.K. Rowling       |1999           |
+        |Harry Potter and the Prisoner of Azkaban   |J.K. Rowling       |1999           |
 
     Scenario: Purchase books
         Given A cart with books in it

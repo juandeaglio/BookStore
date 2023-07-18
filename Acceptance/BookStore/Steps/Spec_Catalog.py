@@ -57,7 +57,17 @@ def checkForExtraBook(context):
     response = TestRestClient().createClientThatGetsCatalogAsJson()
     books = convertTableToArray(context)
     books = createExpectedJson(books)
-
     assert len(books) == len(response)
 
 
+@when('A user searches for Harry Potter')
+def addBook(context):
+    response = TestRestClient().searchForBook(title="Harry Potter")
+    assert response.status_code == 200
+    context.jsonBooks = response.json
+
+@then('Relevant results are displayed')
+def checkForExtraBook(context):
+    books = convertTableToArray(context)
+    books = createExpectedJson(books)
+    assert context.jsonBooks == books

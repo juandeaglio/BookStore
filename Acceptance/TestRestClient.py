@@ -21,8 +21,9 @@ class TestRestClient:
     def __init__(self):
         self.session = requests.session()
 
-    def getRequest(self, port, endpoint):
-        r = self.session.get(url="http://127.0.0.1:" + str(port) + "/" + endpoint, timeout=TestRestClient.clientTimeout)
+    def getRequest(self, port=8091, endpoint="", parameters=None):
+        r = self.session.get(url="http://127.0.0.1:" + str(port) + "/" + endpoint, timeout=TestRestClient.clientTimeout,
+                             params=parameters)
         return r
 
     def createClientThatGetsCatalog(self, port=8091):
@@ -59,5 +60,7 @@ class TestRestClient:
         statusCode = self.sendPostFromSession(payload=book.to_json(), endpoint="catalog_service/addBook/")
         return statusCode
 
-    def tearDown(self):
-        self.session.cookies.clear()
+    def searchForBook(self, title):
+        r = self.getRequest(endpoint="catalog_service/search", parameters={'title': title})
+        return r
+

@@ -26,10 +26,6 @@ def stopDjangoServer(context):
         context.process.terminate()
         context.process.kill()
 
-def after_scenario(context, scenario):
-    TestRestClient().tearDown()
-    time.sleep(1)
-
 
 def after_all(context):
     time.sleep(1)
