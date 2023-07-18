@@ -3,6 +3,14 @@ import requests
 from Source.Book import Book
 
 
+def createClientSession(port=8091, userCreds=None, endpoint=None):
+    with requests.session() as s:
+        s.post(url="http://localhost:" + str(port) + "/" + endpoint, data=userCreds,
+               timeout=TestRestClient.clientTimeout)
+
+    return s
+
+
 class TestRestClient:
     clientTimeout = 1
     userCreds = {
@@ -10,55 +18,46 @@ class TestRestClient:
         'password': 'creativepassword'
     }
 
-    @staticmethod
-    def getRequest(port, endpoint):
-        r = requests.get(url="http://127.0.0.1:" + str(port) + "/" + endpoint, timeout=TestRestClient.clientTimeout)
+    def __init__(self):
+        self.session = requests.session()
+
+    def getRequest(self, port, endpoint):
+        r = self.session.get(url="http://127.0.0.1:" + str(port) + "/" + endpoint, timeout=TestRestClient.clientTimeout)
         return r
 
-    @staticmethod
-    def createClientThatGetsCatalog(port=8091):
-        r = TestRestClient.getRequest(port, "getCatalog")
+    def createClientThatGetsCatalog(self, port=8091):
+        r = self.getRequest(port, "getCatalog")
         return r.text.splitlines()
 
-    @staticmethod
-    def createClientForAboutPage(port=8091):
-        r = TestRestClient.getRequest(port, "about")
+    def createClientForAboutPage(self, port=8091):
+        r = self.getRequest(port, "about")
         return r.text
 
-    @staticmethod
-    def createClientThatGetsCatalogAsJson(port=8091):
-        r = TestRestClient.getRequest(port, "catalog_service/fetchCatalog")
+    def createClientThatGetsCatalogAsJson(self, port=8091):
+        r = self.getRequest(port, "catalog_service/fetchCatalog")
         return r.json()
 
-    @staticmethod
-    def createClientSession(port=8091, userCreds=None, endpoint=None):
-        with requests.session() as s:
-            p = s.post(url="http://localhost:" + str(port) + "/" + endpoint, data=userCreds,
-                       timeout=TestRestClient.clientTimeout)
-            print("Log in status: " + str(p.status_code))
-        return s
-
-    @staticmethod
-    def sendPostFromSession(port=8091, payload=None, endpoint=None, session=requests.session()):
-        statusCode = session.post(url="http://localhost:" + str(port) + "/" + endpoint, data=payload,
-                                  timeout=TestRestClient.clientTimeout).status_code
-        print("Log in status: " + str(statusCode))
+    def sendPostFromSession(self, port=8091, payload=None, endpoint=None):
+        statusCode = self.session.post(url="http://localhost:" + str(port) + "/" + endpoint, data=payload,
+                                       timeout=TestRestClient.clientTimeout).status_code
         return statusCode
 
-    @staticmethod
-    def createClientAsAdminAddBook(book=None):
-        with TestRestClient.createClientSession(endpoint="catalog_service/login/",
-                                                userCreds=TestRestClient.userCreds) as loggedInSession:
-            bookDetails = book.to_json()
-            statusCode = TestRestClient.sendPostFromSession(payload=bookDetails,
-                                                            endpoint="catalog_service/addBook/",
-                                                            session=loggedInSession)
+    def createClientAsAdminAddBook(self, book=None):
+        bookDetails = book.to_json()
+        self.createClientAsAdmin()
+        statusCode = self.sendPostFromSession(payload=bookDetails, endpoint="catalog_service/addBook/")
         return statusCode
 
-    @staticmethod
-    def createClientAsAdmin(port=8091):
+    def createClientAsAdmin(self):
         userCreds = {
             'username': 'username',
             'password': 'creativepassword'
         }
-        return TestRestClient.sendPostFromSession(port, userCreds, "catalog_service/login/")
+        return self.sendPostFromSession(payload=userCreds, endpoint="catalog_service/login/")
+
+    def createClientAddBook(self, book=None):
+        statusCode = self.sendPostFromSession(payload=book.to_json(), endpoint="catalog_service/addBook/")
+        return statusCode
+
+    def tearDown(self):
+        self.session.cookies.clear()

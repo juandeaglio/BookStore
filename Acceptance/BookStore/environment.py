@@ -3,6 +3,7 @@ import signal
 import subprocess
 import time
 
+from Acceptance.TestRestClient import TestRestClient
 from Source.Catalog.PersistentCatalog import PersistentCatalog
 from Source.Database.SqlDatabase import SqlDatabase
 
@@ -26,10 +27,12 @@ def stopDjangoServer(context):
         context.process.kill()
 
 def after_scenario(context, scenario):
+    TestRestClient().tearDown()
     time.sleep(1)
 
 
 def after_all(context):
+    time.sleep(1)
     stopDjangoServer(context)
     os.kill(context.process.pid, signal.CTRL_C_EVENT)
     print("Done")

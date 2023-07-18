@@ -19,7 +19,7 @@ def defineCatalog(context):
 
 @when('A user views the catalog')
 def viewCatalog(context):
-    response = TestRestClient.createClientThatGetsCatalogAsJson()
+    response = TestRestClient().createClientThatGetsCatalogAsJson()
     context.jsonCatalog = response
 
 
@@ -38,7 +38,7 @@ def createAdminUser(context):
 
 @when('A user logs in as an admin')
 def loginAsAdmin(context):
-    context.statusCode = TestRestClient.createClientAsAdmin()
+    context.statusCode = TestRestClient().createClientAsAdmin()
 
 
 @then('The user can access admin pages')
@@ -49,12 +49,12 @@ def loggedInAsAdmin(context):
 @when('The admin add a duplicate book to the catalog')
 def addBook(context):
     alreadyAddedBook = context.booksFromContext[0]
-    assert TestRestClient.createClientAsAdminAddBook(book=alreadyAddedBook) == 200
+    assert TestRestClient().createClientAsAdminAddBook(book=alreadyAddedBook) == 200
 
 
 @then('There will be no changes to the catalog')
 def checkForExtraBook(context):
-    response = TestRestClient.createClientThatGetsCatalogAsJson()
+    response = TestRestClient().createClientThatGetsCatalogAsJson()
     books = convertTableToArray(context)
     books = createExpectedJson(books)
 
