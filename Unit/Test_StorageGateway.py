@@ -16,8 +16,7 @@ class TestInMemoryStorageGateway(unittest.TestCase):
         self.storageGateway.add(self.books)
 
     def test_retrieveCatalog(self):
-        expectedTotal = len(self.storageGateway.fetchBooksFromDatabase())
-        assert len(self.books) == expectedTotal
+        assert len(self.books) == len(self.storageGateway.fetchBooksFromDatabase())
 
     def test_removeEntryFromCatalog(self):
         expectedTotal = len(self.storageGateway.fetchBooksFromDatabase()) - 1

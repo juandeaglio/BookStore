@@ -11,6 +11,7 @@ from Source.Database.SqlDatabase import SqlDatabase
 def before_all(context):
     startDjangoServer(context)
 
+
 def startDjangoServer(context):
     context.process = subprocess.Popen("./venv/Scripts/python.exe startDjangoWithTestUser.py")
 
