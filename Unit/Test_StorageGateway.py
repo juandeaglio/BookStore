@@ -1,4 +1,5 @@
 import unittest
+from operator import eq
 
 from Source.Book import Book
 from Source.StorageGateway import StorageGateway
@@ -41,6 +42,15 @@ class TestInMemoryStorageGateway(unittest.TestCase):
         self.storageGateway.add(None)
         assert len(self.storageGateway.fetchBooksFromDatabase()) == expectedTotal
 
+    def test_searchBooks(self):
+        title = "Harry Potter"
+        expected = []
+        for book in self.books:
+            if title in book.title:
+                expected.append(book)
+        expected.sort(key=lambda x: x.title)
+        assert self.storageGateway.fetchByString(title) == expected
+
 
 class TestPersistentStorageGateway(unittest.TestCase):
     def setUp(self):
@@ -52,8 +62,9 @@ class TestPersistentStorageGateway(unittest.TestCase):
         self.storageGateway.add(self.books)
 
     def test_retrieveCatalog(self):
-        expectedTotal = len(self.storageGateway.fetchBooksFromDatabase())
-        assert len(self.books) == expectedTotal
+        self.books.sort(key=lambda x: x.title)
+        actual = self.storageGateway.fetchBooksFromDatabase()
+        assert eq(self.books, actual)
 
     def test_addEntryToCatalog(self):
         expectedTotal = len(self.storageGateway.fetchBooksFromDatabase()) + 1
@@ -69,3 +80,13 @@ class TestPersistentStorageGateway(unittest.TestCase):
         expectedTotal = len(self.books)
         self.storageGateway.add(None)
         assert len(self.storageGateway.fetchBooksFromDatabase()) == expectedTotal
+
+    def test_searchBooks(self):
+        title = "Harry Potter"
+        expected = []
+        for book in self.books:
+            if title in book.title:
+                expected.append(book)
+        expected.sort(key=lambda x: x.title)
+        actual = self.storageGateway.fetchByString(title)
+        assert eq(actual, expected)

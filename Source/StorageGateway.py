@@ -38,3 +38,7 @@ class StorageGateway:
     def loadEntryByTitleToCache(self, title):
         book = self.dbConnection.deleteWhereTitle(title)
         return book
+
+    def fetchByString(self, bookDetail):
+        books = self.dbConnection.selectWith(bookDetail)
+        return books

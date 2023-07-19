@@ -50,9 +50,11 @@ Feature: Book catalog
         |To Kill a Mockingbird                      |Harper Lee         |1960           |
         When A user searches for Harry Potter
         Then Relevant results are displayed
-        |Harry Potter and the Sorcerer's Stone      |J.K. Rowling       |1998           |
+        |Title                                      |Author             |Release year   |
         |Harry Potter and the Chamber of Secrets    |J.K. Rowling       |1999           |
         |Harry Potter and the Prisoner of Azkaban   |J.K. Rowling       |1999           |
+        |Harry Potter and the Sorcerer's Stone      |J.K. Rowling       |1998           |
+
 
     Scenario: Purchase books
         Given A cart with books in it

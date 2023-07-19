@@ -43,3 +43,13 @@ class InMemoryDatabase(DatabaseConnection):
                 deleted += 1
 
         return deleted
+
+    def selectWith(self, bookDetail):
+        found = []
+        for book in self.books:
+            if bookDetail in book.title or bookDetail in book.author:
+                found.append(book)
+
+        return sorted(found,
+                       key=lambda book: book.title if "The" not in book.title[0:4]
+                       else book.title[4:])

@@ -1,3 +1,5 @@
+from operator import eq
+
 from behave import given, when, then
 from Acceptance.BookStore.Steps.ContextTable import convertTableToArray
 from Acceptance.TestRestClient import TestRestClient
@@ -64,10 +66,12 @@ def checkForExtraBook(context):
 def addBook(context):
     response = TestRestClient().searchForBook(title="Harry Potter")
     assert response.status_code == 200
-    context.jsonBooks = response.json
+    context.jsonBooks = response.json()
 
 @then('Relevant results are displayed')
 def checkForExtraBook(context):
     books = convertTableToArray(context)
     books = createExpectedJson(books)
-    assert context.jsonBooks == books
+    print("books:\n" + str(books))
+    print("jsonBooks:\n" + str(context.jsonBooks))
+    assert eq(context.jsonBooks, books)

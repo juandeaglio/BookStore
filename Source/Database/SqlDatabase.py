@@ -88,14 +88,23 @@ class SqlDatabase(DatabaseConnection):
 
     def insertBooksIntoCatalogTable(self, books):
         for book in books:
-            self.replaceSingleQuoteWithDouble(book)
-            self.insertQuery(book.title, book.author, book.releaseYear)
+            bookToInsert = self.replaceSingleQuoteWithDouble(book)
+            self.insertQuery(bookToInsert.title, bookToInsert.author, bookToInsert.releaseYear)
 
     def replaceSingleQuoteWithDouble(self, entry):
         # SQL requirement for single quote character ' in field.
-        newEntry = entry
-        if "'" in entry.title and "''" not in entry.title:
-            newEntry.title = re.sub("'", "''", entry.title)
+        newEntry = Book()
+        if isinstance(entry, str):
+            newEntry = re.sub("'", "''", entry)
+
+        else:
+            newEntry.author = entry.author
+            newEntry.releaseYear = entry.releaseYear
+            newEntry.title = entry.title
+
+            if "'" in newEntry.title and "''" not in newEntry.title:
+                title = re.sub("'", "''", newEntry.title)
+                newEntry.title = title
 
         return newEntry
 
@@ -117,5 +126,10 @@ class SqlDatabase(DatabaseConnection):
                 '''
         database.queryCatalogBySQL(query)
 
+    def selectWith(self, bookDetail):
+        database = BooksToSql('catalog.db')
+        sanitizedDetail = self.replaceSingleQuoteWithDouble(bookDetail)
+        query = 'SELECT title AS title, author AS author, releaseyear AS "releaseYear" FROM catalog ' \
+                'WHERE title LIKE \"%' + sanitizedDetail + '%\" OR author=\'' + sanitizedDetail + '\' ORDER by title'
 
-
+        return database.queryCatalogBySQL(query)

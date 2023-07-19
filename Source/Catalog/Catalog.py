@@ -35,3 +35,5 @@ class Catalog:
 
         return jsonList
 
+    def search(self, bookDetail):
+        return self.storageGateway.fetchByString(bookDetail)

@@ -19,3 +19,7 @@ class DatabaseConnection(ABC):
 
     def deleteWhereTitle(self, title):
         pass
+
+    @abstractmethod
+    def selectWith(self, bookDetail):
+        pass

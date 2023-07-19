@@ -54,7 +54,7 @@ class RestSocketTest(unittest.TestCase):
     def test_sendRequestWhileClosing(self):
         self.server.stop()
         try:
-            TestRestClient.createClientThatGetsCatalog()
+            TestRestClient().createClientThatGetsCatalog()
         except requests.exceptions.ConnectTimeout as e:
             print(str(e))
-        self.assertRaises(requests.exceptions.ConnectTimeout, TestRestClient.createClientThatGetsCatalog)
+        self.assertRaises(requests.exceptions.ConnectTimeout, TestRestClient().createClientThatGetsCatalog)
