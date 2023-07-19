@@ -22,8 +22,8 @@ class InMemoryDatabase(DatabaseConnection):
     def delete(self, entry):
         self.books.remove(entry)
 
-    def select(self, book):
-        return book if book in self.books else None
+    def select(self, searchTerm):
+        return searchTerm if searchTerm in self.books else None
 
     def selectWhereTitle(self, title):
         found = []

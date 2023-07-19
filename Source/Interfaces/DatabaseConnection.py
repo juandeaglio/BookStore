@@ -5,8 +5,7 @@ from Source.Book import Book
 
 class DatabaseConnection(ABC):
     def __init__(self):
-        self.books = List[Book]
-        
+        self.books = []
     @abstractmethod
     def insertBooksIntoCatalogTable(self, books):
         pass
@@ -19,8 +18,11 @@ class DatabaseConnection(ABC):
         return self.books
 
     @abstractmethod
-    def select(self, book):
-        pass
+    def select(self, searchTerm):
+        for book in self.books:
+            if book == searchTerm:
+                return book
+
 
     @abstractmethod
     def delete(self, entry):
