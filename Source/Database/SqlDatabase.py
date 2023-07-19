@@ -56,7 +56,24 @@ class BooksToSql:
 
 class SqlDatabase(DatabaseConnection):
     def __init__(self):
+        super().__init__()
         self.initializeDatabase()
+        self.databaseToCache()
+
+    def databaseToCache(self):
+        database = BooksToSql('catalog.db')
+        sqlStatement = '''
+                    SELECT title AS title, author AS author, releaseyear AS "releaseYear" FROM catalog ORDER BY title ASC
+                '''
+        self.books = self.query(database=database, query=sqlStatement)
+
+    def query(self, database, query, data=None):
+        if data is None:
+            self.books = database.queryCatalogBySQL(query)
+        else:
+            self.books = database.queryCatalogBySQL(query=query, data=data)
+
+        return self.books
 
     def initializeDatabase(self):
         database = BooksToSql('catalog.db')
@@ -68,14 +85,11 @@ class SqlDatabase(DatabaseConnection):
                 releaseyear TEXT
             )
         '''
-        database.queryCatalogBySQL(create_table_query)
+        self.query(database=database, query=create_table_query)
 
     def selectAll(self):
-        database = BooksToSql('catalog.db')
-        query = '''
-                    SELECT title AS title, author AS author, releaseyear AS "releaseYear" FROM catalog ORDER BY title ASC
-                '''
-        return database.queryCatalogBySQL(query)
+        self.databaseToCache()
+        return super().selectAll()
 
     def select(self, book):
         database = BooksToSql('catalog.db')
@@ -84,7 +98,7 @@ class SqlDatabase(DatabaseConnection):
                 'WHERE title LIKE \"%' + parsedBook.title + '%\" AND author=\'' + parsedBook.author + '\' AND releaseyear=\'' \
                 + parsedBook.releaseYear + '\''
 
-        return database.queryCatalogBySQL(query)
+        return self.query(database=database, query=query)
 
     def insertBooksIntoCatalogTable(self, books):
         for book in books:
@@ -116,7 +130,7 @@ class SqlDatabase(DatabaseConnection):
                     VALUES (?, ?, ?)
                 '''
         data = (title, author, releaseYear)
-        database.queryCatalogBySQL(query, data)
+        self.query(database=database, query=query, data=data)
 
     def clearData(self):
         database = BooksToSql('catalog.db')
@@ -124,7 +138,7 @@ class SqlDatabase(DatabaseConnection):
         query = '''
                     DROP TABLE IF EXISTS catalog
                 '''
-        database.queryCatalogBySQL(query)
+        self.query(database, query)
 
     def selectWith(self, bookDetail):
         database = BooksToSql('catalog.db')
@@ -132,7 +146,7 @@ class SqlDatabase(DatabaseConnection):
         query = 'SELECT title AS title, author AS author, releaseyear AS "releaseYear" FROM catalog ' \
                 'WHERE title LIKE \"%' + sanitizedDetail + '%\" OR author=\'' + sanitizedDetail + '\' ORDER by title'
 
-        return database.queryCatalogBySQL(query)
+        return self.query(database=database, query=query)
 
     def delete(self, entry):
         database = BooksToSql('catalog.db')
@@ -142,11 +156,11 @@ class SqlDatabase(DatabaseConnection):
                 'author=\'' + parsedBook.author + '\' AND ' \
                 'releaseyear=\'' + parsedBook.releaseYear + '\''
 
-        return database.queryCatalogBySQL(query)
+        return self.query(database=database, query=query)
 
     def deleteWhereTitle(self, title):
         database = BooksToSql('catalog.db')
         sanitizedDetail = self.replaceSingleQuoteWithDouble(title)
         query = 'DELETE FROM catalog WHERE title LIKE \"%' + sanitizedDetail + '%\"'
 
-        return database.queryCatalogBySQL(query)
+        return self.query(database=database, query=query)

@@ -3,6 +3,7 @@ from Source.Interfaces.DatabaseConnection import DatabaseConnection
 
 class InMemoryDatabase(DatabaseConnection):
     def __init__(self):
+        super().__init__()
         self.books = []
 
     def insertBooksIntoCatalogTable(self, books):
@@ -16,10 +17,7 @@ class InMemoryDatabase(DatabaseConnection):
             return None
 
     def selectAll(self):
-        self.books = sorted(self.books,
-                            key=lambda book: book.title if "The" not in book.title[0:4]
-                            else book.title[4:])
-        return self.books
+        return super().selectAll()
 
     def delete(self, entry):
         self.books.remove(entry)

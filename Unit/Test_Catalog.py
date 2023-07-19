@@ -32,8 +32,40 @@ class CatalogWithInitialAmountOfBooks(unittest.TestCase):
         self.catalog = InMemoryCatalog()
         self.catalog.add(self.books)
 
+    def test_smokeTestOfAllFunctions(self):
+        title = "Harry"
+        sizeOfSearch = len(self.catalog.search(title))
+        if self.catalog.getSizeOfCatalog() - sizeOfSearch == len(self.books) - sizeOfSearch:
+            books = self.catalog.getAllBooks()
+            length = len(books)
+            for i in range(0, length):
+                self.catalog.removeAllByTitle(books.pop().title)
+
+        assert self.catalog.getSizeOfCatalog() == 0
+
     def test_getAllBooksJson(self):
         assert len(self.catalog.getAllBooksJson()) == len(self.books)
+
+    def test_removeBookFromCatalogByName(self):
+        oldLength = self.catalog.getSizeOfCatalog()
+        self.catalog.removeAllByTitle("Harry Potter")
+        assert self.catalog.getSizeOfCatalog() < oldLength
+
+    def test_catalogBooksAreSorted(self):
+        expectedSortOrder = sortBooksByTitle(self.books)
+        actualSortOrder = createListOfTitles(self.catalog.getAllBooks())
+        assert expectedSortOrder == actualSortOrder
+
+    def test_searchBooks(self):
+        title = "Harry Potter"
+        actualBooks = self.catalog.search(title)
+        expectedBooks = []
+
+        for book in self.books:
+            if title in book.title:
+                expectedBooks.append(book)
+        expectedBooks.sort(key=lambda x: x.title)
+        assert expectedBooks == actualBooks
 
 
 class CatalogWithVariableAmountOfBooks(unittest.TestCase):
