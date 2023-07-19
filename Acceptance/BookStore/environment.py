@@ -28,7 +28,6 @@ def stopDjangoServer(context):
 
 
 def after_all(context):
-    time.sleep(1)
     stopDjangoServer(context)
     os.kill(context.process.pid, signal.CTRL_C_EVENT)
     print("Done")
