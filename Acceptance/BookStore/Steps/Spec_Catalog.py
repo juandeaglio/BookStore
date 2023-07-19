@@ -35,8 +35,9 @@ def displayCatalog(context):
 
 @given('A user has admin permissions')
 def createAdminUser(context):
-    #add user as admin
+    # add user as admin
     pass
+
 
 @when('A user logs in as an admin')
 def loginAsAdmin(context):
@@ -67,6 +68,7 @@ def addBook(context):
     response = TestRestClient().searchForBook(title="Harry Potter")
     assert response.status_code == 200
     context.jsonBooks = response.json()
+
 
 @then('Relevant results are displayed')
 def checkForExtraBook(context):

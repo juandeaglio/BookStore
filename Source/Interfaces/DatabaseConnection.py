@@ -14,9 +14,11 @@ class DatabaseConnection(ABC):
     def select(self, book):
         pass
 
+    @abstractmethod
     def delete(self, entry):
         pass
 
+    @abstractmethod
     def deleteWhereTitle(self, title):
         pass
 

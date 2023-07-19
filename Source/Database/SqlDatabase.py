@@ -133,3 +133,20 @@ class SqlDatabase(DatabaseConnection):
                 'WHERE title LIKE \"%' + sanitizedDetail + '%\" OR author=\'' + sanitizedDetail + '\' ORDER by title'
 
         return database.queryCatalogBySQL(query)
+
+    def delete(self, entry):
+        database = BooksToSql('catalog.db')
+        parsedBook = self.replaceSingleQuoteWithDouble(entry)
+        query = 'DELETE FROM catalog WHERE ' \
+                'title LIKE \"%' + parsedBook.title + '%\" AND ' \
+                'author=\'' + parsedBook.author + '\' AND ' \
+                'releaseyear=\'' + parsedBook.releaseYear + '\''
+
+        return database.queryCatalogBySQL(query)
+
+    def deleteWhereTitle(self, title):
+        database = BooksToSql('catalog.db')
+        sanitizedDetail = self.replaceSingleQuoteWithDouble(title)
+        query = 'DELETE FROM catalog WHERE title LIKE \"%' + sanitizedDetail + '%\"'
+
+        return database.queryCatalogBySQL(query)
