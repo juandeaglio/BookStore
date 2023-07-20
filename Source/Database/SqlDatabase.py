@@ -136,13 +136,16 @@ class SqlDatabase(DatabaseConnection):
         self.query(database, query)
 
     def selectWith(self, bookDetail, books):
+        searchResult = self.selectWhereQuery(bookDetail)
+        return super().selectWith(bookDetail, searchResult)
+
+    def selectWhereQuery(self, bookDetail):
         database = BooksToSql('catalog.db')
         sanitizedDetail = self.replaceSingleQuoteWithDouble(bookDetail)
         query = 'SELECT title AS title, author AS author, releaseyear AS "releaseYear" FROM catalog ' \
                 'WHERE title LIKE \"%' + sanitizedDetail + '%\" OR author=\'' + sanitizedDetail + '\' ORDER by title'
         searchResult = self.query(database=database, query=query)
-
-        return super().selectWith(bookDetail, searchResult)
+        return searchResult
 
     def delete(self, entry, books):
         books = self.databaseToCache()
@@ -159,9 +162,14 @@ class SqlDatabase(DatabaseConnection):
         self.query(database=database, query=query)
 
     def deleteWhereTitle(self, title, books):
+        books = self.databaseToCache()
+        deleted = super().deleteWhereTitle(title, books)
+        self.sendDeleteWhereQuery(title)
+
+        return deleted
+
+    def sendDeleteWhereQuery(self, title):
         database = BooksToSql('catalog.db')
         sanitizedDetail = self.replaceSingleQuoteWithDouble(title)
         query = 'DELETE FROM catalog WHERE title LIKE \"%' + sanitizedDetail + '%\"'
         self.query(database=database, query=query)
-
-        return super().deleteWhereTitle(title, books)
