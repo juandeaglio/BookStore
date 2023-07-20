@@ -22,3 +22,6 @@ class InMemoryDatabase(DatabaseConnection):
 
     def selectWith(self, bookDetail, books):
         return super().selectWith(bookDetail, books)
+
+    def synchronize(self, books):
+        return books

@@ -43,3 +43,7 @@ class DatabaseConnection(ABC):
         return sorted(found,
                       key=lambda book: book.title if "The" not in book.title[0:4]
                       else book.title[4:])
+
+    @abstractmethod
+    def synchronize(self, books):
+        return books

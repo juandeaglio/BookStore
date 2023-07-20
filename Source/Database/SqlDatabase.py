@@ -36,7 +36,8 @@ class BooksToSql:
             books.append(book)
         return books
 
-    def makeBookFromSQL(self, columns, row):
+    @staticmethod
+    def makeBookFromSQL(columns, row):
         book = Book()
         for i in range(len(columns)):
             setattr(book, columns[i][0], row[i])
@@ -47,10 +48,12 @@ class BooksToSql:
         if self.titleHasDoubleQuote(book):
             self.removeDuplicateQuotes(book)
 
-    def removeDuplicateQuotes(self, book):
+    @staticmethod
+    def removeDuplicateQuotes(book):
         book.title = re.sub("''+", "'", book.title)
 
-    def titleHasDoubleQuote(self, book):
+    @staticmethod
+    def titleHasDoubleQuote(book):
         return "\'\'" in book.title
 
 
@@ -59,14 +62,8 @@ class SqlDatabase(DatabaseConnection):
         super().__init__()
         self.initializeDatabase()
 
-    def databaseToCache(self):
-        database = BooksToSql('catalog.db')
-        sqlStatement = '''
-                    SELECT title AS title, author AS author, releaseyear AS "releaseYear" FROM catalog ORDER BY title ASC
-                '''
-        return self.query(database=database, query=sqlStatement)
-
-    def query(self, database, query, data=None):
+    @staticmethod
+    def query(database, query, data=None):
         if data is None:
             return database.queryCatalogBySQL(query)
         else:
@@ -84,15 +81,6 @@ class SqlDatabase(DatabaseConnection):
         '''
         self.query(database=database, query=create_table_query)
 
-    def selectAll(self, books):
-        if len(books) != len(self.databaseToCache()):
-            books = self.databaseToCache()
-        return super().selectAll(books)
-
-    def select(self, searchTerm, books):
-        books = self.databaseToCache()
-        return super().select(searchTerm, books)
-
     def insertBooksIntoCatalogTable(self, books, booksToInsert):
         for book in booksToInsert:
             bookToInsert = self.replaceSingleQuoteWithDouble(book)
@@ -100,7 +88,34 @@ class SqlDatabase(DatabaseConnection):
 
         return super().insertBooksIntoCatalogTable(books, booksToInsert)
 
-    def replaceSingleQuoteWithDouble(self, entry):
+    def synchronize(self, books):
+        database = BooksToSql('catalog.db')
+        sqlStatement = '''
+                    SELECT title AS title, author AS author, releaseyear AS "releaseYear" FROM catalog ORDER BY title ASC
+                '''
+        return self.query(database=database, query=sqlStatement)
+
+    def selectAll(self, books):
+        return super().selectAll(books)
+
+    def select(self, searchTerm, books):
+        return super().select(searchTerm, books)
+
+    def selectWith(self, bookDetail, books):
+        return super().selectWith(bookDetail, books)
+
+    def delete(self, entry, books):
+        self.sendDeleteQuery(entry)
+        return super().delete(entry, books)
+
+    def deleteWhereTitle(self, title, books):
+        deleted = super().deleteWhereTitle(title, books)
+        self.sendDeleteWhereQuery(title)
+
+        return deleted
+
+    @staticmethod
+    def replaceSingleQuoteWithDouble(entry):
         # SQL requirement for single quote character ' in field.
         newEntry = Book()
         if isinstance(entry, str):
@@ -135,23 +150,6 @@ class SqlDatabase(DatabaseConnection):
                 '''
         self.query(database, query)
 
-    def selectWith(self, bookDetail, books):
-        searchResult = self.selectWhereQuery(bookDetail)
-        return super().selectWith(bookDetail, searchResult)
-
-    def selectWhereQuery(self, bookDetail):
-        database = BooksToSql('catalog.db')
-        sanitizedDetail = self.replaceSingleQuoteWithDouble(bookDetail)
-        query = 'SELECT title AS title, author AS author, releaseyear AS "releaseYear" FROM catalog ' \
-                'WHERE title LIKE \"%' + sanitizedDetail + '%\" OR author=\'' + sanitizedDetail + '\' ORDER by title'
-        searchResult = self.query(database=database, query=query)
-        return searchResult
-
-    def delete(self, entry, books):
-        books = self.databaseToCache()
-        self.sendDeleteQuery(entry)
-        return super().delete(entry, books)
-
     def sendDeleteQuery(self, entry):
         database = BooksToSql('catalog.db')
         parsedBook = self.replaceSingleQuoteWithDouble(entry)
@@ -160,13 +158,6 @@ class SqlDatabase(DatabaseConnection):
                                                       'author=\'' + parsedBook.author + '\' AND ' \
                                                                                         'releaseyear=\'' + parsedBook.releaseYear + '\''
         self.query(database=database, query=query)
-
-    def deleteWhereTitle(self, title, books):
-        books = self.databaseToCache()
-        deleted = super().deleteWhereTitle(title, books)
-        self.sendDeleteWhereQuery(title)
-
-        return deleted
 
     def sendDeleteWhereQuery(self, title):
         database = BooksToSql('catalog.db')
