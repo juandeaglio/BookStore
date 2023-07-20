@@ -58,7 +58,6 @@ class SqlDatabase(DatabaseConnection):
     def __init__(self):
         super().__init__()
         self.initializeDatabase()
-        self.databaseToCache()
 
     def databaseToCache(self):
         database = BooksToSql('catalog.db')
@@ -86,7 +85,7 @@ class SqlDatabase(DatabaseConnection):
         self.query(database=database, query=create_table_query)
 
     def selectAll(self, books):
-        books = self.databaseToCache()
+        assert len(books) == len(self.databaseToCache())
         return super().selectAll(books)
 
     def select(self, searchTerm, books):
@@ -99,11 +98,13 @@ class SqlDatabase(DatabaseConnection):
 
         return self.query(database=database, query=query)
 
-    def insertBooksIntoCatalogTable(self, books, booksToEnter):
-        super().insertBooksIntoCatalogTable(books, booksToEnter)
-        for book in booksToEnter:
+    def insertBooksIntoCatalogTable(self, books, booksToInsert):
+        for book in booksToInsert:
             bookToInsert = self.replaceSingleQuoteWithDouble(book)
             self.insertQuery(bookToInsert.title, bookToInsert.author, bookToInsert.releaseYear)
+
+        return super().insertBooksIntoCatalogTable(books, booksToInsert)
+
 
     def replaceSingleQuoteWithDouble(self, entry):
         # SQL requirement for single quote character ' in field.
@@ -146,7 +147,8 @@ class SqlDatabase(DatabaseConnection):
         query = 'SELECT title AS title, author AS author, releaseyear AS "releaseYear" FROM catalog ' \
                 'WHERE title LIKE \"%' + sanitizedDetail + '%\" OR author=\'' + sanitizedDetail + '\' ORDER by title'
 
-        return self.query(database=database, query=query)
+        self.query(database=database, query=query)
+        return super().selectWith(bookDetail, books)
 
     def delete(self, entry, books):
         database = BooksToSql('catalog.db')
@@ -155,8 +157,8 @@ class SqlDatabase(DatabaseConnection):
                 'title LIKE \"%' + parsedBook.title + '%\" AND ' \
                 'author=\'' + parsedBook.author + '\' AND ' \
                 'releaseyear=\'' + parsedBook.releaseYear + '\''
-
-        return self.query(database=database, query=query)
+        self.query(database=database, query=query)
+        return super().delete(entry, books)
 
     def deleteWhereTitle(self, title, books):
         database = BooksToSql('catalog.db')

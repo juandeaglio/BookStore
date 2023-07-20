@@ -11,8 +11,8 @@ class DatabaseConnection(ABC):
     @abstractmethod
     def selectAll(self, books):
         books = sorted(books,
-                            key=lambda book: book.title if "The" not in book.title[0:4]
-                            else book.title[4:])
+                       key=lambda book: book.title if "The" not in book.title[0:4]
+                       else book.title[4:])
         return books
 
     @abstractmethod
@@ -43,4 +43,3 @@ class DatabaseConnection(ABC):
         return sorted(found,
                       key=lambda book: book.title if "The" not in book.title[0:4]
                       else book.title[4:])
-
