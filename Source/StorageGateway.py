@@ -8,7 +8,7 @@ class StorageGateway:
             self.dbConnection = dbConn
 
     def fetchBooksFromDatabase(self):
-        self.books = self.dbConnection.selectAll()
+        self.books = self.dbConnection.selectAll(self.books)
         return self.books
 
     def loadEntryToCache(self, book):
@@ -16,7 +16,7 @@ class StorageGateway:
 
     def removeEntry(self, entry):
         if self.doesBookExist(entry):
-            self.dbConnection.delete(entry)
+            self.dbConnection.delete(entry, self.books)
 
     def add(self, entries):
         if entries is not None:
@@ -26,7 +26,7 @@ class StorageGateway:
     def addUniqueEntry(self, entry):
         result = self.dbConnection.select(entry, self.books)
         if not result:
-            self.dbConnection.insertBooksIntoCatalogTable([entry])
+            self.dbConnection.insertBooksIntoCatalogTable(self.books, [entry])
 
     def doesBookExist(self, entry):
         return self.loadEntryToCache(entry) is not None
@@ -38,9 +38,9 @@ class StorageGateway:
         return self.loadEntryByTitleToCache(title) is not None
 
     def loadEntryByTitleToCache(self, title):
-        book = self.dbConnection.deleteWhereTitle(title)
+        book = self.dbConnection.deleteWhereTitle(title, self.books)
         return book
 
     def fetchByString(self, bookDetail):
-        books = self.dbConnection.selectWith(bookDetail)
+        books = self.dbConnection.selectWith(bookDetail, self.books)
         return books

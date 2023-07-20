@@ -5,20 +5,20 @@ class InMemoryDatabase(DatabaseConnection):
     def __init__(self):
         super().__init__()
 
-    def insertBooksIntoCatalogTable(self, books):
-        return super().insertBooksIntoCatalogTable(books)
+    def insertBooksIntoCatalogTable(self, books, booksToInsert):
+        return super().insertBooksIntoCatalogTable(books, booksToInsert)
     
-    def selectAll(self):
-        return super().selectAll()
+    def selectAll(self, books):
+        return super().selectAll(books)
 
-    def delete(self, entry):
-        return super().delete(entry)
+    def delete(self, entry, books):
+        return super().delete(entry, books)
 
     def select(self, searchTerm, books=None):
         return super().select(searchTerm, books)
 
-    def deleteWhereTitle(self, title):
-        return super().deleteWhereTitle(title)
+    def deleteWhereTitle(self, title, books):
+        return super().deleteWhereTitle(title, books)
 
-    def selectWith(self, bookDetail):
-        return super().selectWith(bookDetail)
+    def selectWith(self, bookDetail, books):
+        return super().selectWith(bookDetail, books)

@@ -4,48 +4,39 @@ from Source.Book import Book
 
 
 class DatabaseConnection(ABC):
-    def __init__(self):
-        self.books = []
     @abstractmethod
-    def insertBooksIntoCatalogTable(self, books):
-        oldLen = len(self.books)
-        for book in books:
-            self.books.append(book)
-
-        if len(self.books) != oldLen:
-            return self.books
-        else:
-            return None
+    def insertBooksIntoCatalogTable(self, books, booksToInsert):
+        books += booksToInsert
 
     @abstractmethod
-    def selectAll(self):
-        self.books = sorted(self.books,
+    def selectAll(self, books):
+        books = sorted(books,
                             key=lambda book: book.title if "The" not in book.title[0:4]
                             else book.title[4:])
-        return self.books
+        return books
 
     @abstractmethod
     def select(self, searchTerm, books):
         return searchTerm if searchTerm in books else None
 
     @abstractmethod
-    def delete(self, entry):
-        self.books.remove(entry)
+    def delete(self, entry, books):
+        books.remove(entry)
 
     @abstractmethod
-    def deleteWhereTitle(self, title):
+    def deleteWhereTitle(self, title, books):
         deleted = 0
-        for book in self.books:
+        for book in books:
             if title in book.title:
-                self.books.remove(book)
+                books.remove(book)
                 deleted += 1
 
         return deleted
 
     @abstractmethod
-    def selectWith(self, bookDetail):
+    def selectWith(self, bookDetail, books):
         found = []
-        for book in self.books:
+        for book in books:
             if bookDetail in book.title or bookDetail in book.author:
                 found.append(book)
 
