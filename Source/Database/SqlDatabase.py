@@ -85,7 +85,8 @@ class SqlDatabase(DatabaseConnection):
         self.query(database=database, query=create_table_query)
 
     def selectAll(self, books):
-        assert len(books) == len(self.databaseToCache())
+        if len(books) != len(self.databaseToCache()):
+            books = self.databaseToCache()
         return super().selectAll(books)
 
     def select(self, searchTerm, books):
@@ -104,7 +105,6 @@ class SqlDatabase(DatabaseConnection):
             self.insertQuery(bookToInsert.title, bookToInsert.author, bookToInsert.releaseYear)
 
         return super().insertBooksIntoCatalogTable(books, booksToInsert)
-
 
     def replaceSingleQuoteWithDouble(self, entry):
         # SQL requirement for single quote character ' in field.
@@ -146,17 +146,17 @@ class SqlDatabase(DatabaseConnection):
         sanitizedDetail = self.replaceSingleQuoteWithDouble(bookDetail)
         query = 'SELECT title AS title, author AS author, releaseyear AS "releaseYear" FROM catalog ' \
                 'WHERE title LIKE \"%' + sanitizedDetail + '%\" OR author=\'' + sanitizedDetail + '\' ORDER by title'
+        searchResult = self.query(database=database, query=query)
 
-        self.query(database=database, query=query)
-        return super().selectWith(bookDetail, books)
+        return super().selectWith(bookDetail, searchResult)
 
     def delete(self, entry, books):
         database = BooksToSql('catalog.db')
         parsedBook = self.replaceSingleQuoteWithDouble(entry)
         query = 'DELETE FROM catalog WHERE ' \
                 'title LIKE \"%' + parsedBook.title + '%\" AND ' \
-                'author=\'' + parsedBook.author + '\' AND ' \
-                'releaseyear=\'' + parsedBook.releaseYear + '\''
+                                                      'author=\'' + parsedBook.author + '\' AND ' \
+                                                                                        'releaseyear=\'' + parsedBook.releaseYear + '\''
         self.query(database=database, query=query)
         return super().delete(entry, books)
 

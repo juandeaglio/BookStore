@@ -31,11 +31,13 @@ class StorageGateway:
     def doesBookExist(self, entry):
         return self.loadEntryToCache(entry) is not None
 
-    def removeEntryByTitle(self, title):
-        self.removeEntry(self.loadEntryByTitleToCache(title))
+    def removeEntriesByTitle(self, title):
+        books = self.loadEntryByTitleToCache(title)
+        for book in books:
+            self.removeEntry(book)
 
     def loadEntryByTitleToCache(self, title):
-        books = self.dbConnection.deleteWhereTitle(title, self.books)
+        books = self.dbConnection.selectWith(title, self.books)
         return books
 
     def fetchByString(self, bookDetail):

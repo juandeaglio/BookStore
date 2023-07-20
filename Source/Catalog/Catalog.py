@@ -13,7 +13,7 @@ class Catalog:
             self.storageGateway.add(books)
 
     def removeAllByTitle(self, title):
-        self.storageGateway.removeEntryByTitle(title)
+        self.storageGateway.removeEntriesByTitle(title)
 
     def getAllBooks(self):
         return self.storageGateway.fetchBooksFromDatabase()

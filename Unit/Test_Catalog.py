@@ -2,6 +2,8 @@ import unittest
 
 from Source.Book import Book
 from Source.Catalog.InMemoryCatalog import InMemoryCatalog
+from Source.Catalog.PersistentCatalog import PersistentCatalog
+from Source.Database.SqlDatabase import SqlDatabase
 
 
 def sortBooksByTitle(books):
@@ -39,7 +41,7 @@ class CatalogWithInitialAmountOfBooks(unittest.TestCase):
             books = self.catalog.getAllBooks()
             length = len(books)
             for i in range(0, length):
-                self.catalog.removeAllByTitle(books.pop().title)
+                self.catalog.removeAllByTitle(books[0].title)
 
         assert self.catalog.getSizeOfCatalog() == 0
 
@@ -68,13 +70,22 @@ class CatalogWithInitialAmountOfBooks(unittest.TestCase):
         assert expectedBooks == actualBooks
 
 
+class PersistentCatalogWithInitialAmountOfBooks(CatalogWithInitialAmountOfBooks):
+    def setUp(self):
+        SqlDatabase().clearData()
+        super().setUp()
+        self.catalog = PersistentCatalog()
+        self.catalog.add(self.books)
+
+
 class CatalogWithVariableAmountOfBooks(unittest.TestCase):
     def setUp(self):
         self.catalog = InMemoryCatalog()
 
     def test_addNoneToCatalog(self):
         self.catalog.add(None)
-        assert self.catalog.getSizeOfCatalog() == 0
+        expectedSize = self.catalog.getSizeOfCatalog()
+        assert expectedSize == 0
 
     def test_addNoBooksToCatalog(self):
         self.catalog.add([])
@@ -84,6 +95,12 @@ class CatalogWithVariableAmountOfBooks(unittest.TestCase):
         self.catalog.add(Book('The Hunger Games', 'Suzanne Collins', '2008'))
         assert self.catalog.getSizeOfCatalog() == 1
 
+
+class PersistentCatalogWithVariableAmountOfBooks(CatalogWithVariableAmountOfBooks):
+    def setUp(self):
+        SqlDatabase().clearData()
+        super().setUp()
+        self.catalog = PersistentCatalog()
 
 if __name__ == '__main__':
     unittest.main()

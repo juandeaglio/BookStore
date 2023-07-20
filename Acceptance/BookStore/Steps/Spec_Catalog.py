@@ -64,14 +64,14 @@ def checkForExtraBook(context):
 
 
 @when('A user searches for Harry Potter')
-def addBook(context):
+def searchForBookTitle(context):
     response = TestRestClient().searchForBook(title="Harry Potter")
     assert response.status_code == 200
     context.jsonBooks = response.json()
 
 
 @then('Relevant results are displayed')
-def checkForExtraBook(context):
+def bookFound(context):
     books = convertTableToArray(context)
     books = createExpectedJson(books)
     print("books:\n" + str(books))
