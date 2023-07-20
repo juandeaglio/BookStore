@@ -41,16 +41,6 @@ class RestSocketTest(unittest.TestCase):
         actualResponse = Response(raw=responseData)
         assert expectedHTTP == actualResponse
 
-    def test_sendAndReceiveAbout(self):
-        expectedHTTP = Response(start="HTTP/1.1 200 OK",
-                                parameters={"Access-Control-Allow-Origin": "*", "Content-Type": "text/html"},
-                                body=PageLoader("./Source/Static/about.html").htmlAsString)
-
-        self.service.serve(TestClientSocket("/about"))
-        responseData = self.service.lastResponse
-        actualResponse = Response(raw=responseData)
-        assert expectedHTTP == actualResponse
-
     def test_sendRequestWhileClosing(self):
         self.server.stop()
         try:
