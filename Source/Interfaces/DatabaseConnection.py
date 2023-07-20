@@ -25,8 +25,8 @@ class DatabaseConnection(ABC):
         return self.books
 
     @abstractmethod
-    def select(self, searchTerm):
-        return searchTerm if searchTerm in self.books else None
+    def select(self, searchTerm, books):
+        return searchTerm if searchTerm in books else None
 
     @abstractmethod
     def delete(self, entry):

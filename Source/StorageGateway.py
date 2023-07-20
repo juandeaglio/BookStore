@@ -3,14 +3,16 @@ from Source.Interfaces.DatabaseConnection import DatabaseConnection
 
 class StorageGateway:
     def __init__(self, dbConn):
+        self.books = []
         if isinstance(dbConn, DatabaseConnection):
             self.dbConnection = dbConn
 
     def fetchBooksFromDatabase(self):
-        return self.dbConnection.selectAll()
+        self.books = self.dbConnection.selectAll()
+        return self.books
 
     def loadEntryToCache(self, book):
-        return self.dbConnection.select(book)
+        return self.dbConnection.select(book, self.books)
 
     def removeEntry(self, entry):
         if self.doesBookExist(entry):
@@ -22,7 +24,7 @@ class StorageGateway:
                 self.addUniqueEntry(entry)
 
     def addUniqueEntry(self, entry):
-        result = self.dbConnection.select(entry)
+        result = self.dbConnection.select(entry, self.books)
         if not result:
             self.dbConnection.insertBooksIntoCatalogTable([entry])
 

@@ -91,7 +91,7 @@ class SqlDatabase(DatabaseConnection):
         self.databaseToCache()
         return super().selectAll()
 
-    def select(self, searchTerm):
+    def select(self, searchTerm, books):
         database = BooksToSql('catalog.db')
         parsedBook = self.replaceSingleQuoteWithDouble(searchTerm)
         query = 'SELECT title AS title, author AS author, releaseyear AS "releaseYear" FROM catalog ' \
