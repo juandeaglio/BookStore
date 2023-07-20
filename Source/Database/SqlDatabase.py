@@ -158,9 +158,10 @@ class SqlDatabase(DatabaseConnection):
 
         return self.query(database=database, query=query)
 
-    def deleteWhereTitle(self, title):
+    def deleteWhereTitle(self, title, books):
         database = BooksToSql('catalog.db')
         sanitizedDetail = self.replaceSingleQuoteWithDouble(title)
         query = 'DELETE FROM catalog WHERE title LIKE \"%' + sanitizedDetail + '%\"'
+        self.query(database=database, query=query)
 
-        return self.query(database=database, query=query)
+        return super().deleteWhereTitle(title, books)

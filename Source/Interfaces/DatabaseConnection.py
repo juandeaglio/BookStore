@@ -25,11 +25,11 @@ class DatabaseConnection(ABC):
 
     @abstractmethod
     def deleteWhereTitle(self, title, books):
-        deleted = 0
+        deleted = []
         for book in books:
             if title in book.title:
                 books.remove(book)
-                deleted += 1
+                deleted.append(book)
 
         return deleted
 

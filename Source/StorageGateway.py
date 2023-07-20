@@ -34,12 +34,9 @@ class StorageGateway:
     def removeEntryByTitle(self, title):
         self.removeEntry(self.loadEntryByTitleToCache(title))
 
-    def doesTitleExist(self, title):
-        return self.loadEntryByTitleToCache(title) is not None
-
     def loadEntryByTitleToCache(self, title):
-        book = self.dbConnection.deleteWhereTitle(title, self.books)
-        return book
+        books = self.dbConnection.deleteWhereTitle(title, self.books)
+        return books
 
     def fetchByString(self, bookDetail):
         books = self.dbConnection.selectWith(bookDetail, self.books)
