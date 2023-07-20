@@ -65,15 +65,13 @@ class SqlDatabase(DatabaseConnection):
         sqlStatement = '''
                     SELECT title AS title, author AS author, releaseyear AS "releaseYear" FROM catalog ORDER BY title ASC
                 '''
-        self.books = self.query(database=database, query=sqlStatement)
+        return self.query(database=database, query=sqlStatement)
 
     def query(self, database, query, data=None):
         if data is None:
-            self.books = database.queryCatalogBySQL(query)
+            return database.queryCatalogBySQL(query)
         else:
-            self.books = database.queryCatalogBySQL(query=query, data=data)
-
-        return self.books
+            return database.queryCatalogBySQL(query=query, data=data)
 
     def initializeDatabase(self):
         database = BooksToSql('catalog.db')
@@ -88,7 +86,7 @@ class SqlDatabase(DatabaseConnection):
         self.query(database=database, query=create_table_query)
 
     def selectAll(self):
-        self.databaseToCache()
+        self.books = self.databaseToCache()
         return super().selectAll()
 
     def select(self, searchTerm, books):
