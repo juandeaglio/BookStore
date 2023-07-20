@@ -109,10 +109,41 @@ class SqlDatabase(DatabaseConnection):
         return super().delete(entry, books)
 
     def deleteWhereTitle(self, title, books):
-        deleted = super().deleteWhereTitle(title, books)
         self.sendDeleteWhereQuery(title)
+        return super().deleteWhereTitle(title, books)
 
-        return deleted
+    def insertQuery(self, title, author, releaseYear):
+        database = BooksToSql('catalog.db')
+
+        query = '''
+                    INSERT INTO catalog (title, author, releaseyear)
+                    VALUES (?, ?, ?)
+                '''
+        data = (title, author, releaseYear)
+        self.query(database=database, query=query, data=data)
+
+    def sendDeleteQuery(self, entry):
+        database = BooksToSql('catalog.db')
+        parsedBook = self.replaceSingleQuoteWithDouble(entry)
+        query = 'DELETE FROM catalog WHERE ' \
+                'title LIKE \"%' + parsedBook.title + '%\" AND ' \
+                                                      'author=\'' + parsedBook.author + '\' AND ' \
+                                                                                        'releaseyear=\'' + parsedBook.releaseYear + '\''
+        self.query(database=database, query=query)
+
+    def sendDeleteWhereQuery(self, title):
+        database = BooksToSql('catalog.db')
+        sanitizedDetail = self.replaceSingleQuoteWithDouble(title)
+        query = 'DELETE FROM catalog WHERE title LIKE \"%' + sanitizedDetail + '%\"'
+        self.query(database=database, query=query)
+
+    def clearData(self):
+        database = BooksToSql('catalog.db')
+
+        query = '''
+                    DROP TABLE IF EXISTS catalog
+                '''
+        self.query(database, query)
 
     @staticmethod
     def replaceSingleQuoteWithDouble(entry):
@@ -131,36 +162,3 @@ class SqlDatabase(DatabaseConnection):
                 newEntry.title = title
 
         return newEntry
-
-    def insertQuery(self, title, author, releaseYear):
-        database = BooksToSql('catalog.db')
-
-        query = '''
-                    INSERT INTO catalog (title, author, releaseyear)
-                    VALUES (?, ?, ?)
-                '''
-        data = (title, author, releaseYear)
-        self.query(database=database, query=query, data=data)
-
-    def clearData(self):
-        database = BooksToSql('catalog.db')
-
-        query = '''
-                    DROP TABLE IF EXISTS catalog
-                '''
-        self.query(database, query)
-
-    def sendDeleteQuery(self, entry):
-        database = BooksToSql('catalog.db')
-        parsedBook = self.replaceSingleQuoteWithDouble(entry)
-        query = 'DELETE FROM catalog WHERE ' \
-                'title LIKE \"%' + parsedBook.title + '%\" AND ' \
-                                                      'author=\'' + parsedBook.author + '\' AND ' \
-                                                                                        'releaseyear=\'' + parsedBook.releaseYear + '\''
-        self.query(database=database, query=query)
-
-    def sendDeleteWhereQuery(self, title):
-        database = BooksToSql('catalog.db')
-        sanitizedDetail = self.replaceSingleQuoteWithDouble(title)
-        query = 'DELETE FROM catalog WHERE title LIKE \"%' + sanitizedDetail + '%\"'
-        self.query(database=database, query=query)

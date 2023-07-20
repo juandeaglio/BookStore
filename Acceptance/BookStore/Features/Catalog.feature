@@ -55,6 +55,17 @@ Feature: Book catalog
         |Harry Potter and the Prisoner of Azkaban   |J.K. Rowling       |1999           |
         |Harry Potter and the Sorcerer's Stone      |J.K. Rowling       |1998           |
 
+    Scenario: Delete a book
+        Given A catalog
+        |Title                                      |Author             |Release year   |
+        |The Hunger Games                           |Suzanne Collins    |2008           |
+        |Harry Potter and the Sorcerer's Stone      |J.K. Rowling       |1998           |
+        |To Kill a Mockingbird                      |Harper Lee         |1960           |
+        When An authorized user deletes a book
+        Then The book will be removed from the catalog
+        |Title                                      |Author             |Release year   |
+        |The Hunger Games                           |Suzanne Collins    |2008           |
+        |To Kill a Mockingbird                      |Harper Lee         |1960           |
 
     Scenario: Purchase books
         Given A cart with books in it
