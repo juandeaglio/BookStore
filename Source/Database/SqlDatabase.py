@@ -90,14 +90,8 @@ class SqlDatabase(DatabaseConnection):
         return super().selectAll(books)
 
     def select(self, searchTerm, books):
-        database = BooksToSql('catalog.db')
-        parsedBook = self.replaceSingleQuoteWithDouble(searchTerm)
-        query = 'SELECT title AS title, author AS author, releaseyear AS "releaseYear" FROM catalog ' \
-                'WHERE title LIKE \"%' + parsedBook.title + '%\" AND author=\'' + parsedBook.author + \
-                '\' AND releaseyear=\'' \
-                + parsedBook.releaseYear + '\''
-
-        return self.query(database=database, query=query)
+        books = self.databaseToCache()
+        return super().select(searchTerm, books)
 
     def insertBooksIntoCatalogTable(self, books, booksToInsert):
         for book in booksToInsert:
@@ -151,6 +145,11 @@ class SqlDatabase(DatabaseConnection):
         return super().selectWith(bookDetail, searchResult)
 
     def delete(self, entry, books):
+        books = self.databaseToCache()
+        self.sendDeleteQuery(entry)
+        return super().delete(entry, books)
+
+    def sendDeleteQuery(self, entry):
         database = BooksToSql('catalog.db')
         parsedBook = self.replaceSingleQuoteWithDouble(entry)
         query = 'DELETE FROM catalog WHERE ' \
@@ -158,7 +157,6 @@ class SqlDatabase(DatabaseConnection):
                                                       'author=\'' + parsedBook.author + '\' AND ' \
                                                                                         'releaseyear=\'' + parsedBook.releaseYear + '\''
         self.query(database=database, query=query)
-        return super().delete(entry, books)
 
     def deleteWhereTitle(self, title, books):
         database = BooksToSql('catalog.db')

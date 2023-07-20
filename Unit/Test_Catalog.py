@@ -41,7 +41,7 @@ class CatalogWithInitialAmountOfBooks(unittest.TestCase):
             books = self.catalog.getAllBooks()
             length = len(books)
             for i in range(0, length):
-                self.catalog.removeAllByTitle(books[0].title)
+                self.catalog.removeAllByTitle(books.pop().title)
 
         assert self.catalog.getSizeOfCatalog() == 0
 
