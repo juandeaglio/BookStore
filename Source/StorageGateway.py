@@ -2,9 +2,9 @@ from Source.Interfaces.DatabaseConnection import DatabaseConnection
 
 
 class StorageGateway:
-    def __init__(self, databasePipe):
-        if isinstance(databasePipe, DatabaseConnection):
-            self.dbConnection = databasePipe
+    def __init__(self, dbConn):
+        if isinstance(dbConn, DatabaseConnection):
+            self.dbConnection = dbConn
 
     def fetchBooksFromDatabase(self):
         return self.dbConnection.selectAll()

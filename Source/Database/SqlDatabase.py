@@ -95,7 +95,8 @@ class SqlDatabase(DatabaseConnection):
         database = BooksToSql('catalog.db')
         parsedBook = self.replaceSingleQuoteWithDouble(searchTerm)
         query = 'SELECT title AS title, author AS author, releaseyear AS "releaseYear" FROM catalog ' \
-                'WHERE title LIKE \"%' + parsedBook.title + '%\" AND author=\'' + parsedBook.author + '\' AND releaseyear=\'' \
+                'WHERE title LIKE \"%' + parsedBook.title + '%\" AND author=\'' + parsedBook.author + \
+                '\' AND releaseyear=\'' \
                 + parsedBook.releaseYear + '\''
 
         return self.query(database=database, query=query)
