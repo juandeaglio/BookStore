@@ -7,47 +7,19 @@ class InMemoryDatabase(DatabaseConnection):
         self.books = []
 
     def insertBooksIntoCatalogTable(self, books):
-        oldLen = len(self.books)
-        for book in books:
-            self.books.append(book)
-
-        if len(self.books) != oldLen:
-            return self.books
-        else:
-            return None
-
+        return super().insertBooksIntoCatalogTable(books)
+    
     def selectAll(self):
         return super().selectAll()
 
     def delete(self, entry):
-        self.books.remove(entry)
+        return super().delete(entry)
 
     def select(self, searchTerm):
-        return searchTerm if searchTerm in self.books else None
-
-    def selectWhereTitle(self, title):
-        found = []
-        for book in self.books:
-            if title in book.title:
-                found.append(book)
-
-        return found
+        return super().select(searchTerm)
 
     def deleteWhereTitle(self, title):
-        deleted = 0
-        for book in self.books:
-            if title in book.title:
-                self.books.remove(book)
-                deleted += 1
-
-        return deleted
+        return super().deleteWhereTitle(title)
 
     def selectWith(self, bookDetail):
-        found = []
-        for book in self.books:
-            if bookDetail in book.title or bookDetail in book.author:
-                found.append(book)
-
-        return sorted(found,
-                       key=lambda book: book.title if "The" not in book.title[0:4]
-                       else book.title[4:])
+        return super().selectWith(bookDetail)
