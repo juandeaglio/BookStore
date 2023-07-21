@@ -74,6 +74,12 @@ def searchForBookTitle(context):
 def bookFound(context):
     books = convertTableToArray(context)
     books = createExpectedJson(books)
-    print("books:\n" + str(books))
-    print("jsonBooks:\n" + str(context.jsonBooks))
     assert eq(context.jsonBooks, books)
+
+
+@when('An authorized user deletes the first book in the catalog')
+def searchForBookTitle(context):
+    firstBook = context.booksFromContext[0]
+    response = TestRestClient().deleteBook(firstBook)
+    assert response == 200
+    context.jsonBooks = TestRestClient().createClientThatGetsCatalogAsJson()

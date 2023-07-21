@@ -61,10 +61,10 @@ Feature: Book catalog
         |The Hunger Games                           |Suzanne Collins    |2008           |
         |Harry Potter and the Sorcerer's Stone      |J.K. Rowling       |1998           |
         |To Kill a Mockingbird                      |Harper Lee         |1960           |
-        When An authorized user deletes a book
-        Then The book will be removed from the catalog
+        When An authorized user deletes the first book in the catalog
+        Then Relevant results are displayed
         |Title                                      |Author             |Release year   |
-        |The Hunger Games                           |Suzanne Collins    |2008           |
+        |Harry Potter and the Sorcerer's Stone      |J.K. Rowling       |1998           |
         |To Kill a Mockingbird                      |Harper Lee         |1960           |
 
     Scenario: Purchase books

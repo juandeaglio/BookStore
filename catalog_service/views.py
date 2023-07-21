@@ -55,7 +55,7 @@ def loginWithCredentials(request, username, password):
     if user is not None:
         login(request, user)
     else:
-        raise(ValueError("Unauthorized"))
+        raise (ValueError("Unauthorized"))
 
 
 def createTestCatalogAdminUser(request):
@@ -70,6 +70,16 @@ def addBook(request):
         book = makeBookFromRequest(request)
         catalog = PersistentCatalog()
         catalog.add(book)
+        return HttpResponse(status=200)
+    return HttpResponse("Not found", status=404)
+
+
+@login_required
+def removeBook(request):
+    if request.method == "POST":
+        book = makeBookFromRequest(request)
+        catalog = PersistentCatalog()
+        catalog.removeAllByTitle(book.title)
         return HttpResponse(status=200)
     return HttpResponse("Not found", status=404)
 

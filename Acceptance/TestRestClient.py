@@ -43,7 +43,7 @@ class TestRestClient:
                                        timeout=TestRestClient.clientTimeout).status_code
         return statusCode
 
-    def createClientAsAdminAddBook(self, book=None):
+    def createClientAsAdminAddBook(self, book):
         bookDetails = book.to_json()
         self.createClientAsAdmin()
         statusCode = self.sendPostFromSession(payload=bookDetails, endpoint="catalog_service/addBook/")
@@ -63,4 +63,10 @@ class TestRestClient:
     def searchForBook(self, title):
         r = self.getRequest(endpoint="catalog_service/search", parameters={'title': title})
         return r
+
+    def deleteBook(self, firstBook):
+        bookDetails = firstBook.to_json()
+        self.createClientAsAdmin()
+        statusCode = self.sendPostFromSession(payload=bookDetails, endpoint="catalog_service/removeBook/")
+        return statusCode
 
