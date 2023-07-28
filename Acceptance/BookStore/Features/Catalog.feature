@@ -1,10 +1,10 @@
 Feature: Book catalog
     Scenario: View a persistent catalog
         Given A catalog
-        |Title                                  |Author             |Release year   |
-        |The Hunger Games                       |Suzanne Collins    |2008           |
-        |Harry Potter and the Sorcerer's Stone  |J.K. Rowling       |1998           |
-        |To Kill a Mockingbird                  |Harper Lee         |1960           |
+        |Title                                  |Author             |Release year   | Image path                                        |
+        |The Hunger Games                       |Suzanne Collins    |2008           |/static/The Hunger Games.jpg                       |
+        |Harry Potter and the Sorcerer's Stone  |J.K. Rowling       |1998           |/static/Harry Potter and the Sorcerer's Stone.jpg  |
+        |To Kill a Mockingbird                  |Harper Lee         |1960           |/static/To Kill a Mockingbird.jpg                  |
         When A user views the catalog
         Then The entire catalog is displayed
         |Title                                  |Author             |Release year   |

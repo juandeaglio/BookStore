@@ -1,6 +1,11 @@
 # This is a python webserver that serves a list of books to a web browser client.
+import os
+import subprocess
+
 from Source.Book import Book
 from Source.Catalog.InMemoryCatalog import InMemoryCatalog
+from Source.Catalog.PersistentCatalog import PersistentCatalog
+from Source.Database.SqlDatabase import SqlDatabase
 from Source.Server.Services.HTTPSocketService import HTTPSocketService
 from Source.Server.SimpleSocketServer import SimpleSocketServer
 
@@ -11,14 +16,15 @@ def sendRestFromClientHandleRestWithServer(name):
              Book('To Kill a Mockingbird', 'Harper Lee', '1960'),
              Book('The Lord of the Rings', 'J.R.R. Tolkien', '1954'),
              Book('The Great Gatsby', 'F. Scott Fitzgerald', '1925'),
-             Book('Price and Prejudice', 'Jane Austen', '1813'),
-             Book('Oedipus Rex (The Theban Plays, #1)', 'Sophocles', '1956'),
+             Book('Pride and Prejudice', 'Jane Austen', '1813'),
+             Book('Oedipus Rex', 'Sophocles', '1956'),
              Book('Moby-Dick', 'Herman Melville', '1851'),
              Book('The Adventures of Tom Sawyer', 'Mark Twain', '1876'),
              Book('The Canterbury Tales', 'Geoffrey Chaucer', '1392'),
              Book('Frankenstein: The 1818 Text', 'Mary Wollstonecraft Shelley', '1818')]
     defaultPort = 8091
-    catalog = InMemoryCatalog()
+    SqlDatabase().clearData()
+    catalog = PersistentCatalog()
     catalog.add(books)
     booksArr = []
     with open("books/books.txt") as books:
@@ -35,18 +41,7 @@ def sendRestFromClientHandleRestWithServer(name):
             if i % 4 == 0:
                 booksArr.append(Book(title, author, releaseYear))
 
-    catalog.add(booksArr)
-
-    service = HTTPSocketService(catalog)
-    server = SimpleSocketServer(service=service, port=defaultPort)
-    server.start()
-    lastCount = 0
-    while server.getConnections() <= 20:
-        if lastCount != server.getConnections():
-            print("Connections: " + str(server.getConnections()))
-            print("Body: " + str(server.service.lastResponse))
-            lastCount += 1
-    server.stop()
+    subprocess.call("./venv/Scripts/python.exe startDjangoWithTestUser.py")
 
 
 # Press the green button in the gutter to run the script.

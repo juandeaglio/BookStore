@@ -14,7 +14,9 @@ def fetchCatalog(request):
     if request.method == "GET":
         catalog = PersistentCatalog()
         catalogContent = catalog.getAllBooksJson()
-        return HttpResponse(json.dumps(catalogContent), content_type="application/json")
+        response = HttpResponse(json.dumps(catalogContent), content_type="application/json")
+        print(response.headers)
+        return response
 
 
 def searchBooks(request):
