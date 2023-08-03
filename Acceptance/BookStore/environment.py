@@ -13,7 +13,8 @@ def before_all(context):
 
 
 def startDjangoServer(context):
-    context.process = subprocess.Popen("./venv/Scripts/python.exe startDjangoWithTestUser.py")
+    print(str(os.getcwd()))
+    context.process = subprocess.Popen("python.exe startDjangoWithTestUser.py")
 
 
 def before_scenario(context, scenario):
