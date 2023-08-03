@@ -2,7 +2,7 @@
 A pretty basic and simple book store.
 There is a catalog which serves suggestions based on category.
 An online store with a shopping cart.
-![Early website design](https://gitfront.io/r/user-9745374/D8ZrCkf4bx8U/BookStore/raw/EarlyWebsiteDesign.png)
+![Early website design](https://github.com/juandeaglio/BookStore/blob/master/EarlyWebsiteDesign.png)
 
 Wrote a simple webserver that provides the current inventory of books to clients.
 Used Javascript + HTML + CSS for the webpage.
