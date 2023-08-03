@@ -10,6 +10,7 @@ from Source.Database.SqlDatabase import SqlDatabase
 
 def before_all(context):
     startDjangoServer(context)
+    time.sleep(1)
 
 
 def startDjangoServer(context):

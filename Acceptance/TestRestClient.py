@@ -12,7 +12,7 @@ def createClientSession(port=8091, userCreds=None, endpoint=None):
 
 
 class TestRestClient:
-    clientTimeout = 1
+    clientTimeout = 2
     userCreds = {
         'username': 'username',
         'password': 'creativepassword'
