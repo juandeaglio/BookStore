@@ -23,7 +23,11 @@ jobs:
     - name: Run Unit Tests
       run: |
         python -m unittest discover
-
+        
+    - name: Show Files
+      run: |
+        dir
+        
     - name: Run Integation Tests
       run: |
-        behave $GITHUB_WORKSPACE\Acceptance\BookStore\
+        behave .\Acceptance\BookStore\
