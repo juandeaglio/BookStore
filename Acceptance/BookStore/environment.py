@@ -28,12 +28,18 @@ def stopDjangoServer(context):
         context.process.terminate()
         context.process.kill()
 
+    cmd = "Get-WmiObject Win32_Process -Filter \"name = 'python.exe'\" | Where-Object { $_.CommandLine -like '*runserver*' } | ForEach-Object { Stop-Process -Id $_.ProcessId }"
+
+    # Try to run the command and catch any errors
+    try:
+        subprocess.run(["powershell", "-Command", cmd], check=True)
+    except subprocess.CalledProcessError as e:
+        print(f"Error executing command: {e}")
+
 
 def after_all(context):
-    time.sleep(1)
+    time.sleep(2)
     stopDjangoServer(context)
-    time.sleep(1)
-    os.kill(context.process.pid, signal.CTRL_C_EVENT)
     print("Done")
 
 
