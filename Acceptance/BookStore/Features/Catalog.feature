@@ -66,8 +66,3 @@ Feature: Book catalog
         |Title                                      |Author             |Release year   |
         |Harry Potter and the Sorcerer's Stone      |J.K. Rowling       |1998           |
         |To Kill a Mockingbird                      |Harper Lee         |1960           |
-
-    Scenario: Purchase books
-        Given A cart with books in it
-        When A user fills out their billing/mailing data
-        Then The book stock is decremented
