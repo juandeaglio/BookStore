@@ -32,6 +32,7 @@ jobs:
       run: |
         mv ./Acceptance/BookStore/Steps ./Acceptance/BookStore/steps
         ls -lhrt
+        chmod +x ./startDjangoWithTestUser.py
           
     - name: Run Integation Tests
       run: |
