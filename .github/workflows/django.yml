@@ -30,4 +30,4 @@ jobs:
         
     - name: Run Integation Tests
       run: |
-        behave .\Acceptance\BookStore\
+        behave ./Acceptance/BookStore/
