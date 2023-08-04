@@ -15,7 +15,7 @@ def before_all(context):
 
 def startDjangoServer(context):
     print(str(os.getcwd()))
-    context.process = subprocess.Popen("python.exe startDjangoWithTestUser.py")
+    context.process = subprocess.Popen("python startDjangoWithTestUser.py")
 
 
 def before_scenario(context, scenario):
@@ -29,7 +29,7 @@ def stopDjangoServer(context):
         context.process.terminate()
         context.process.kill()
 
-    cmd = "Get-WmiObject Win32_Process -Filter \"name = 'python.exe'\" | Where-Object { $_.CommandLine -like '*runserver*' } | ForEach-Object { Stop-Process -Id $_.ProcessId }"
+    cmd = "Get-WmiObject Win32_Process -Filter \"name = 'python'\" | Where-Object { $_.CommandLine -like '*runserver*' } | ForEach-Object { Stop-Process -Id $_.ProcessId }"
 
     # Try to run the command and catch any errors
     try:
