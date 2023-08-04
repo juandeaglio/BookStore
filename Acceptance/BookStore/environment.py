@@ -15,7 +15,7 @@ def before_all(context):
 
 def startDjangoServer(context):
     print(str(os.getcwd()))
-    context.process = subprocess.Popen("python startDjangoWithTestUser.py")
+    context.process = subprocess.Popen("python ./startDjangoWithTestUser.py")
 
 
 def before_scenario(context, scenario):
