@@ -27,7 +27,11 @@ jobs:
     - name: Run Unit Tests
       run: |
         python -m unittest discover
-        
+    - name: Configure Integration Tests for Linux
+      if: ${{matrix.os}} == 'ubuntu-latest'
+      run: |
+        mv ./Acceptance/BookStore/Steps ./Acceptance/BookStore/steps
+          
     - name: Run Integation Tests
       run: |
         behave ./Acceptance/BookStore/
