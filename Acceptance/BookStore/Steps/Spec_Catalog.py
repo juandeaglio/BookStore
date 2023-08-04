@@ -1,9 +1,19 @@
 from operator import eq
 
 from behave import given, when, then
-from Acceptance.BookStore.Steps.ContextTable import convertTableToArray
 from Acceptance.TestRestClient import TestRestClient
 from Source.Catalog.InMemoryCatalog import InMemoryCatalog
+
+from Source.Book import Book
+
+
+def convertTableToArray(context):
+    books = []
+    for book in context.table:
+        new = Book(title=book[0], author=book[1], releaseYear=book[2])
+        books.append(new)
+
+    return books
 
 
 def createExpectedJson(books):
