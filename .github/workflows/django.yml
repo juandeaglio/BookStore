@@ -33,6 +33,7 @@ jobs:
         mv ./Acceptance/BookStore/Steps ./Acceptance/BookStore/steps
         ls -lhrt
         chmod +x ./startDjangoWithTestUser.py
+        echo "alias python='python3'" >> ~/.bashrc
           
     - name: Run Integation Tests
       run: |
