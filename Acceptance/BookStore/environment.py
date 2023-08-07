@@ -43,7 +43,7 @@ def stopDjangoServer(context):
         if os.name == 'nt':
             subprocess.run(["powershell", "-Command", cmd], check=True)
         elif os.name == 'posix':
-            subprocess.run(cmd, shell=False, check=True)
+            subprocess.run(cmd, shell=True, check=True)
     except subprocess.CalledProcessError as e:
         print(f"Error executing command: {e}")
 
