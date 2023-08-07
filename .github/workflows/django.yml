@@ -33,7 +33,7 @@ jobs:
       if: ${{matrix.os == 'ubuntu-latest'}}
       run: |
         python -m venv venv
-        ./source/venv/bin/activate
+        source ./venv/bin/activate
         python -m pip install --upgrade pip
         pip install -r requirements.txt
         echo "alias python='python3'" >> ~/.bashrc
@@ -47,7 +47,7 @@ jobs:
     - name: Run Linux Unit Tests
       if: ${{matrix.os == 'ubuntu-latest'}}
       run: |
-        ./venv/Scripts/activate.ps1
+        source ./venv/bin/activate
         python -m unittest discover
         
     - name: Configure Integration Tests for Linux
