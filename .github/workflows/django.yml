@@ -28,7 +28,6 @@ jobs:
         ./venv/Scripts/activate.ps1
         python -m pip install --upgrade pip
         pip install -r requirements.txt
-        deactivate
 
     - name: Install Linux Dependencies
       if: ${{matrix.os == 'ubuntu-latest'}}
@@ -37,7 +36,6 @@ jobs:
         ./source/venv/bin/activate
         python -m pip install --upgrade pip
         pip install -r requirements.txt
-        deactivate
         
     - name: Run Unit Tests
       run: |
