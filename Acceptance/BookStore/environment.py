@@ -16,7 +16,10 @@ def before_all(context):
 
 def startDjangoServer(context):
     print(str(os.getcwd()))
-    context.process = subprocess.Popen(sys.executable + " startDjangoWithTestUser.py")
+    if os.name == 'nt':
+        context.process = subprocess.Popen(sys.executable + " startDjangoWithTestUser.py")
+    elif os.name == 'posix':
+        context.process = subprocess.Popen(sys.executable + " /home/runner/work/BookStore/BookStore/startDjangoWithTestUser.py")
 
 
 def before_scenario(context, scenario):
