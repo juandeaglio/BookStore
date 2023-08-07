@@ -6,7 +6,7 @@ import concurrent.futures
 from Source.Server.Services.ClosingSocketService import ClosingSocketService
 from Source.Server.SimpleSocketServer import SimpleSocketServer
 from Source.Server.Services.EchoSocketService import EchoSocketService
-from Unit.Client import Client
+from test.Client import Client
 
 
 def aggregateServerResponsesToArray(futures):

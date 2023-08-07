@@ -8,7 +8,7 @@ from Source.Catalog.InMemoryCatalog import InMemoryCatalog
 from Source.Response import Response
 from Source.Server.Services.HTTPSocketService import HTTPSocketService
 from Source.Server.SimpleSocketServer import SimpleSocketServer
-from Unit.TestClientSocket import TestClientSocket
+from test.TestClientSocket import TestClientSocket
 
 
 class PageLoader:
