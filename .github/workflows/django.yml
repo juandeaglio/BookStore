@@ -36,6 +36,7 @@ jobs:
         ./source/venv/bin/activate
         python -m pip install --upgrade pip
         pip install -r requirements.txt
+        echo "alias python='python3'" >> ~/.bashrc
         
     - name: Run Window Unit Tests
       if: ${{matrix.os == 'windows-latest'}}
@@ -56,8 +57,11 @@ jobs:
         ls -lhrt
         chmod +x startDjangoWithTestUser.py
         ls -lhrt startDjangoWithTestUser.py
-        echo "alias python='python3'" >> ~/.bashrc
+        source ./venv/bin/activate
+        behave ./Acceptance/BookStore/
           
-    - name: Run Integation Tests
+    - name: Run Windows Integation Tests
+      if: ${{matrix.os == 'windows-latest'}}
       run: |
+        ./venv/Scripts/activate.ps1
         behave ./Acceptance/BookStore/
