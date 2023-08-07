@@ -48,7 +48,7 @@ jobs:
       if: ${{matrix.os == 'ubuntu-latest'}}
       run: |
         source ./venv/bin/activate
-        python -m unittest discover
+        python -m unittest discover -p "Test_*.py"
         
     - name: Configure Integration Tests for Linux
       if: ${{matrix.os == 'ubuntu-latest'}}
