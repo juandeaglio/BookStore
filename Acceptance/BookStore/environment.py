@@ -1,6 +1,7 @@
 import os
 import signal
 import subprocess
+import sys
 import time
 
 from Acceptance.TestRestClient import TestRestClient
@@ -15,7 +16,7 @@ def before_all(context):
 
 def startDjangoServer(context):
     print(str(os.getcwd()))
-    context.process = subprocess.Popen("python ./startDjangoWithTestUser.py")
+    context.process = subprocess.Popen(sys.executable + " startDjangoWithTestUser.py")
 
 
 def before_scenario(context, scenario):
@@ -29,7 +30,9 @@ def stopDjangoServer(context):
         context.process.terminate()
         context.process.kill()
 
-    cmd = "Get-WmiObject Win32_Process -Filter \"name = 'python'\" | Where-Object { $_.CommandLine -like '*runserver*' } | ForEach-Object { Stop-Process -Id $_.ProcessId }"
+    cmd = "Get-WmiObject Win32_Process | Where-Object " \
+          "{ $_.Name -match 'python' -and $_.CommandLine -like '*runserver*' } | " \
+          "ForEach-Object { Stop-Process -Id $_.ProcessId -Force }"
 
     # Try to run the command and catch any errors
     try:
