@@ -10,5 +10,5 @@ if __name__ == '__main__':
     # define the directory path
     dir_path = './venv/Scripts/'
 
-    p = subprocess.call(sys.executable + " manage.py runserver 8091 --noreload "
-                            "--settings catalog_service.settings_development")
+    p = subprocess.call([sys.executable, "manage.py", "runserver", "8091", "--noreload",
+                         "--settings", "catalog_service.settings_development"])
