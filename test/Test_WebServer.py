@@ -19,7 +19,7 @@ class FakedProcessLibrary:
             args = []
 
 
-class TestInMemoryStorageGateway(unittest.TestCase):
+class TestWebServer(unittest.TestCase):
     def test_startAndStopServer(self):
         self.web_server = WebServer(strategy="Django", processLibrary=FakedProcessLibrary, osLibrary=FakedOSLibrary())
         self.web_server.start()

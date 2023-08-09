@@ -18,7 +18,6 @@ class WebServer:
             raise Exception("Unknown web server strategy: " + self.strategy)
         self.running = True
 
-
     def stop(self):
         if self.process:
             self.process.terminate()
@@ -38,10 +37,11 @@ class WebServer:
                 subprocess.run(["powershell", "-Command", cmd], check=True)
             elif os.name == 'posix':
                 subprocess.run(cmd, shell=True, check=True)
-            self.running = False
 
         except subprocess.CalledProcessError as e:
             print(f"Error executing command: {e}")
+
+        self.running = False
 
     def isRunning(self):
         return self.running
