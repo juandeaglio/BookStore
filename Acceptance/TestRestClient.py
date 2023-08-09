@@ -71,7 +71,10 @@ class TestRestClient:
         return statusCode
 
     def getStatic(self, port, staticfile, timeout=clientTimeout):
-        r = self.getRequest(port=port, endpoint="static/"+staticfile, timeout=timeout)
-        return r
+        try:
+            r = self.getRequest(port=port, endpoint="static/"+staticfile, timeout=timeout)
+            return r
+        except (requests.exceptions.ConnectionError, TimeoutError) as e:
+            return e
 
 

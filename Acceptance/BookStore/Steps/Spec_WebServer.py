@@ -1,26 +1,9 @@
 import time
-from operator import eq
 
+import requests.exceptions
 from behave import given, when, then
 from Acceptance.TestRestClient import TestRestClient
-from Source.Catalog.InMemoryCatalog import InMemoryCatalog
-
-from Source.Book import Book
-
-
-class WebServer:
-    def __init__(self, strategy):
-        self.strategy = strategy
-        self.process = None
-
-    def start(self):
-        pass
-
-    def stop(self):
-        pass
-
-    def isRunning(self):
-        pass
+from Source.WebServer import WebServer
 
 
 @given('A user starts the "{web_server_type}" web server')
@@ -45,15 +28,18 @@ def stopWebServer(context):
 
 @then('The user can no longer access the web page')
 def accessWebPage(context):
-    try:
-        response1 = TestRestClient().createClientForAboutPage()
+    response1 = TestRestClient().createClientForAboutPage()
 
-        # server still shutting down
-        if response1.status_code == 200:
-            time.sleep(0.5)
-            response2 = TestRestClient().createClientForAboutPage()
+    # if response 1 is not an exception and the status code is 200, then wait 0.5 seconds and try again
+    print(response1)
+    print(type(response1))
+    if not isinstance(response1, requests.exceptions.ConnectTimeout) and response1.status_code == 200:
+        time.sleep(0.5)
+        response2 = TestRestClient().createClientForAboutPage()
 
-            assert response2.status_code != 200, "Server still returning 200 OK after multiple checks."
+        assert isinstance(response2, requests.exceptions.ConnectTimeout), \
+            "Expected TimeoutError but got " + str(response2)
 
-    except (ConnectionError, TimeoutError):
-        return  # Server seems down. Test passed.
+    else:
+        assert isinstance(response1, requests.exceptions.ConnectTimeout),\
+            "Expected TimeoutError but got " + str(response1)
