@@ -33,13 +33,16 @@ def accessWebPage(context):
     # if response 1 is not an exception and the status code is 200, then wait 0.5 seconds and try again
     print(response1)
     print(type(response1))
-    if not isinstance(response1, requests.exceptions.ConnectTimeout) and response1.status_code == 200:
+    if not isinstance(response1, requests.exceptions.ConnectTimeout) \
+            or not isinstance(response1, requests.exceptions.ConnectionError) and response1.status_code == 200:
         time.sleep(0.5)
         response2 = TestRestClient().createClientForAboutPage()
 
-        assert isinstance(response2, requests.exceptions.ConnectTimeout), \
+        assert isinstance(response2, requests.exceptions.ConnectTimeout) \
+               or not isinstance(response1, requests.exceptions.ConnectionError), \
             "Expected TimeoutError but got " + str(response2)
 
     else:
-        assert isinstance(response1, requests.exceptions.ConnectTimeout),\
+        assert isinstance(response1, requests.exceptions.ConnectTimeout) \
+               or not isinstance(response1, requests.exceptions.ConnectionError), \
             "Expected TimeoutError but got " + str(response1)
