@@ -31,7 +31,7 @@ class TestRestClient:
         return r.text.splitlines()
 
     def createClientForAboutPage(self, port=8091):
-        r = self.getRequest(port, "about")
+        r = self.getStatic(port, staticfile="about.html")
         return r
 
     def createClientThatGetsCatalogAsJson(self, port=8091):
@@ -69,5 +69,9 @@ class TestRestClient:
         self.createClientAsAdmin()
         statusCode = self.sendPostFromSession(payload=bookDetails, endpoint="catalog_service/removeBook/")
         return statusCode
+
+    def getStatic(self, port, staticfile):
+        r = self.getRequest(port, endpoint="static/"+staticfile)
+        return r
 
 
