@@ -6,6 +6,7 @@ class FakedOSLibrary:
     def __init__(self):
         self.name = 'None'
 
+
 class FakedProcessLibrary:
     def run(self):
         pass
@@ -20,7 +21,7 @@ class FakedProcessLibrary:
 
 class TestInMemoryStorageGateway(unittest.TestCase):
     def test_startAndStopServer(self):
-        self.web_server = WebServer(strategy="Django", processLibrary=FakedProcessLibrary)
+        self.web_server = WebServer(strategy="Django", processLibrary=FakedProcessLibrary, osLibrary=FakedOSLibrary())
         self.web_server.start()
         assert self.web_server.isRunning() is True, "Expected web server to be running but it is not."
         self.web_server.stop()
