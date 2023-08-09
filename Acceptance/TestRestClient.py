@@ -32,7 +32,7 @@ class TestRestClient:
 
     def createClientForAboutPage(self, port=8091):
         r = self.getRequest(port, "about")
-        return r.text
+        return r
 
     def createClientThatGetsCatalogAsJson(self, port=8091):
         r = self.getRequest(port, "catalog_service/fetchCatalog")
@@ -69,4 +69,5 @@ class TestRestClient:
         self.createClientAsAdmin()
         statusCode = self.sendPostFromSession(payload=bookDetails, endpoint="catalog_service/removeBook/")
         return statusCode
+
 

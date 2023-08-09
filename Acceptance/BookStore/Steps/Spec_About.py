@@ -10,9 +10,11 @@ def defineCatalog(context):
 @when('A user requests the about page')
 def viewCatalog(context):
     response = TestRestClient().createClientForAboutPage()
-    context.aboutPageReceived = response
+    context.aboutPageResponse = response
 
 
 @then('The about page is displayed')
 def displayCatalog(context):
-    assert "about" in context.aboutPageReceived.lower()
+    assert "about" in context.aboutPageResponse.text.lower()
+    assert context.aboutPageResponse.status_code == 200, \
+        "Expected 200 OK but got " + str(context.aboutPageResponse.status_code)
