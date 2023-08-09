@@ -30,6 +30,7 @@ class WebServer:
                   "ForEach-Object { Stop-Process -Id $_.ProcessId -Force }"
         elif os.name == 'posix':
             cmd = "ps aux | grep 'python' | grep 'runserver' | awk '{print $2}' | xargs kill -9"
+        self.running = False
 
         # Try to run the command and catch any errors
         try:
