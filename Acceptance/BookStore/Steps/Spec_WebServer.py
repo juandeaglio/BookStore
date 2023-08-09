@@ -31,7 +31,9 @@ def start_web_server(context, web_server_type):
 
 @then('The user can access the web page')
 def accessWebPage(context):
-    response = TestRestClient().getRequest(endpoint="about")
+    time.sleep(2)
+    response = TestRestClient().createClientForAboutPage(timeout=2)
+    assert "about" in response.text.lower()
     assert response.status_code == 200, "Expected 200 OK but got " + str(response.status_code)
 
 
@@ -44,12 +46,12 @@ def stopWebServer(context):
 @then('The user can no longer access the web page')
 def accessWebPage(context):
     try:
-        response1 = TestRestClient().getRequest(endpoint="about")
+        response1 = TestRestClient().createClientForAboutPage()
 
         # server still shutting down
         if response1.status_code == 200:
             time.sleep(0.5)
-            response2 = TestRestClient().getRequest(endpoint="about")
+            response2 = TestRestClient().createClientForAboutPage()
 
             assert response2.status_code != 200, "Server still returning 200 OK after multiple checks."
 

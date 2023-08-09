@@ -9,9 +9,17 @@ from Source.Catalog.PersistentCatalog import PersistentCatalog
 from Source.Database.SqlDatabase import SqlDatabase
 
 
-def before_all(context):
-    startDjangoServer(context)
-    time.sleep(1)
+def before_feature(context, feature):
+    if "catalog" in feature.name.lower() or "about" in feature.name.lower():
+        startDjangoServer(context)
+        time.sleep(2)
+
+
+def after_feature(context, feature):
+    if "catalog" in feature.name.lower() or "about" in feature.name.lower():
+        time.sleep(2)
+        stopDjangoServer(context)
+        print("Done")
 
 
 def startDjangoServer(context):
@@ -48,10 +56,6 @@ def stopDjangoServer(context):
         print(f"Error executing command: {e}")
 
 
-def after_all(context):
-    time.sleep(2)
-    stopDjangoServer(context)
-    print("Done")
 
 
 def clearDatabase():
