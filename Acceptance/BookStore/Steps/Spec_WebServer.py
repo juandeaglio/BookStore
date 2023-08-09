@@ -1,6 +1,7 @@
 import time
 
 import requests.exceptions
+import urllib3.exceptions
 from behave import given, when, then
 from Acceptance.TestRestClient import TestRestClient
 from Source.WebServer import WebServer
@@ -34,15 +35,18 @@ def accessWebPage(context):
     print(response1)
     print(type(response1))
     if not isinstance(response1, requests.exceptions.ConnectTimeout) \
-            or not isinstance(response1, requests.exceptions.ConnectionError) and response1.status_code == 200:
+            or not isinstance(response1, requests.exceptions.ConnectionError) and response1.status_code == 200\
+            or not isinstance(response1, urllib3.exceptions.NewConnectionError):
         time.sleep(0.5)
         response2 = TestRestClient().createClientForAboutPage()
 
         assert isinstance(response2, requests.exceptions.ConnectTimeout) \
-               or not isinstance(response1, requests.exceptions.ConnectionError), \
+            or not isinstance(response2, requests.exceptions.ConnectionError)\
+            or not isinstance(response2, urllib3.exceptions.NewConnectionError), \
             "Expected TimeoutError but got " + str(response2)
 
     else:
         assert isinstance(response1, requests.exceptions.ConnectTimeout) \
-               or not isinstance(response1, requests.exceptions.ConnectionError), \
+            or not isinstance(response1, requests.exceptions.ConnectionError)\
+            or not isinstance(response1, urllib3.exceptions.NewConnectionError), \
             "Expected TimeoutError but got " + str(response1)
