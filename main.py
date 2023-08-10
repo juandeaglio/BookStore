@@ -8,6 +8,7 @@ from Source.Catalog.PersistentCatalog import PersistentCatalog
 from Source.Database.SqlDatabase import SqlDatabase
 from Source.Server.Services.HTTPSocketService import HTTPSocketService
 from Source.Server.SimpleSocketServer import SimpleSocketServer
+from Source.WebServer import WebServer
 
 
 def sendRestFromClientHandleRestWithServer(name):
@@ -22,7 +23,6 @@ def sendRestFromClientHandleRestWithServer(name):
              Book('The Adventures of Tom Sawyer', 'Mark Twain', '1876'),
              Book('The Canterbury Tales', 'Geoffrey Chaucer', '1392'),
              Book('Frankenstein: The 1818 Text', 'Mary Wollstonecraft Shelley', '1818')]
-    defaultPort = 8091
     SqlDatabase().clearData()
     catalog = PersistentCatalog()
     catalog.add(books)
@@ -41,7 +41,8 @@ def sendRestFromClientHandleRestWithServer(name):
             if i % 4 == 0:
                 booksArr.append(Book(title, author, releaseYear))
 
-    subprocess.call("./venv/Scripts/python.exe startDjangoWithTestUser.py")
+    web_server = WebServer()
+    web_server.start()
 
 
 # Press the green button in the gutter to run the script.
