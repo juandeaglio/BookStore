@@ -4,39 +4,29 @@ from Source.Book import Book
 
 
 class DatabaseConnection(ABC):
+    @abstractmethod
     def insertBooksIntoCatalogTable(self, books, booksToInsert):
-        books += booksToInsert
+        pass
 
+    @abstractmethod
     def selectAll(self, books):
-        books = sorted(books,
-                       key=lambda book: book.title if "The" not in book.title[0:4]
-                       else book.title[4:])
-        return books
+        pass
 
+    @abstractmethod
     def select(self, searchTerm, books):
-        return searchTerm if searchTerm in books else None
+        pass
 
+    @abstractmethod
     def delete(self, entry, books):
-        books.remove(entry)
-
+        pass
+    @abstractmethod
     def deleteWhereTitle(self, title, books):
-        deleted = []
-        for book in books:
-            if title in book.title:
-                books.remove(book)
-                deleted.append(book)
+        pass
 
-        return deleted
-
+    @abstractmethod
     def selectWith(self, bookDetail, books):
-        found = []
-        for book in books:
-            if bookDetail in book.title or bookDetail in book.author:
-                found.append(book)
+        pass
 
-        return sorted(found,
-                      key=lambda book: book.title if "The" not in book.title[0:4]
-                      else book.title[4:])
-
+    @abstractmethod
     def synchronize(self, books):
-        return books
+        pass
