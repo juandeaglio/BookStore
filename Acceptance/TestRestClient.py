@@ -1,4 +1,5 @@
 import requests
+import urllib3
 
 from Source.Book import Book
 
