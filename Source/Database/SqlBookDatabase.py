@@ -6,13 +6,12 @@ import sqlite3
 
 class Database:
     def __init__(self):
-        self.initializeDatabase()
-        self.sqlAdapter = SqlAdapter('catalog.db')
         self.conn = sqlite3.connect('catalog.db')
         self.cursor = self.conn.cursor()
+        self.initializeDatabase()
+        self.sqlAdapter = SqlAdapter('catalog.db')
 
     def initializeDatabase(self):
-        database = SqlAdapter('catalog.db')
         create_table_query = '''
             CREATE TABLE IF NOT EXISTS catalog (
                 id INTEGER PRIMARY KEY,
@@ -21,34 +20,26 @@ class Database:
                 releaseyear TEXT
             )
         '''
-        SqlBookDatabase.query(database=database, query=create_table_query)
+        self.query(query=create_table_query)
 
     def dropTable(self, name):
         query = "DROP TABLE IF EXISTS " + name
-        self.commit(query)
+        self.query(query=query)
 
-    def commit(self, query, data=None):
-        database = SqlAdapter('catalog.db')
+    def query(self, query, data=None):
         if data is None:
             self.cursor.execute(query)
         else:
             self.cursor.execute(query, data)
 
-        books = self.sqlAdapter.getBooksChanged()
+        books = BookAdapter().getBooksChanged(self.commit())
 
         return books
 
-
-class SqlAdapter:
-    def __init__(self, dbName):
-        self.conn = sqlite3.connect(dbName)
-        self.cursor = self.conn.cursor()
-
-    def closeAndCommit(self):
+    def commit(self):
         self.conn.commit()
         rows = self.cursor.fetchall()
         columns = self.cursor.description
-        self.conn.close()
         return rows, columns
 
     def queryCatalogBySQL(self, query, data=None):
@@ -57,26 +48,34 @@ class SqlAdapter:
         else:
             self.cursor.execute(query, data)
 
-        books = self.getBooksChanged()
+        books = BookAdapter().getBooksChanged(self.commit())
 
         return books
 
-    def getBooksChanged(self):
-        rows, columns = self.closeAndCommit()
-        books = []
-        for row in rows:
-            book = self.makeBookFromSQL(columns, row)
 
-            self.cleanDoubleQuotesFromTitle(book)
-            books.append(book)
-        return books
-
+class BookAdapter:
     @staticmethod
     def makeBookFromSQL(columns, row):
         book = Book()
         for i in range(len(columns)):
             setattr(book, columns[i][0], row[i])
         return book
+
+    def getBooksChanged(self, sqlData):
+        rows, columns = sqlData
+        books = []
+        for row in rows:
+            book = self.makeBookFromSQL(columns, row)
+
+            SqlAdapter('catalog.db').cleanDoubleQuotesFromTitle(book)
+            books.append(book)
+        return books
+
+
+class SqlAdapter:
+    def __init__(self, dbName):
+        self.conn = sqlite3.connect(dbName)
+        self.cursor = self.conn.cursor()
 
     def cleanDoubleQuotesFromTitle(self, book):
         # SQL requirement for quotes in field (must be double-quoted)
@@ -121,44 +120,32 @@ class SqlBookDatabase(DatabaseConnection):
         self.sendDeleteWhereQuery(title)
         return super().deleteWhereTitle(title, books)
 
-    @staticmethod
-    def query(database, query, data=None):
-        if data is None:
-            return database.queryCatalogBySQL(query)
-        else:
-            return database.queryCatalogBySQL(query=query, data=data)
-
     def synchronize(self, books):
-        database = SqlAdapter('catalog.db')
         sqlStatement = '''
                     SELECT title AS title, author AS author, releaseyear AS "releaseYear" FROM catalog ORDER BY title ASC
                 '''
-        return self.query(database=database, query=sqlStatement)
+        return self.database.query(query=sqlStatement)
 
     def insertQuery(self, title, author, releaseYear):
-        database = SqlAdapter('catalog.db')
-
         query = '''
                     INSERT INTO catalog (title, author, releaseyear)
                     VALUES (?, ?, ?)
                 '''
         data = (title, author, releaseYear)
-        self.query(database=database, query=query, data=data)
+        self.database.query(query=query, data=data)
 
     def sendDeleteQuery(self, entry):
-        database = SqlAdapter('catalog.db')
         parsedBook = self.replaceSingleQuoteWithDouble(entry)
         query = 'DELETE FROM catalog WHERE ' \
                 'title LIKE \"%' + parsedBook.title + '%\" AND ' \
                                                       'author=\'' + parsedBook.author + '\' AND ' \
                                                                                         'releaseyear=\'' + parsedBook.releaseYear + '\''
-        self.query(database=database, query=query)
+        self.database.query(query=query)
 
     def sendDeleteWhereQuery(self, title):
-        database = SqlAdapter('catalog.db')
         sanitizedDetail = self.replaceSingleQuoteWithDouble(title)
         query = 'DELETE FROM catalog WHERE title LIKE \"%' + sanitizedDetail + '%\"'
-        self.query(database=database, query=query)
+        self.database.query(query=query)
 
     def clearCatalog(self):
         self.database.dropTable('catalog')
