@@ -4,8 +4,42 @@ from Source.Interfaces.DatabaseConnection import DatabaseConnection
 import sqlite3
 
 
+class Database:
+    def __init__(self):
+        self.initializeDatabase()
+        self.sqlAdapter = SqlAdapter('catalog.db')
+        self.conn = sqlite3.connect('catalog.db')
+        self.cursor = self.conn.cursor()
 
-class BooksToSql:
+    def initializeDatabase(self):
+        database = SqlAdapter('catalog.db')
+        create_table_query = '''
+            CREATE TABLE IF NOT EXISTS catalog (
+                id INTEGER PRIMARY KEY,
+                title TEXT,
+                author TEXT,
+                releaseyear TEXT
+            )
+        '''
+        SqlBookDatabase.query(database=database, query=create_table_query)
+
+    def dropTable(self, name):
+        query = "DROP TABLE IF EXISTS " + name
+        self.commit(query)
+
+    def commit(self, query, data=None):
+        database = SqlAdapter('catalog.db')
+        if data is None:
+            self.cursor.execute(query)
+        else:
+            self.cursor.execute(query, data)
+
+        books = self.sqlAdapter.getBooksChanged()
+
+        return books
+
+
+class SqlAdapter:
     def __init__(self, dbName):
         self.conn = sqlite3.connect(dbName)
         self.cursor = self.conn.cursor()
@@ -58,10 +92,10 @@ class BooksToSql:
         return "\'\'" in book.title
 
 
-class SqlDatabase(DatabaseConnection):
+class SqlBookDatabase(DatabaseConnection):
     def __init__(self):
         super().__init__()
-        self.initializeDatabase()
+        self.database = Database()
 
     def insertBooksIntoCatalogTable(self, books, booksToInsert):
         for book in booksToInsert:
@@ -94,30 +128,15 @@ class SqlDatabase(DatabaseConnection):
         else:
             return database.queryCatalogBySQL(query=query, data=data)
 
-    def initializeDatabase(self):
-        database = BooksToSql('catalog.db')
-        create_table_query = '''
-            CREATE TABLE IF NOT EXISTS catalog (
-                id INTEGER PRIMARY KEY,
-                title TEXT,
-                author TEXT,
-                releaseyear TEXT
-            )
-        '''
-        self.query(database=database, query=create_table_query)
-
-
     def synchronize(self, books):
-        database = BooksToSql('catalog.db')
+        database = SqlAdapter('catalog.db')
         sqlStatement = '''
                     SELECT title AS title, author AS author, releaseyear AS "releaseYear" FROM catalog ORDER BY title ASC
                 '''
         return self.query(database=database, query=sqlStatement)
 
-
-
     def insertQuery(self, title, author, releaseYear):
-        database = BooksToSql('catalog.db')
+        database = SqlAdapter('catalog.db')
 
         query = '''
                     INSERT INTO catalog (title, author, releaseyear)
@@ -127,7 +146,7 @@ class SqlDatabase(DatabaseConnection):
         self.query(database=database, query=query, data=data)
 
     def sendDeleteQuery(self, entry):
-        database = BooksToSql('catalog.db')
+        database = SqlAdapter('catalog.db')
         parsedBook = self.replaceSingleQuoteWithDouble(entry)
         query = 'DELETE FROM catalog WHERE ' \
                 'title LIKE \"%' + parsedBook.title + '%\" AND ' \
@@ -136,18 +155,13 @@ class SqlDatabase(DatabaseConnection):
         self.query(database=database, query=query)
 
     def sendDeleteWhereQuery(self, title):
-        database = BooksToSql('catalog.db')
+        database = SqlAdapter('catalog.db')
         sanitizedDetail = self.replaceSingleQuoteWithDouble(title)
         query = 'DELETE FROM catalog WHERE title LIKE \"%' + sanitizedDetail + '%\"'
         self.query(database=database, query=query)
 
-    def clearData(self):
-        database = BooksToSql('catalog.db')
-
-        query = '''
-                    DROP TABLE IF EXISTS catalog
-                '''
-        self.query(database, query)
+    def clearCatalog(self):
+        self.database.dropTable('catalog')
 
     @staticmethod
     def replaceSingleQuoteWithDouble(entry):

@@ -3,7 +3,7 @@ import unittest
 from Source.Book import Book
 from Source.Catalog.InMemoryCatalog import InMemoryCatalog
 from Source.Catalog.PersistentCatalog import PersistentCatalog
-from Source.Database.SqlDatabase import SqlDatabase
+from Source.Database.SqlBookDatabase import SqlBookDatabase
 
 
 def sortBooksByTitle(books):
@@ -72,7 +72,7 @@ class CatalogWithInitialAmountOfBooks(unittest.TestCase):
 
 class PersistentCatalogWithInitialAmountOfBooks(CatalogWithInitialAmountOfBooks):
     def setUp(self):
-        SqlDatabase().clearData()
+        SqlBookDatabase().clearCatalog()
         super().setUp()
         self.catalog = PersistentCatalog()
         self.catalog.add(self.books)
@@ -98,7 +98,7 @@ class CatalogWithVariableAmountOfBooks(unittest.TestCase):
 
 class PersistentCatalogWithVariableAmountOfBooks(CatalogWithVariableAmountOfBooks):
     def setUp(self):
-        SqlDatabase().clearData()
+        SqlBookDatabase().clearCatalog()
         super().setUp()
         self.catalog = PersistentCatalog()
 
