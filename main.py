@@ -43,6 +43,8 @@ def sendRestFromClientHandleRestWithServer(name):
 
     web_server = WebServer()
     web_server.start()
+    while True:
+        continue
 
 
 # Press the green button in the gutter to run the script.

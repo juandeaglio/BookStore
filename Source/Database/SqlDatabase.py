@@ -4,6 +4,7 @@ from Source.Interfaces.DatabaseConnection import DatabaseConnection
 import sqlite3
 
 
+
 class BooksToSql:
     def __init__(self, dbName):
         self.conn = sqlite3.connect(dbName)
@@ -62,6 +63,30 @@ class SqlDatabase(DatabaseConnection):
         super().__init__()
         self.initializeDatabase()
 
+    def insertBooksIntoCatalogTable(self, books, booksToInsert):
+        for book in booksToInsert:
+            bookToInsert = self.replaceSingleQuoteWithDouble(book)
+            self.insertQuery(bookToInsert.title, bookToInsert.author, bookToInsert.releaseYear)
+
+        return super().insertBooksIntoCatalogTable(books, booksToInsert)
+
+    def selectAll(self, books):
+        return super().selectAll(books)
+
+    def select(self, searchTerm, books):
+        return super().select(searchTerm, books)
+
+    def selectWith(self, bookDetail, books):
+        return super().selectWith(bookDetail, books)
+
+    def delete(self, entry, books):
+        self.sendDeleteQuery(entry)
+        return super().delete(entry, books)
+
+    def deleteWhereTitle(self, title, books):
+        self.sendDeleteWhereQuery(title)
+        return super().deleteWhereTitle(title, books)
+
     @staticmethod
     def query(database, query, data=None):
         if data is None:
@@ -81,12 +106,6 @@ class SqlDatabase(DatabaseConnection):
         '''
         self.query(database=database, query=create_table_query)
 
-    def insertBooksIntoCatalogTable(self, books, booksToInsert):
-        for book in booksToInsert:
-            bookToInsert = self.replaceSingleQuoteWithDouble(book)
-            self.insertQuery(bookToInsert.title, bookToInsert.author, bookToInsert.releaseYear)
-
-        return super().insertBooksIntoCatalogTable(books, booksToInsert)
 
     def synchronize(self, books):
         database = BooksToSql('catalog.db')
@@ -95,22 +114,7 @@ class SqlDatabase(DatabaseConnection):
                 '''
         return self.query(database=database, query=sqlStatement)
 
-    def selectAll(self, books):
-        return super().selectAll(books)
 
-    def select(self, searchTerm, books):
-        return super().select(searchTerm, books)
-
-    def selectWith(self, bookDetail, books):
-        return super().selectWith(bookDetail, books)
-
-    def delete(self, entry, books):
-        self.sendDeleteQuery(entry)
-        return super().delete(entry, books)
-
-    def deleteWhereTitle(self, title, books):
-        self.sendDeleteWhereQuery(title)
-        return super().deleteWhereTitle(title, books)
 
     def insertQuery(self, title, author, releaseYear):
         database = BooksToSql('catalog.db')
