@@ -3,7 +3,7 @@ from typing import List
 from Source.Book import Book
 
 
-class InMemoryBooks(ABC):
+class DatabaseConnection(ABC):
     @abstractmethod
     def insertBooksIntoCatalogTable(self, books, booksToInsert):
         pass
@@ -27,3 +27,6 @@ class InMemoryBooks(ABC):
     def selectWith(self, bookDetail, books):
         pass
 
+    @abstractmethod
+    def synchronize(self, books):
+        pass

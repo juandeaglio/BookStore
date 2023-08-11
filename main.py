@@ -5,7 +5,7 @@ import subprocess
 from Source.Book import Book
 from Source.Catalog.InMemoryCatalog import InMemoryCatalog
 from Source.Catalog.PersistentCatalog import PersistentCatalog
-from Source.Database.SqlInMemoryBooks import SqlInMemoryBooks
+from Source.Database.SqlBookDatabase import SqlBookDatabase
 from Source.Server.Services.HTTPSocketService import HTTPSocketService
 from Source.Server.SimpleSocketServer import SimpleSocketServer
 from Source.WebServer import WebServer
@@ -23,7 +23,7 @@ def sendRestFromClientHandleRestWithServer(name):
              Book('The Adventures of Tom Sawyer', 'Mark Twain', '1876'),
              Book('The Canterbury Tales', 'Geoffrey Chaucer', '1392'),
              Book('Frankenstein: The 1818 Text', 'Mary Wollstonecraft Shelley', '1818')]
-    SqlInMemoryBooks().clearCatalog()
+    SqlBookDatabase().clearCatalog()
     catalog = PersistentCatalog()
     catalog.add(books)
     booksArr = []

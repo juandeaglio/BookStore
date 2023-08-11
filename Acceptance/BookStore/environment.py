@@ -6,7 +6,7 @@ import time
 
 from Acceptance.TestRestClient import TestRestClient
 from Source.Catalog.PersistentCatalog import PersistentCatalog
-from Source.Database.SqlInMemoryBooks import SqlInMemoryBooks
+from Source.Database.SqlBookDatabase import SqlBookDatabase
 from Source.WebServer import WebServer
 
 
@@ -31,4 +31,4 @@ def before_scenario(context, scenario):
 
 
 def clearDatabase():
-    SqlInMemoryBooks().clearCatalog()
+    SqlBookDatabase().clearCatalog()

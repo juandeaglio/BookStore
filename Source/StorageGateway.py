@@ -1,21 +1,24 @@
-from Source.Interfaces.InMemoryBooks import InMemoryBooks
+from Source.Interfaces.DatabaseConnection import DatabaseConnection
 
 
 class StorageGateway:
     def __init__(self, dbConn):
         self.books = []
-        if isinstance(dbConn, InMemoryBooks):
+        if isinstance(dbConn, DatabaseConnection):
             self.dbConnection = dbConn
 
     def fetchBooksFromDatabase(self):
+        self.books = self.dbConnection.synchronize(self.books)
         self.books = self.dbConnection.selectAll(self.books)
         return self.books
 
     def loadEntryToCache(self, book):
+        self.books = self.dbConnection.synchronize(self.books)
         return self.dbConnection.select(book, self.books)
 
     def removeEntry(self, entry):
         if self.doesBookExist(entry):
+            self.books = self.dbConnection.synchronize(self.books)
             self.dbConnection.delete(entry, self.books)
 
     def add(self, entries):
@@ -24,6 +27,7 @@ class StorageGateway:
                 self.addUniqueEntry(entry)
 
     def addUniqueEntry(self, entry):
+        self.books = self.dbConnection.synchronize(self.books)
         result = self.dbConnection.select(entry, self.books)
         if not result:
             self.dbConnection.insertBooksIntoCatalogTable(self.books, [entry])
@@ -37,9 +41,11 @@ class StorageGateway:
             self.removeEntry(book)
 
     def loadEntryByTitleToCache(self, title):
+        self.books = self.dbConnection.synchronize(self.books)
         books = self.dbConnection.selectWith(title, self.books)
         return books
 
     def fetchByString(self, bookDetail):
+        self.books = self.dbConnection.synchronize(self.books)
         books = self.dbConnection.selectWith(bookDetail, self.books)
         return books

@@ -1,7 +1,7 @@
 import re
 from Source.Book import Book
 from Source.Database.InMemoryDatabase import InMemoryDatabase
-from Source.Interfaces.InMemoryBooks import InMemoryBooks
+from Source.Interfaces.DatabaseConnection import DatabaseConnection
 import sqlite3
 
 
@@ -42,6 +42,16 @@ class Database:
         rows = self.cursor.fetchall()
         columns = self.cursor.description
         return rows, columns
+
+    def queryCatalogBySQL(self, query, data=None):
+        if data is None:
+            self.cursor.execute(query)
+        else:
+            self.cursor.execute(query, data)
+
+        books = BookAdapter().getBooksChanged(self.commit())
+
+        return books
 
 
 class BookAdapter:
@@ -98,7 +108,7 @@ class SqlAdapter:
         return "\'\'" in book.title
 
 
-class SqlInMemoryBooks(InMemoryBooks):
+class SqlBookDatabase(DatabaseConnection):
     def __init__(self):
         super().__init__()
         self.cachedData = InMemoryDatabase()
@@ -127,6 +137,12 @@ class SqlInMemoryBooks(InMemoryBooks):
     def deleteWhereTitle(self, title, books):
         self.sendDeleteWhereQuery(title)
         return self.cachedData.deleteWhereTitle(title, books)
+
+    def synchronize(self, books):
+        sqlStatement = '''
+                    SELECT title AS title, author AS author, releaseyear AS "releaseYear" FROM catalog ORDER BY title ASC
+                '''
+        return self.cachedData.synchronize(self.database.query(query=sqlStatement))
 
     def insertQuery(self, title, author, releaseYear):
         query = '''
