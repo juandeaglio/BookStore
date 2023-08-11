@@ -61,3 +61,23 @@ class TestPersistentStorageGateway(TestInMemoryStorageGateway):
         SqlBookDatabase().clearCatalog()
         self.storageGateway = StorageGateway(SqlBookDatabase())
         self.storageGateway.add(self.books)
+
+    def test_addSqlInjection(self):
+        malicious_title = "'; DROP TABLE catalog;--"
+        book = Book(malicious_title, 'test_author', 'test_year')
+
+        initial_count = len(self.storageGateway.fetchBooksFromDatabase())
+        self.storageGateway.add([book])
+
+        # Now we check if our malicious title actually dropped the table
+        # If not, the count will simply be incremented by 1
+        # If it did drop the table, the count will be 0
+        print(str(self.storageGateway.fetchBooksFromDatabase()))
+        assert len(self.storageGateway.fetchBooksFromDatabase()) == initial_count + 1
+
+    def test_deleteSqlInjection(self):
+        malicious_book = Book('"; DROP TABLE catalog; --', 'author', 'year')
+        initial_count = len(self.storageGateway.fetchBooksFromDatabase())
+        self.storageGateway.removeEntry(malicious_book)
+        # If the table was dropped due to SQL injection, this will fail
+        assert len(self.storageGateway.fetchBooksFromDatabase()) == initial_count

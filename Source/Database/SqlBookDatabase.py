@@ -6,6 +6,7 @@ import sqlite3
 
 
 class Database:
+    catalogTableName = 'catalog'
     def __init__(self):
         self.conn = sqlite3.connect('catalog.db')
         self.cursor = self.conn.cursor()
@@ -22,8 +23,8 @@ class Database:
         '''
         self.query(query=create_table_query)
 
-    def dropTable(self, name):
-        query = "DROP TABLE IF EXISTS " + name
+    def dropCatalog(self, name):
+        query = "DROP TABLE IF EXISTS " + self.catalogTableName
         self.query(query=query)
 
     def query(self, query, data=None):
@@ -68,16 +69,18 @@ class Database:
 
     def sendDeleteQuery(self, entry):
         parsedBook = BookAdapter().replaceSingleQuoteWithDouble(entry)
-        query = 'DELETE FROM catalog WHERE ' \
-                'title LIKE \"%' + parsedBook.title + '%\" AND ' \
-                'author=\'' + parsedBook.author + '\' AND ' \
-                'releaseyear=\'' + parsedBook.releaseYear + '\''
-        self.query(query=query)
+        query = '''DELETE FROM catalog WHERE
+                title LIKE ? 
+                AND author = ? 
+                AND releaseyear = ?'''
+        data = ('%' + parsedBook.title + '%', parsedBook.author, parsedBook.releaseYear)
+        self.query(query=query, data=data)
 
     def sendDeleteWhereQuery(self, title):
         sanitizedDetail = BookAdapter().replaceSingleQuoteWithDouble(title)
-        query = 'DELETE FROM catalog WHERE title LIKE \"%' + sanitizedDetail + '%\"'
-        self.query(query=query)
+        query = 'DELETE FROM catalog WHERE title LIKE ?'
+        data = ('%' + sanitizedDetail + '%',)
+        self.query(query=query, data=data)
 
 
 class BookAdapter:
@@ -166,4 +169,4 @@ class SqlBookDatabase(DatabaseConnection):
         return self.cachedData.synchronize(self.database.synchronize())
 
     def clearCatalog(self):
-        self.database.dropTable('catalog')
+        self.database.dropCatalog('catalog')
