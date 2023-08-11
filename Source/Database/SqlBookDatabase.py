@@ -10,7 +10,6 @@ class Database:
         self.conn = sqlite3.connect('catalog.db')
         self.cursor = self.conn.cursor()
         self.initializeDatabase()
-        self.sqlAdapter = SqlAdapter()
 
     def initializeDatabase(self):
         create_table_query = '''
@@ -53,6 +52,33 @@ class Database:
 
         return books
 
+    def synchronize(self):
+        sqlStatement = '''
+                    SELECT title AS title, author AS author, releaseyear AS "releaseYear" FROM catalog ORDER BY title ASC
+                '''
+        return self.queryCatalogBySQL(sqlStatement)
+
+    def insertQuery(self, title, author, releaseYear):
+        query = '''
+                    INSERT INTO catalog (title, author, releaseyear)
+                    VALUES (?, ?, ?)
+                '''
+        data = (title, author, releaseYear)
+        self.query(query=query, data=data)
+
+    def sendDeleteQuery(self, entry):
+        parsedBook = BookAdapter().replaceSingleQuoteWithDouble(entry)
+        query = 'DELETE FROM catalog WHERE ' \
+                'title LIKE \"%' + parsedBook.title + '%\" AND ' \
+                'author=\'' + parsedBook.author + '\' AND ' \
+                'releaseyear=\'' + parsedBook.releaseYear + '\''
+        self.query(query=query)
+
+    def sendDeleteWhereQuery(self, title):
+        sanitizedDetail = BookAdapter().replaceSingleQuoteWithDouble(title)
+        query = 'DELETE FROM catalog WHERE title LIKE \"%' + sanitizedDetail + '%\"'
+        self.query(query=query)
+
 
 class BookAdapter:
     @staticmethod
@@ -69,7 +95,7 @@ class BookAdapter:
         for row in rows:
             book = BookAdapter.makeBookFromSQL(columns, row)
 
-            SqlAdapter().cleanDoubleQuotesFromTitle(book)
+            BookAdapter.cleanDoubleQuotesFromTitle(book)
             books.append(book)
         return books
 
@@ -91,13 +117,11 @@ class BookAdapter:
 
         return newEntry
 
-
-class SqlAdapter:
     @staticmethod
     def cleanDoubleQuotesFromTitle(book):
         # SQL requirement for quotes in field (must be double-quoted)
-        if SqlAdapter.titleHasDoubleQuote(book):
-            SqlAdapter.removeDuplicateQuotes(book)
+        if BookAdapter.titleHasDoubleQuote(book):
+            BookAdapter.removeDuplicateQuotes(book)
 
     @staticmethod
     def removeDuplicateQuotes(book):
@@ -117,7 +141,7 @@ class SqlBookDatabase(DatabaseConnection):
     def insertBooksIntoCatalogTable(self, books, booksToInsert):
         for book in booksToInsert:
             bookToInsert = BookAdapter().replaceSingleQuoteWithDouble(book)
-            self.insertQuery(bookToInsert.title, bookToInsert.author, bookToInsert.releaseYear)
+            self.database.insertQuery(bookToInsert.title, bookToInsert.author, bookToInsert.releaseYear)
 
         return self.cachedData.insertBooksIntoCatalogTable(books, booksToInsert)
 
@@ -131,39 +155,15 @@ class SqlBookDatabase(DatabaseConnection):
         return self.cachedData.selectWith(bookDetail, books)
 
     def delete(self, entry, books):
-        self.sendDeleteQuery(entry)
+        self.database.sendDeleteQuery(entry)
         return self.cachedData.delete(entry, books)
 
     def deleteWhereTitle(self, title, books):
-        self.sendDeleteWhereQuery(title)
+        self.database.sendDeleteWhereQuery(title)
         return self.cachedData.deleteWhereTitle(title, books)
 
     def synchronize(self, books):
-        sqlStatement = '''
-                    SELECT title AS title, author AS author, releaseyear AS "releaseYear" FROM catalog ORDER BY title ASC
-                '''
-        return self.cachedData.synchronize(self.database.query(query=sqlStatement))
-
-    def insertQuery(self, title, author, releaseYear):
-        query = '''
-                    INSERT INTO catalog (title, author, releaseyear)
-                    VALUES (?, ?, ?)
-                '''
-        data = (title, author, releaseYear)
-        self.database.query(query=query, data=data)
-
-    def sendDeleteQuery(self, entry):
-        parsedBook = BookAdapter().replaceSingleQuoteWithDouble(entry)
-        query = 'DELETE FROM catalog WHERE ' \
-                'title LIKE \"%' + parsedBook.title + '%\" AND ' \
-                'author=\'' + parsedBook.author + '\' AND ' \
-                'releaseyear=\'' + parsedBook.releaseYear + '\''
-        self.database.query(query=query)
-
-    def sendDeleteWhereQuery(self, title):
-        sanitizedDetail = BookAdapter().replaceSingleQuoteWithDouble(title)
-        query = 'DELETE FROM catalog WHERE title LIKE \"%' + sanitizedDetail + '%\"'
-        self.database.query(query=query)
+        return self.cachedData.synchronize(self.database.synchronize())
 
     def clearCatalog(self):
         self.database.dropTable('catalog')
