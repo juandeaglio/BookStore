@@ -4,7 +4,7 @@ from operator import eq
 from Source.Book import Book
 from Source.StorageGateway import StorageGateway
 from Source.Database.InMemoryDatabase import InMemoryDatabase
-from Source.Database.SqlBookDatabase import SqlBookDatabase
+from Source.Database.SqlInMemoryBooks import SqlInMemoryBooks
 
 
 class TestInMemoryStorageGateway(unittest.TestCase):
@@ -58,6 +58,6 @@ class TestPersistentStorageGateway(TestInMemoryStorageGateway):
             Book('Harry Potter and the Sorcerer\'s Stone', 'J.K. Rowling', '1998'),
             Book('To Kill a Mockingbird', 'Harper Lee', '1960')
         ]
-        SqlBookDatabase().clearCatalog()
-        self.storageGateway = StorageGateway(SqlBookDatabase())
+        SqlInMemoryBooks().clearCatalog()
+        self.storageGateway = StorageGateway(SqlInMemoryBooks())
         self.storageGateway.add(self.books)

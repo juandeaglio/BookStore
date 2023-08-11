@@ -1,7 +1,7 @@
-from Source.Interfaces.DatabaseConnection import DatabaseConnection
+from Source.Interfaces.InMemoryBooks import InMemoryBooks
 
 
-class InMemoryDatabase(DatabaseConnection):
+class InMemoryDatabase(InMemoryBooks):
     def insertBooksIntoCatalogTable(self, books, booksToInsert):
         books += booksToInsert
 
