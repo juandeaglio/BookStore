@@ -26,6 +26,8 @@ jobs:
           repository: juandeaglio/TailwindCSS
           token: ${{ secrets.GH_PAT }} # `GH_PAT` is a secret that contains your PAT
           path: TailwindCSS
+    - name: setup node
+      uses: actions/setup-node@v3
 
         
     - name: Install Windows Dependencies
@@ -35,7 +37,8 @@ jobs:
         ./venv/Scripts/activate.ps1
         python -m pip install --upgrade pip
         pip install -r requirements.txt
-        dir
+        npm install ./TailwindCSS/
+        npm run build
 
     - name: Install Linux Dependencies
       if: ${{matrix.os == 'ubuntu-latest'}}
@@ -45,7 +48,8 @@ jobs:
         python -m pip install --upgrade pip
         pip install -r requirements.txt
         echo "alias python='python3'" >> ~/.bashrc
-        ls -lhrt
+        npm install ./TailwindCSS/
+        npm run build
         
     - name: Run Window test Tests
       if: ${{matrix.os == 'windows-latest'}}
@@ -74,3 +78,8 @@ jobs:
       run: |
         ./venv/Scripts/activate.ps1
         behave ./Acceptance/BookStore/
+        
+    - name: Start React server
+      run: |
+        serve -s build
+
