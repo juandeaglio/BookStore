@@ -73,6 +73,3 @@ jobs:
       run: |
         ./venv/Scripts/activate.ps1
         behave ./Acceptance/BookStore/
-    
-    - name: Build React app
-      run
