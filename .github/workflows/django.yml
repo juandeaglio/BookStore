@@ -19,6 +19,12 @@ jobs:
       uses: actions/setup-python@v3
       with:
         python-version: '3.10'
+        
+    - name: Checkout React App
+      uses: actions/checkout@v3
+      with:
+          repository: juandeaglio/TailwindCSS
+          path: TailwindCSS
 
         
     - name: Install Windows Dependencies
@@ -28,6 +34,7 @@ jobs:
         ./venv/Scripts/activate.ps1
         python -m pip install --upgrade pip
         pip install -r requirements.txt
+        dir
 
     - name: Install Linux Dependencies
       if: ${{matrix.os == 'ubuntu-latest'}}
@@ -37,6 +44,7 @@ jobs:
         python -m pip install --upgrade pip
         pip install -r requirements.txt
         echo "alias python='python3'" >> ~/.bashrc
+        ls -lhrt
         
     - name: Run Window test Tests
       if: ${{matrix.os == 'windows-latest'}}
@@ -65,3 +73,6 @@ jobs:
       run: |
         ./venv/Scripts/activate.ps1
         behave ./Acceptance/BookStore/
+    
+    - name: Build React app
+      run
