@@ -24,6 +24,7 @@ jobs:
       uses: actions/checkout@v3
       with:
           repository: juandeaglio/TailwindCSS
+          token: ${{ secrets.GH_PAT }} # `GH_PAT` is a secret that contains your PAT
           path: TailwindCSS
 
         
