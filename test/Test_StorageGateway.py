@@ -62,7 +62,5 @@ class TestPersistentStorageGateway(TestInMemoryStorageGateway):
         self.storageGateway = StorageGateway(SqlBookDatabase())
         self.storageGateway.add(self.books)
 
-    #Tested adding sql injection via add method and "'; DROP TABLE catalog;--" as title, removed since test was passing
-    #to start with, added no testing value.
-
-    #Tested deleting a book and adding sql injection into a parameter, removed since test already passed. No test value.
+    # Removed SQL injection tests for add & delete methods using "; DROP TABLE catalog;--" since they
+    # passed initially and added no further testing value.

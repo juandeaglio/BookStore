@@ -41,7 +41,7 @@ def sendRestFromClientHandleRestWithServer(name):
             if i % 4 == 0:
                 booksArr.append(Book(title, author, releaseYear))
 
-    web_server = WebServer()
+    web_server = WebServer("Django")
     web_server.start()
     while True:
         continue
