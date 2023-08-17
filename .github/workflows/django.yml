@@ -39,8 +39,10 @@ jobs:
         ./venv/Scripts/activate.ps1
         python -m pip install --upgrade pip
         pip install -r requirements.txt
-        npm install --prefix ./TailwindCSS/
-        npm run build --prefix ./TailwindCSS/
+        cd TailwindCSS
+        npm install
+        npm run build
+        cd ..
 
     - name: Install Linux Dependencies
       if: ${{matrix.os == 'ubuntu-latest'}}
