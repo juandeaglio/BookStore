@@ -37,8 +37,8 @@ jobs:
         ./venv/Scripts/activate.ps1
         python -m pip install --upgrade pip
         pip install -r requirements.txt
-        npm install ./TailwindCSS/
-        npm run build
+        npm install --prefix ./TailwindCSS/
+        npm run build --prefix ./TailwindCSS/
 
     - name: Install Linux Dependencies
       if: ${{matrix.os == 'ubuntu-latest'}}
@@ -78,8 +78,4 @@ jobs:
       run: |
         ./venv/Scripts/activate.ps1
         behave ./Acceptance/BookStore/
-        
-    - name: Start React server
-      run: |
-        serve -s build
-
+      
