@@ -33,6 +33,8 @@ jobs:
     - name: Install Windows Dependencies
       if: ${{matrix.os == 'windows-latest'}}
       run: |
+        dir
+        dir ./TailwindCSS
         python -m venv venv
         ./venv/Scripts/activate.ps1
         python -m pip install --upgrade pip
