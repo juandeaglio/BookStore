@@ -28,6 +28,7 @@ class WebServer:
             self.process.kill()
 
         cmd = self.createStopCommand()
+
         self.executeCommand(cmd)
         self.running = False
 
@@ -43,12 +44,17 @@ class WebServer:
 
     def createStopCommand(self):
         cmd = ""
+
         if self.osLibrary.name == 'nt':
-            cmd = "Get-WmiObject Win32_Process | Where-Object " \
-                  "{ $_.Name -match 'python' -and $_.CommandLine -like '*runserver*' } | " \
-                  "ForEach-Object { Stop-Process -Id $_.ProcessId -Force }"
+            if self.type == "Django":
+                cmd = "Get-WmiObject Win32_Process | Where-Object " \
+                      "{ $_.Name -match 'python' -and $_.CommandLine -like '*runserver*' } | " \
+                      "ForEach-Object { Stop-Process -Id $_.ProcessId -Force }"
         elif os.name == 'posix':
-            cmd = "ps aux | grep 'python' | grep 'runserver' | awk '{print $2}' | xargs -r kill -9"
+            if self.type =="Django":
+                cmd = "ps aux | grep 'python' | grep 'runserver' | awk '{print $2}' | xargs -r kill -9"
+            elif self.type == "gunicorn":
+                cmd = "ps aux | grep 'gunicorn' | grep 'BookStoreServer' | awk '{print $2}' | xargs -r kill -9"
         return cmd
 
     def isRunning(self):
