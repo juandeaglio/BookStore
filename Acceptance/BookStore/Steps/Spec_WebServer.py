@@ -19,10 +19,12 @@ def start_web_server(context, web_server_type):
 
 @then('The user can access the web page')
 def accessWebPage(context):
-    if os.name != 'posix' and context.web_server.type != "gunicorn":
+    if os.name != 'nt' and context.web_server.type != "gunicorn":
         response = TestRestClient().createClientForAboutPage(timeout=2)
         assert "about" in response.text.lower()
         assert response.status_code == 200, "Expected 200 OK but got " + str(response.status_code)
+    else:
+        assert os.name == 'nt'
 
 
 @when('The user shuts down the web server')
