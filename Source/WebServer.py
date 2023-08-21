@@ -8,7 +8,6 @@ class WebServer:
         self.strategy = strategy
         self.processLibrary = processLibrary
         self.process = None
-        self.running = False
         self.osLibrary = osLibrary
         self.type = strategy
 
@@ -20,7 +19,6 @@ class WebServer:
                 self.process = self.processLibrary.Popen(["gunicorn", "BookStoreServer.wsgi"])
         else:
             raise Exception("Unknown web server strategy: " + self.strategy)
-        self.running = True
 
     def stop(self):
         if self.process:
@@ -30,7 +28,6 @@ class WebServer:
         cmd = self.createStopCommand()
 
         self.executeCommand(cmd)
-        self.running = False
 
     def executeCommand(self, cmd):
         try:
@@ -58,6 +55,14 @@ class WebServer:
         return cmd
 
     def isRunning(self):
-        return self.running
+        cmd = ''
+        if os.name == 'nt':
+            if self.type == "Django":
+                #get all python processes and filter out the ones that are not runserver, count the number of processes and return true if there is at least one
+                cmd = "CheckRunServerDjango.ps1"
+            print(subprocess.run(["powershell", "-File", cmd], capture_output=True).returncode)
+            return subprocess.run(["powershell", "-File", cmd], capture_output=True).returncode > 0
 
-
+        elif os.name == 'posix':
+            cmd = "CheckRunServer.sh"
+            return subprocess.run(["bash", cmd], capture_output=True).returncode > 0

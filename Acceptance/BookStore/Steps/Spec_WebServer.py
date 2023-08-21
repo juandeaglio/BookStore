@@ -14,7 +14,8 @@ def start_web_server(context, web_server_type):
     context.web_server.start()
 
     time.sleep(2)
-
+    if os.name != 'posix' and context.web_server.type != "gunicorn":
+        assert context.web_server.isRunning() is True, "Expected web server to be up."
 
 @then('The user can access the web page')
 def accessWebPage(context):
@@ -28,6 +29,7 @@ def accessWebPage(context):
 def stopWebServer(context):
     if os.name != 'posix' and context.web_server.type != "gunicorn":
         context.web_server.stop()
+        time.sleep(2)
         assert context.web_server.isRunning() is False, "Expected web server to be down but it is still running."
 
 
