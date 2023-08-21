@@ -11,17 +11,16 @@ from Source.WebServer import WebServer
 
 
 def before_feature(context, feature):
+    context.web_server = WebServer()
     if "catalog" in feature.name.lower() or "about" in feature.name.lower():
-        context.web_server = WebServer()
         context.web_server.start()
         time.sleep(2)
 
 
 def after_feature(context, feature):
-    if "catalog" in feature.name.lower() or "about" in feature.name.lower():
-        time.sleep(2)
-        context.web_server.stop()
-        print("Done")
+    time.sleep(2)
+    context.web_server.stop()
+    print("Done")
 
 
 def before_scenario(context, scenario):
