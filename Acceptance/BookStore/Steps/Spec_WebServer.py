@@ -11,11 +11,11 @@ from Source.WebServer import WebServer
 def start_web_server(context, web_server_type):
     context.web_server = WebServer(strategy=web_server_type)
     context.web_server.start()
+    time.sleep(2)
 
 
 @then('The user can access the web page')
 def accessWebPage(context):
-    time.sleep(2)
     response = TestRestClient().createClientForAboutPage(timeout=2)
     assert "about" in response.text.lower()
     assert response.status_code == 200, "Expected 200 OK but got " + str(response.status_code)
