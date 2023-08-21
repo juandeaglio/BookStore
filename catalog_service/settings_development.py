@@ -60,19 +60,6 @@ DEFAULT_AUTO_FIELD = BookStoreServer.settings.DEFAULT_AUTO_FIELD
 
 if os.environ.get("ENVIRONMENT") == "test":
     DEBUG = True
-    # ALLOWED_HOSTS = [
-    #     "localhost",
-    #     "127.0.0.1",
-    # ]
-    # CORS_ORIGIN_WHITELIST = [
-    #     'http://localhost:3000',
-    #     'http://localhost:8091',
-    #     'http://127.0.0.1:3000'
-    # ]
-    # CORS_ALLOWED_ORIGINS = [
-    #     "http://localhost:3000",
-    #     'http://localhost:8091',
-    # ]
     CORS_ALLOW_ALL_ORIGINS = DEBUG
     CORS_ALLOW_HEADERS = (
         "accept",
