@@ -7,7 +7,7 @@ from Acceptance.TestRestClient import TestRestClient
 from Source.WebServer import WebServer
 
 
-@given('A user starts the "{web_server_type}" web server')
+@given('"{web_server_type}" web server is started')
 def start_web_server(context, web_server_type):
     context.web_server = WebServer(strategy=web_server_type)
     context.web_server.start()
@@ -50,3 +50,15 @@ def accessWebPage(context):
             or not isinstance(response1, requests.exceptions.ConnectionError)\
             or not isinstance(response1, urllib3.exceptions.NewConnectionError), \
             "Expected TimeoutError but got " + str(response1)
+
+
+@when('The user fetches a static image')
+def fetchStaticImage(context):
+    context.response = TestRestClient().fetchStaticImage()
+
+
+@then('The user can see the static image')
+def seeStaticImage(context):
+    assert context.response.status_code == 200, "Expected 200 OK but got " + str(context.response.status_code)
+    assert context.response.headers['Content-Type'] == 'image/jpeg', "Expected image/png but got " + \
+                                                                    str(context.response.headers['Content-Type'])
