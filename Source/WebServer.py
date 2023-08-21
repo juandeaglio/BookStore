@@ -34,7 +34,7 @@ class WebServer:
             if os.name == 'nt':
                 subprocess.run(["powershell", "-Command", cmd], check=True)
             elif os.name == 'posix':
-                subprocess.run(cmd, shell=True, check=True)
+                subprocess.run(["bash", "-c", cmd], check=True)
 
         except subprocess.CalledProcessError as e:
             print(f"Error executing command: {e}")
