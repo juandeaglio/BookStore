@@ -10,10 +10,14 @@ class WebServer:
         self.process = None
         self.running = False
         self.osLibrary = osLibrary
+        self.type = strategy
 
     def start(self):
         if self.strategy == "Django":
             self.process = self.processLibrary.Popen([sys.executable, "startDjangoWithTestUser.py"])
+        elif self.strategy == "gunicorn":
+            if os.name == 'posix':
+                self.process = self.processLibrary.Popen(["gunicorn", "BookStoreServer:wsgi"])
         else:
             raise Exception("Unknown web server strategy: " + self.strategy)
         self.running = True
