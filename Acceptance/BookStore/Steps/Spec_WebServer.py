@@ -19,17 +19,19 @@ def start_web_server(context, web_server_type):
 
 @then('The user can access the web page')
 def accessWebPage(context):
-    if os.name != 'nt' and context.web_server.type != "gunicorn":
+    if os.name == 'nt' and context.web_server.type == "gunicorn":
+        assert os.name == 'nt'
+    else:
         response = TestRestClient().createClientForAboutPage(timeout=2)
         assert "about" in response.text.lower()
         assert response.status_code == 200, "Expected 200 OK but got " + str(response.status_code)
-    else:
-        assert os.name == 'nt'
 
 
 @when('The user shuts down the web server')
 def stopWebServer(context):
-    if os.name != 'posix' and context.web_server.type != "gunicorn":
+    if os.name == 'nt' and context.web_server.type == "gunicorn":
+        assert os.name == 'nt'
+    else:
         context.web_server.stop()
         time.sleep(2)
         assert context.web_server.isRunning() is False, "Expected web server to be down but it is still running."
@@ -37,7 +39,9 @@ def stopWebServer(context):
 
 @then('The user can no longer access the web page')
 def accessWebPage(context):
-    if os.name != 'posix' and context.web_server.type != "gunicorn":
+    if os.name == 'nt' and context.web_server.type == "gunicorn":
+        assert os.name == 'nt'
+    else:
         response1 = TestRestClient().createClientForAboutPage()
 
         # if response 1 is not an exception and the status code is 200, then wait 0.5 seconds and try again
@@ -63,13 +67,17 @@ def accessWebPage(context):
 
 @when('The user fetches a static image')
 def fetchStaticImage(context):
-    if os.name != 'posix' and context.web_server.type != "gunicorn":
+    if os.name == 'nt' and context.web_server.type == "gunicorn":
+        assert os.name == 'nt'
+    else:
         context.response = TestRestClient().fetchStaticImage()
 
 
 @then('The user can see the static image')
 def seeStaticImage(context):
-    if os.name != 'posix' and context.web_server.type != "gunicorn":
+    if os.name == 'nt' and context.web_server.type == "gunicorn":
+        assert os.name == 'nt'
+    else:
         assert context.response.status_code == 200, "Expected 200 OK but got " + str(context.response.status_code)
         assert context.response.headers['Content-Type'] == 'image/jpeg', "Expected image/png but got " + \
                                                                         str(context.response.headers['Content-Type'])
