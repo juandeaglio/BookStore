@@ -111,12 +111,10 @@ USE_TZ = True
 
 STATIC_ROOT = BASE_DIR / 'static'
 
-ALLOWED_HOSTS = [
-    'localhost',
-]
+ALLOWED_HOSTS = ['.localhost', '127.0.0.1']
 
 CORS_ORIGIN_WHITELIST = [
-    'http://localhost:3000'
+    'http://localhost:3000',
 ]
 
 STATIC_URL = 'static/'

@@ -49,7 +49,7 @@ class WebServer:
                       "ForEach-Object { Stop-Process -Id $_.ProcessId -Force }"
         elif os.name == 'posix':
             if self.type =="Django":
-                cmd = "ps aux | grep 'python' | grep 'runserver' | grep -v 'stopServer.py' | awk '{print $2}' | xargs -r kill -9"
+                cmd = "ps aux | grep 'python' | grep 'runserver' | grep -v 'kill' | awk '{print $2}' | xargs -r kill -9"
             elif self.type == "gunicorn":
                 cmd = "ps aux | grep 'gunicorn' | grep 'BookStoreServer' | grep -v 'stopServer.py'  | awk '{print $2}' | xargs -r kill -9"
         return cmd
