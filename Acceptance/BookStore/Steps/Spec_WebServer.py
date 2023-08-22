@@ -22,9 +22,9 @@ def accessWebPage(context):
     if os.name == 'nt' and context.web_server.type == "gunicorn":
         assert os.name == 'nt'
     else:
-        response = TestRestClient().createClientForAboutPage(timeout=2)
-        assert "about" in response.text.lower()
+        response = TestRestClient().searchForBook("The Hobbit")
         assert response.status_code == 200, "Expected 200 OK but got " + str(response.status_code)
+        assert response.json() == [], "Expected empty json but got " + str(response.json)
 
 
 @when('The user shuts down the web server')
