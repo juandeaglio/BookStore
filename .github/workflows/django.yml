@@ -32,10 +32,6 @@ jobs:
     - name: setup nginx
       run: |
         sudo apt-get install -y nginx
-        sed -i "s|{server_name}|localhost|g" nginx.conf
-        sed -i "s|{static_path}|/app/static|g" nginx.conf
-        cp nginx.conf /etc/nginx/sites-available/bookstore.conf
-        ln -s /etc/nginx/sites-available/bookstore.conf /etc/nginx/sites-enabled/bookstore.conf
         
     - name: Install Windows Dependencies
       if: ${{matrix.os == 'windows-latest'}}
@@ -61,6 +57,10 @@ jobs:
         echo "alias python='python3'" >> ~/.bashrc
         npm install --prefix ./TailwindCSS/
         npm run build --prefix ./TailwindCSS/
+        sed -i "s|{server_name}|localhost|g" nginx.conf
+        sed -i "s|{static_path}|/app/static|g" nginx.conf
+        cp nginx.conf /etc/nginx/sites-available/bookstore.conf
+        ln -s /etc/nginx/sites-available/bookstore.conf /etc/nginx/sites-enabled/bookstore.conf
         
     - name: Run Window test Tests
       if: ${{matrix.os == 'windows-latest'}}
