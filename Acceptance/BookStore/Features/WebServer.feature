@@ -10,7 +10,6 @@ Feature: Web Server That Hosts A Webpage
       | web_server_type |
       | Django          |
       | gunicorn        |
-      | ngnix-gunicorn  |
 
 
   Scenario Outline: Fetching Static Images From a Web Server
