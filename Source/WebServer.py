@@ -22,7 +22,6 @@ class WebServer:
             self.process.kill()
 
         cmd = self.strategy.createStopCommand()
-
         self.executeCommand(cmd)
 
     def executeCommand(self, cmd):
