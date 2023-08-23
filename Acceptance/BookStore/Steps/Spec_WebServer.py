@@ -17,6 +17,7 @@ def start_web_server(context, web_server_type):
     if os.name != 'posix' and context.web_server.type != "gunicorn":
         assert context.web_server.isRunning() is True, "Expected web server to be up."
 
+
 @then('The user can access the web page')
 def accessWebPage(context):
     if os.name == 'nt' and context.web_server.type == "gunicorn":
