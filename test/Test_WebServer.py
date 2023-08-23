@@ -5,8 +5,8 @@ from Source.WebServerStrategy.GunicornStrategy import GunicornStrategy
 
 
 class FakedOSLibrary:
-    def __init__(self):
-        self.name = 'None'
+    def __init__(self, name='nt'):
+        self.name = name
 
 
 class FakeProcess:
@@ -37,24 +37,35 @@ class FakedProcessLibrary:
         return FakeProcess()
 
 
-class TestWebServer(unittest.TestCase):
-    def test_startDjangoServer(self):
-        self.webserver = WebServer(strategy=DjangoStrategy,
+class TestDjangoWebServer(unittest.TestCase):
+    def test_startDjangoServer(self, strategy=DjangoStrategy, osLibrary=FakedOSLibrary()):
+        self.webserver = WebServer(strategy=strategy,
                                    processLibrary=FakedProcessLibrary(),
-                                   osLibrary=FakedOSLibrary())
+                                   osLibrary=osLibrary)
         self.webserver.start()
         assert self.webserver.process is not None
 
-    def test_startAndStopDjangoServer(self):
-        self.webserver = WebServer(strategy=DjangoStrategy,
+    def test_startAndStopDjangoServer(self, strategy=DjangoStrategy, osLibrary=FakedOSLibrary()):
+        self.webserver = WebServer(strategy=strategy,
                                    processLibrary=FakedProcessLibrary(),
-                                   osLibrary=FakedOSLibrary())
+                                   osLibrary=osLibrary)
         self.webserver.start()
         self.webserver.stop()
         assert self.webserver.process.poll() is None
 
-    def test_isServerRunning(self):
-        self.webserver = WebServer(strategy=DjangoStrategy,
+    def test_isServerRunning(self, strategy=DjangoStrategy, osLibrary=FakedOSLibrary()):
+        self.webserver = WebServer(strategy=strategy,
                                    processLibrary=FakedProcessLibrary(),
-                                   osLibrary=FakedOSLibrary())
+                                   osLibrary=osLibrary)
         assert self.webserver.isRunning() is False
+
+
+class TestGunicornWebServer(TestDjangoWebServer):
+    def test_startDjangoServer(self, strategy=GunicornStrategy, osLibrary=FakedOSLibrary(name='posix')):
+        super().test_startDjangoServer(strategy, osLibrary)
+
+    def test_startAndStopDjangoServer(self, strategy=GunicornStrategy, osLibrary=FakedOSLibrary(name='posix')):
+        super().test_startAndStopDjangoServer(strategy, osLibrary)
+
+    def test_isServerRunning(self, strategy=GunicornStrategy, osLibrary=FakedOSLibrary(name='posix')):
+        super().test_isServerRunning(strategy, osLibrary)

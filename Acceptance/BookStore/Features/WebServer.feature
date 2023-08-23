@@ -9,7 +9,7 @@ Feature: Web Server That Hosts A Webpage
     Examples:
       | web_server_type |
       | Django          |
-      | gunicorn        |
+      | Gunicorn        |
 
 
   Scenario Outline: Fetching Static Images From a Web Server

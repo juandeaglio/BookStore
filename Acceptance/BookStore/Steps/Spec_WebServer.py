@@ -21,17 +21,19 @@ strategies = {
 
 @given('"{web_server_type}" web server is started')
 def start_web_server(context, web_server_type):
-    context.web_server = WebServer(strategies[web_server_type])
+    context.web_server = WebServer(strategy=strategies[web_server_type])
     context.web_server.start()
-
+    context.web_server_type = web_server_type
     time.sleep(2)
-    if os.name != 'posix' and context.web_server.type != "gunicorn":
-        assert context.web_server.isRunning() is True, "Expected web server to be up."
+    if context.web_server_type == "Gunicorn" and os.name == 'nt':
+        assert os.name == 'nt'
+    else:
+        assert context.web_server.isRunning() is True, "Expected web server to be up but it is down"
 
 
 @then('The user can access the web page')
 def accessWebPage(context):
-    if os.name == 'nt' and context.web_server.type == "gunicorn":
+    if os.name == 'nt' and context.web_server_type == "Gunicorn":
         assert os.name == 'nt'
     else:
         response = TestRestClient().searchForBook("The Hobbit")
@@ -41,18 +43,17 @@ def accessWebPage(context):
 
 @when('The user shuts down the web server')
 def stopWebServer(context):
-    if os.name == 'nt' and context.web_server.type == "gunicorn":
+    if os.name == 'nt' and context.web_server_type == "Gunicorn":
         assert os.name == 'nt'
     else:
-        context.web_server.createStopCommand()
+        context.web_server.stop()
         time.sleep(2)
-        assert context.web_server.isRunning(
-            subprocess) is False, "Expected web server to be down but it is still running."
+        assert context.web_server.isRunning() is False, "Expected web server to be down but it is still running."
 
 
 @then('The user can no longer access the web page')
 def accessWebPage(context):
-    if os.name == 'nt' and context.web_server.type == "gunicorn":
+    if os.name == 'nt' and context.web_server_type == "Gunicorn":
         assert os.name == 'nt'
     else:
         response1 = TestRestClient().createClientForAboutPage()
@@ -80,7 +81,7 @@ def accessWebPage(context):
 
 @when('The user fetches a static image')
 def fetchStaticImage(context):
-    if os.name == 'nt' and context.web_server.type == "gunicorn":
+    if os.name == 'nt' and context.web_server_type == "gunicorn":
         assert os.name == 'nt'
     else:
         context.response = TestRestClient().fetchStaticImage()
@@ -88,7 +89,7 @@ def fetchStaticImage(context):
 
 @then('The user can see the static image')
 def seeStaticImage(context):
-    if os.name == 'nt' and context.web_server.type == "gunicorn":
+    if os.name == 'nt' and context.web_server_type == "gunicorn":
         assert os.name == 'nt'
     else:
         assert context.response.status_code == 200, "Expected 200 OK but got " + str(context.response.status_code)

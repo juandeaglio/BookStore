@@ -5,6 +5,9 @@ import sys
 
 
 class DjangoStrategy(WebServerStrategy):
+    def __init__(self, subprocessLib, osLibrary):
+        super().__init__(subprocessLib, osLibrary)
+
     def createStopCommand(self):
         cmd = ''
         if os.name == 'nt':
@@ -16,17 +19,17 @@ class DjangoStrategy(WebServerStrategy):
 
         return cmd
 
-    def isRunning(self, subprocessLib):
+    def isRunning(self):
         cmd = ''
         if os.name == 'nt':
             # get all python processes and filter out the ones that are not runserver, count the number of processes and return true if there is at least one
             cmd = "CheckRunServerDjango.ps1"
-            print(subprocessLib.run(["powershell", "-File", cmd], capture_output=True).returncode)
-            return subprocessLib.run(["powershell", "-File", cmd], capture_output=True).returncode > 0
+            print(self.subprocessLib.run(["powershell", "-File", cmd], capture_output=True).returncode)
+            return self.subprocessLib.run(["powershell", "-File", cmd], capture_output=True).returncode > 0
 
         elif os.name == 'posix':
             cmd = "CheckRunServer.sh"
-            return subprocessLib.run(["bash", cmd], capture_output=True).returncode > 0
+            return self.subprocessLib.run(["bash", cmd], capture_output=True).returncode > 0
 
-    def start(self, processLibrary):
-        return processLibrary.Popen([sys.executable, "startDjangoWithTestUser.py"])
+    def start(self):
+        return self.subprocessLib.Popen([sys.executable, "startDjangoWithTestUser.py"])

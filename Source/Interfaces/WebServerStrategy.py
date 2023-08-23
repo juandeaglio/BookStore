@@ -2,8 +2,12 @@ from abc import ABC, abstractmethod
 
 
 class WebServerStrategy(ABC):
+    def __init__(self, subprocessLib, osLibrary):
+        self.subprocessLib = subprocessLib
+        self.osLibrary = osLibrary
+
     @abstractmethod
-    def start(self, processLibrary):
+    def start(self):
         pass
 
     @abstractmethod
@@ -11,5 +15,5 @@ class WebServerStrategy(ABC):
         pass
 
     @abstractmethod
-    def isRunning(self, subprocessLib):
+    def isRunning(self):
         pass
