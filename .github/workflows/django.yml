@@ -60,7 +60,7 @@ jobs:
         sed -i "s|{server_name}|localhost|g" ./nginx.conf
         sed -i "s|{static_path}|/app/static|g" ./nginx.conf
         sudo cp ./nginx.conf /etc/nginx/sites-available/bookstore.conf
-        ln -s /etc/nginx/sites-available/bookstore.conf /etc/nginx/sites-enabled/bookstore.conf
+        sudo ln -s /etc/nginx/sites-available/bookstore.conf /etc/nginx/sites-enabled/bookstore.conf
         
     - name: Run Window test Tests
       if: ${{matrix.os == 'windows-latest'}}
