@@ -5,12 +5,23 @@ import requests.exceptions
 import urllib3.exceptions
 from behave import given, when, then
 from Acceptance.TestRestClient import TestRestClient
+from Source.Interfaces.WebServerStrategy import WebServerStrategy
 from Source.WebServer import WebServer
+from Source.WebServerStrategy.DjangoStrategy import DjangoStrategy
+from Source.WebServerStrategy.GunicornNginxStrategy import GunicornNginxStrategy
+from Source.WebServerStrategy.GunicornStrategy import GunicornStrategy
+
+
+strategies = {
+    "Django": DjangoStrategy,
+    "Gunicorn": GunicornStrategy,
+    "GunicornNginx": GunicornNginxStrategy
+}
 
 
 @given('"{web_server_type}" web server is started')
 def start_web_server(context, web_server_type):
-    context.web_server = WebServer(strategy=web_server_type)
+    context.web_server = WebServer(strategies[web_server_type])
     context.web_server.start()
 
     time.sleep(2)
@@ -33,9 +44,10 @@ def stopWebServer(context):
     if os.name == 'nt' and context.web_server.type == "gunicorn":
         assert os.name == 'nt'
     else:
-        context.web_server.stop()
+        context.web_server.createStopCommand()
         time.sleep(2)
-        assert context.web_server.isRunning() is False, "Expected web server to be down but it is still running."
+        assert context.web_server.isRunning(
+            subprocess) is False, "Expected web server to be down but it is still running."
 
 
 @then('The user can no longer access the web page')

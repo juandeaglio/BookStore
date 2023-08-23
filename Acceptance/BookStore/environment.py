@@ -18,7 +18,7 @@ def before_scenario(context, scenario):
 
 def after_scenario(context, scenario):
     time.sleep(4)
-    context.web_server.stop()
+    context.web_server.createStopCommand()
     print("Done")
 
 

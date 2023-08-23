@@ -1,24 +1,21 @@
 import os
 import subprocess
-import sys
+from Source.WebServerStrategy.DjangoStrategy import DjangoStrategy
 
 
 class WebServer:
-    def __init__(self, strategy="Django", processLibrary=subprocess, osLibrary=os):
-        self.strategy = strategy
+    def __init__(self, strategy=DjangoStrategy, processLibrary=subprocess, osLibrary=os):
+        self.strategy = strategy()
         self.processLibrary = processLibrary
         self.process = None
         self.osLibrary = osLibrary
         self.type = strategy
 
     def start(self):
-        if self.strategy == "Django":
-            self.process = self.processLibrary.Popen([sys.executable, "startDjangoWithTestUser.py"])
-        elif self.strategy == "gunicorn":
-            if os.name == 'posix':
-                self.process = self.processLibrary.Popen(["gunicorn", "-b", "0.0.0.0:8091", "BookStoreServer.wsgi"])
+        if self.strategy.start:
+            self.process = self.strategy.start(self.processLibrary)
         else:
-            raise Exception("Unknown web server strategy: " + self.strategy)
+            raise Exception("Unknown web server strategy: " + str(self.strategy))
 
     def stop(self):
         if self.process:
@@ -55,14 +52,5 @@ class WebServer:
         return cmd
 
     def isRunning(self):
-        cmd = ''
-        if os.name == 'nt':
-            if self.type == "Django":
-                #get all python processes and filter out the ones that are not runserver, count the number of processes and return true if there is at least one
-                cmd = "CheckRunServerDjango.ps1"
-            print(subprocess.run(["powershell", "-File", cmd], capture_output=True).returncode)
-            return subprocess.run(["powershell", "-File", cmd], capture_output=True).returncode > 0
+        return self.strategy.isRunning(self.processLibrary)
 
-        elif os.name == 'posix':
-            cmd = "CheckRunServer.sh"
-            return subprocess.run(["bash", cmd], capture_output=True).returncode > 0
