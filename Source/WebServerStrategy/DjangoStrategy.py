@@ -28,7 +28,7 @@ class DjangoStrategy(WebServerStrategy):
             return self.subprocessLib.run(["powershell", "-File", cmd], capture_output=True).returncode > 0
 
         elif os.name == 'posix':
-            cmd = "CheckRunServer.sh"
+            cmd = "CheckRunDjango.sh"
             return self.subprocessLib.run(["bash", cmd], capture_output=True).returncode > 0
 
     def start(self):
