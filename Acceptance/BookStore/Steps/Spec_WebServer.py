@@ -25,7 +25,7 @@ def start_web_server(context, web_server_type):
     context.web_server.start()
     context.web_server_type = web_server_type
     time.sleep(2)
-    if context.web_server_type == "Gunicorn" and os.name == 'nt':
+    if (context.web_server_type == "Gunicorn" or context.web_server_type == "GunicornNginx") and os.name == 'nt':
         assert os.name == 'nt'
     else:
         assert context.web_server.isRunning() is True, "Expected web server to be up but it is down"
@@ -33,7 +33,7 @@ def start_web_server(context, web_server_type):
 
 @then('The user can access the web page')
 def accessWebPage(context):
-    if os.name == 'nt' and context.web_server_type == "Gunicorn":
+    if os.name == 'nt' and (context.web_server_type == "Gunicorn" or context.web_server_type == "GunicornNginx"):
         assert os.name == 'nt'
     else:
         response = TestRestClient().searchForBook("The Hobbit")
@@ -43,7 +43,7 @@ def accessWebPage(context):
 
 @when('The user shuts down the web server')
 def stopWebServer(context):
-    if os.name == 'nt' and context.web_server_type == "Gunicorn":
+    if os.name == 'nt' and (context.web_server_type == "Gunicorn" or context.web_server_type == "GunicornNginx"):
         assert os.name == 'nt'
     else:
         context.web_server.stop()
@@ -53,7 +53,7 @@ def stopWebServer(context):
 
 @then('The user can no longer access the web page')
 def accessWebPage(context):
-    if os.name == 'nt' and context.web_server_type == "Gunicorn":
+    if os.name == 'nt' and (context.web_server_type == "Gunicorn" or context.web_server_type == "GunicornNginx"):
         assert os.name == 'nt'
     else:
         response1 = TestRestClient().createClientForAboutPage()
@@ -81,7 +81,7 @@ def accessWebPage(context):
 
 @when('The user fetches a static image')
 def fetchStaticImage(context):
-    if os.name == 'nt' and context.web_server_type == "gunicorn":
+    if os.name == 'nt' and (context.web_server_type == "Gunicorn" or context.web_server_type == "GunicornNginx"):
         assert os.name == 'nt'
     else:
         context.response = TestRestClient().fetchStaticImage()
@@ -89,7 +89,7 @@ def fetchStaticImage(context):
 
 @then('The user can see the static image')
 def seeStaticImage(context):
-    if os.name == 'nt' and context.web_server_type == "gunicorn":
+    if os.name == 'nt' and (context.web_server_type == "Gunicorn" or context.web_server_type == "GunicornNginx"):
         assert os.name == 'nt'
     else:
         assert context.response.status_code == 200, "Expected 200 OK but got " + str(context.response.status_code)

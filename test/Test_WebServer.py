@@ -2,6 +2,7 @@ import os
 import unittest
 from Source.WebServer import WebServer
 from Source.WebServerStrategy.DjangoStrategy import DjangoStrategy
+from Source.WebServerStrategy.GunicornNginxStrategy import GunicornNginxStrategy
 from Source.WebServerStrategy.GunicornStrategy import GunicornStrategy
 
 
@@ -61,8 +62,19 @@ class TestDjangoWebServer(unittest.TestCase):
         assert self.webserver.isRunning() is False
 
 
-class TestGunicornWebServer(TestDjangoWebServer):
-    def test_startDjangoServer(self, strategy=GunicornStrategy, osLibrary=FakedOSLibrary(name='posix')):
+class TestGunicornAppServer(TestDjangoWebServer):
+    def test_startGunicornServer(self, strategy=GunicornStrategy, osLibrary=FakedOSLibrary(name='posix')):
+        super().test_startDjangoServer(strategy, osLibrary)
+
+    def test_startAndStopServer(self, strategy=GunicornStrategy, osLibrary=FakedOSLibrary(name='posix')):
+        super().test_startAndStopServer(strategy, osLibrary)
+
+    def test_isServerRunning(self, strategy=GunicornStrategy, osLibrary=FakedOSLibrary(name='posix')):
+        super().test_isServerRunning(strategy, osLibrary)
+
+
+class TestGunicornNginxWebServer(TestGunicornAppServer):
+    def test_startDjangoServer(self, strategy=GunicornNginxStrategy, osLibrary=FakedOSLibrary(name='posix')):
         super().test_startDjangoServer(strategy, osLibrary)
 
     def test_startAndStopServer(self, strategy=GunicornStrategy, osLibrary=FakedOSLibrary(name='posix')):
