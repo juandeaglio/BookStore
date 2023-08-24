@@ -61,8 +61,8 @@ class TestRestClient:
         statusCode = self.sendPostFromSession(payload=book.to_json(), endpoint="catalog_service/addBook/")
         return statusCode
 
-    def searchForBook(self, title):
-        r = self.getRequest(endpoint="catalog_service/search", parameters={'title': title})
+    def searchForBook(self, title, port=8091):
+        r = self.getRequest(endpoint="catalog_service/search", parameters={'title': title}, port=port)
         return r
 
     def deleteBook(self, firstBook):

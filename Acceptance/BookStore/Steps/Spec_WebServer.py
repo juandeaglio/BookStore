@@ -36,7 +36,10 @@ def accessWebPage(context):
     if os.name == 'nt' and (context.web_server_type == "Gunicorn" or context.web_server_type == "GunicornNginx"):
         assert os.name == 'nt'
     else:
-        response = TestRestClient().searchForBook("The Hobbit")
+        port = 8091
+        if context.web_server_type == "GunicornNginx":
+            port = 80
+        response = TestRestClient().searchForBook("The Hobbit", port=port)
         assert response.status_code == 200, "Expected 200 OK but got " + str(response.status_code)
         assert response.json() == [], "Expected empty json but got " + str(response.json)
 
