@@ -5,9 +5,9 @@ class GunicornStrategy(WebServerStrategy):
     def __init__(self, subprocessLib, osLibrary):
         super().__init__(subprocessLib, osLibrary)
 
-    def start(self):
+    def start(self, port=8091):
         if self.osLibrary.name == 'posix':
-            return self.subprocessLib.Popen(["gunicorn", "-b", "0.0.0.0:8091", "BookStoreServer.wsgi"])
+            return self.subprocessLib.Popen(["gunicorn", "-b", "0.0.0.0:"+str(port), "BookStoreServer.wsgi"])
 
     def createStopCommand(self):
         cmd = ''
