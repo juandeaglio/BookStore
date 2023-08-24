@@ -1,6 +1,6 @@
 #!/bin/bash
 
-count=$(ps aux | grep python | egrep -i 'gunicorn' | grep -v grep | grep -v kill | wc -l)
+count=$(ps aux | grep python | grep 'BookStoreServer.wsgi' | grep -v grep | grep -v kill | wc -l)
 
 if [[ $count -ge 1 ]]; then
     exit 1
