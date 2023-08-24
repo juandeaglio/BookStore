@@ -18,7 +18,7 @@ class GunicornNginxStrategy(WebServerStrategy):
 
         if self.osLibrary.name == 'posix':
             cmd = "ps aux | egrep 'BookStoreServer|nginx|runserver' | grep -v 'stopServer.py' " \
-                  "| awk '{print $2}' | xargs -r kill -9"
+                  "| awk '{print $2}' | xargs -r sudo kill -9"
 
         return cmd
 
