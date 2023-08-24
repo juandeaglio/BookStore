@@ -20,4 +20,3 @@ Feature: Web Server That Hosts A Webpage
     Examples:
       | web_server_type |
       | Django          |
-      | GunicornNginx   |
