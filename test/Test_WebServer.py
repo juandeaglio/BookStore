@@ -26,7 +26,7 @@ class FakedProcessLibrary:
     def run(self, args=None, capture_output=True, check=True):
         class ProcResults:
             returncode = 0
-            stdout="Works"
+            stdout=bytes("Works", encoding='utf-8')
 
         return ProcResults()
 
