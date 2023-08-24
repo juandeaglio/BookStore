@@ -27,9 +27,9 @@ class WebServer:
     def executeCommand(self, cmd):
         try:
             if self.osLibrary.name == 'nt':
-                subprocess.run(["powershell", "-Command", cmd], check=True)
+                self.processLibrary.run(["powershell", "-Command", cmd], check=True)
             elif self.osLibrary.name == 'posix':
-                subprocess.run(["bash", "-c", cmd], check=True)
+                self.processLibrary.run(["bash", "-c", cmd], check=True)
 
         except subprocess.CalledProcessError as e:
             print(f"Error executing command: {e}")

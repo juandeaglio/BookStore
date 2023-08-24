@@ -22,7 +22,7 @@ class FakeProcess:
 
 
 class FakedProcessLibrary:
-    def run(self, args=None, capture_output=True):
+    def run(self, args=None, capture_output=True, check=True):
         class ProcResults:
             returncode = 0
 
