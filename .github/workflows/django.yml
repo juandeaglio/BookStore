@@ -58,8 +58,8 @@ jobs:
         npm install --prefix ./TailwindCSS/
         npm run build --prefix ./TailwindCSS/
         echo "$(pwd)"
-        sed -i "s|{server_name}|localhost|g" ./nginx.conf
-        sed -i "s|{static_path}|$(pwd)/static|g" ./nginx.conf
+        sudo sed -i "s|{server_name}|localhost|g" ./nginx.conf
+        sudo sed -i "s|{static_path}|$(pwd)/static|g" ./nginx.conf
         sudo cp ./nginx.conf /etc/nginx/sites-available/bookstore.conf
         sudo ln -s /etc/nginx/sites-available/bookstore.conf /etc/nginx/sites-enabled/bookstore.conf
         
