@@ -8,24 +8,23 @@ class GunicornNginxStrategy(WebServerStrategy):
         self.gunicorn = GunicornStrategy(subprocessLib, osLibrary)
 
     def start(self):
-        self.gunicorn.start()
+        self.gunicornProcess = self.gunicorn.start()
         if self.osLibrary.name == 'posix':
-            return self.subprocessLib.Popen(['sudo', 'nginx', '-g daemon off;'])
+            return self.subprocessLib.Popen(['nginx', '-g daemon off;'])
 
     def createStopCommand(self):
         cmd = ''
 
         if self.osLibrary.name == 'posix':
-            cmd = "ps aux | egrep 'gunicorn|nginx|runserver' | grep 'BookStoreServer' | grep -v 'stopServer.py' " \
+            cmd = "ps aux | egrep 'BookStoreServer|nginx|runserver' | grep -v 'stopServer.py' " \
                   "| awk '{print $2}' | xargs -r kill -9"
 
         return cmd
 
     def isRunning(self):
         if self.osLibrary.name == 'posix':
-            cmd = "CheckRunDjango.sh"
             cmd2 = "CheckRunGunicorn.sh"
             cmd3 = "CheckRunNginx.sh"
-            return self.subprocessLib.run(["bash", cmd], capture_output=True).returncode > 0 and \
-                self.subprocessLib.run(["bash", cmd2], capture_output=True).returncode > 0 and \
+            print(self.subprocessLib.run(["bash", "ps -efw"], capture_output=True).stdout)
+            return self.subprocessLib.run(["bash", cmd2], capture_output=True).returncode > 0 and \
                 self.subprocessLib.run(["bash", cmd3], capture_output=True).returncode > 0
