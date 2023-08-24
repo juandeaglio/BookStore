@@ -10,7 +10,7 @@ class GunicornNginxStrategy(WebServerStrategy):
     def start(self):
         self.gunicornProcess = self.gunicorn.start()
         if self.osLibrary.name == 'posix':
-            if self.subprocessLib.Popen(["sudo", "ls", "-lhrt"]).resultcode == 0:
+            if self.subprocessLib.run(["bash", "sudo ls -lhrt"]).returncode == 0:
                 return self.subprocessLib.Popen(['sudo','nginx', '-g daemon off;'])
             else:
                 return self.subprocessLib.Popen(['nginx', '-g daemon off;'])
