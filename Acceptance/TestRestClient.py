@@ -78,8 +78,8 @@ class TestRestClient:
         except (requests.exceptions.ConnectionError, TimeoutError) as e:
             return e
 
-    def fetchStaticImage(self):
-        r = self.getStatic(port=8091, staticfile="imgs/Emma.jpg")
+    def fetchStaticImage(self, port=8091):
+        r = self.getStatic(port=port, staticfile="imgs/Emma.jpg")
         return r
 
 

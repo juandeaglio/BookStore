@@ -59,7 +59,10 @@ def accessWebPage(context):
     if os.name == 'nt' and (context.web_server_type == "Gunicorn" or context.web_server_type == "GunicornNginx"):
         assert os.name == 'nt'
     else:
-        response1 = TestRestClient().createClientForAboutPage()
+        port = 8091
+        if context.web_server_type == "GunicornNginx":
+            port = 80
+        response1 = TestRestClient().createClientForAboutPage(port=port)
 
         # if response 1 is not an exception and the status code is 200, then wait 0.5 seconds and try again
         print(response1)
@@ -68,7 +71,10 @@ def accessWebPage(context):
                 or not isinstance(response1, requests.exceptions.ConnectionError) and response1.status_code == 200\
                 or not isinstance(response1, urllib3.exceptions.NewConnectionError):
             time.sleep(0.5)
-            response2 = TestRestClient().createClientForAboutPage()
+            port = 8091
+            if context.web_server_type == "GunicornNginx":
+                port = 80
+            response2 = TestRestClient().createClientForAboutPage(port=port)
 
             assert isinstance(response2, requests.exceptions.ConnectTimeout) \
                 or not isinstance(response2, requests.exceptions.ConnectionError)\
@@ -87,7 +93,10 @@ def fetchStaticImage(context):
     if os.name == 'nt' and (context.web_server_type == "Gunicorn" or context.web_server_type == "GunicornNginx"):
         assert os.name == 'nt'
     else:
-        context.response = TestRestClient().fetchStaticImage()
+        port = 8091
+        if context.web_server_type == "GunicornNginx":
+            port = 80
+        context.response = TestRestClient().fetchStaticImage(port=port)
 
 
 @then('The user can see the static image')
