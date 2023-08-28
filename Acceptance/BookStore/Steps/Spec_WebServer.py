@@ -23,7 +23,7 @@ strategies = {
 def start_web_server(context, web_server_type):
     context.port = context.ports['nginxPort']
     GunicornNginxStrategy.port = context.port
-    context.web_server = WebServer(strategy=strategies[web_server_type])
+    context.web_server = WebServer(strategy=strategies[web_server_type], ports=context.ports)
     context.web_server.start()
     context.web_server_type = web_server_type
     time.sleep(2)
