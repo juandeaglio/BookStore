@@ -10,7 +10,7 @@ class GunicornNginxStrategy(WebServerStrategy):
         self.gunicorn = GunicornStrategy(subprocessLib, osLibrary, ports=ports)
         if osLibrary.name == 'posix':
             self.inspectedConfigFile = self.createNginxConfig(ports)
-            self.nginxConfigFile = '/etc/nginx/sites-available/default'
+            self.nginxConfigFile = './nginx.conf'
             self.createConfigFile(self.nginxConfigFile, self.inspectedConfigFile)
 
     def start(self):
