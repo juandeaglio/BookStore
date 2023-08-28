@@ -1,8 +1,8 @@
 import re
 
+import nginxTemplate
 from Source.Interfaces.WebServerStrategy import WebServerStrategy
 from Source.WebServerStrategy.GunicornStrategy import GunicornStrategy
-
 
 class GunicornNginxStrategy(WebServerStrategy):
     def __init__(self, subprocessLib, osLibrary, ports=None):
@@ -37,16 +37,13 @@ class GunicornNginxStrategy(WebServerStrategy):
                 self.subprocessLib.run(["bash", cmd3], capture_output=True).returncode > 0
 
     def createNginxConfig(self, ports):
-        with open('../nginxTemplate.conf', 'r') as file:
-            config = file.read()
-            config = re.sub('{nginx_port}', str(ports.get('nginxPort')), config)
-            config = re.sub('{gunicorn_port}', str(ports.get('gunicornPort')), config)
-            config = re.sub('{server_name}', 'BookStore', config)
-            path = self.osLibrary.getcwd()
-            config = re.sub('{static_path}', path + '/static', config)
-            config += '\n'
-            file.close()
-            return config
+        config = re.sub('{nginx_port}', str(ports.get('nginxPort')), nginxTemplate.config)
+        config = re.sub('{gunicorn_port}', str(ports.get('gunicornPort')), config)
+        config = re.sub('{server_name}', 'BookStore', config)
+        path = self.osLibrary.getcwd()
+        config = re.sub('{static_path}', path + '/static', config)
+        config += '\n'
+        return config
 
     def createConfigFile(self, nginxConfigFile, config):
         try:

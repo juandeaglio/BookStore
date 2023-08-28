@@ -1,4 +1,4 @@
-server{
+config="""server{
     listen {nginx_port};
     server_name {server_name};
 
@@ -12,4 +12,4 @@ server{
     location / {
         proxy_pass http://localhost:{gunicorn_port};
     }
-}
+}"""
