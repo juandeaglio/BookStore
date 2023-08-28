@@ -37,8 +37,10 @@ class GunicornNginxStrategy(WebServerStrategy):
                 self.subprocessLib.run(["bash", cmd3], capture_output=True).returncode > 0
 
     def createNginxConfig(self, ports):
-        config = re.sub('{nginx_port}', str(ports.get('nginxPort')), nginxTemplate.config)
-        config = re.sub('{gunicorn_port}', str(ports.get('gunicornPort')), config)
+        nginxPort = ports.get('nginxPort') or 80
+        gunicornPort = ports.get('gunicornPort') or 8091
+        config = re.sub('{nginx_port}', str(nginxPort), nginxTemplate.config)
+        config = re.sub('{gunicorn_port}', str(gunicornPort), config)
         config = re.sub('{server_name}', 'BookStore', config)
         path = self.osLibrary.getcwd()
         config = re.sub('{static_path}', path + '/static', config)

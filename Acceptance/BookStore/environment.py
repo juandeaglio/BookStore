@@ -6,7 +6,8 @@ from Source.WebServer import WebServer
 
 
 def before_scenario(context, scenario):
-    context.web_server = WebServer()
+    context.ports = {'nginxPort': 8091, 'gunicornPort': 8092}
+    context.web_server = WebServer(ports=context.ports)
     if "web server" not in scenario.name.lower():
         context.web_server.start()
         time.sleep(4)

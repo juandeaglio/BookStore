@@ -21,7 +21,7 @@ strategies = {
 
 @given('"{web_server_type}" web server is started')
 def start_web_server(context, web_server_type):
-    context.port = 8091
+    context.port = context.ports['nginxPort']
     GunicornNginxStrategy.port = context.port
     context.web_server = WebServer(strategy=strategies[web_server_type])
     context.web_server.start()
@@ -38,7 +38,7 @@ def accessWebPage(context):
     if os.name == 'nt' and (context.web_server_type == "Gunicorn" or context.web_server_type == "GunicornNginx"):
         assert os.name == 'nt'
     else:
-        port = 8091
+        port = context.ports['nginxPort']
         response = TestRestClient().searchForBook("The Hobbit", port=port)
         assert response.status_code == 200, "Expected 200 OK but got " + str(response.status_code)
         assert response.json() == [], "Expected empty json but got " + str(response.json)
