@@ -60,6 +60,8 @@ jobs:
         touch ./nginx.conf
         sudo ln -s ./nginx.conf /etc/nginx/sites-available/bookstore.conf
         sudo ln -s ./nginx.conf /etc/nginx/sites-enabled/bookstore.conf
+        ls -lhrt /etc/nginx/sites-enabled/
+        ls -lhrt /etc/nginx/sites-available/
 
         
     - name: Run Window test Tests
