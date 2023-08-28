@@ -27,6 +27,11 @@ def start_web_server(context, web_server_type):
     context.web_server.start()
     context.web_server_type = web_server_type
     time.sleep(2)
+    if context.web_server_type == "Gunicorn":
+        context.port = context.ports['gunicornPort']
+    else:
+        context.port = context.ports['nginxPort']
+
     if (context.web_server_type == "Gunicorn" or context.web_server_type == "GunicornNginx") and os.name == 'nt':
         assert os.name == 'nt'
     else:
@@ -38,8 +43,7 @@ def accessWebPage(context):
     if os.name == 'nt' and (context.web_server_type == "Gunicorn" or context.web_server_type == "GunicornNginx"):
         assert os.name == 'nt'
     else:
-        port = context.ports['nginxPort']
-        response = TestRestClient().searchForBook("The Hobbit", port=port)
+        response = TestRestClient().searchForBook("The Hobbit", port=context.port)
         assert response.status_code == 200, "Expected 200 OK but got " + str(response.status_code)
         assert response.json() == [], "Expected empty json but got " + str(response.json)
 
@@ -59,7 +63,7 @@ def accessWebPage(context):
     if os.name == 'nt' and (context.web_server_type == "Gunicorn" or context.web_server_type == "GunicornNginx"):
         assert os.name == 'nt'
     else:
-        response1 = TestRestClient().createClientForAboutPage()
+        response1 = TestRestClient().createClientForAboutPage(port=context.port)
 
         # if response 1 is not an exception and the status code is 200, then wait 0.5 seconds and try again
         print(response1)
@@ -68,7 +72,7 @@ def accessWebPage(context):
                 or not isinstance(response1, requests.exceptions.ConnectionError) and response1.status_code == 200\
                 or not isinstance(response1, urllib3.exceptions.NewConnectionError):
             time.sleep(0.5)
-            response2 = TestRestClient().createClientForAboutPage()
+            response2 = TestRestClient().createClientForAboutPage(port=context.port)
 
             assert isinstance(response2, requests.exceptions.ConnectTimeout) \
                 or not isinstance(response2, requests.exceptions.ConnectionError)\
@@ -87,7 +91,7 @@ def fetchStaticImage(context):
     if os.name == 'nt' and (context.web_server_type == "Gunicorn" or context.web_server_type == "GunicornNginx"):
         assert os.name == 'nt'
     else:
-        context.response = TestRestClient().fetchStaticImage()
+        context.response = TestRestClient().fetchStaticImage(port=context.port)
 
 
 @then('The user can see the static image')
