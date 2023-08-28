@@ -5,8 +5,8 @@ import sys
 
 
 class DjangoStrategy(WebServerStrategy):
-    def __init__(self, subprocessLib, osLibrary):
-        super().__init__(subprocessLib, osLibrary)
+    def __init__(self, subprocessLib, osLibrary, ports=None):
+        super().__init__(subprocessLib, osLibrary, ports=ports)
 
     def createStopCommand(self):
         cmd = ''

@@ -21,6 +21,8 @@ strategies = {
 
 @given('"{web_server_type}" web server is started')
 def start_web_server(context, web_server_type):
+    context.port = 8091
+    GunicornNginxStrategy.port = context.port
     context.web_server = WebServer(strategy=strategies[web_server_type])
     context.web_server.start()
     context.web_server_type = web_server_type

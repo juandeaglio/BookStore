@@ -1,14 +1,18 @@
+import re
+
 from Source.Interfaces.WebServerStrategy import WebServerStrategy
 from Source.WebServerStrategy.GunicornStrategy import GunicornStrategy
 
 
 class GunicornNginxStrategy(WebServerStrategy):
-    def __init__(self, subprocessLib, osLibrary):
-        super().__init__(subprocessLib, osLibrary)
-        self.gunicorn = GunicornStrategy(subprocessLib, osLibrary)
+    def __init__(self, subprocessLib, osLibrary, ports=None):
+        super().__init__(subprocessLib, osLibrary, ports=ports)
+        self.gunicorn = GunicornStrategy(subprocessLib, osLibrary, ports=ports)
+        if osLibrary.name == 'posix':
+            self.inspectedConfigFile = self.createNginxConfig(ports)
 
     def start(self):
-        self.gunicornProcess = self.gunicorn.start(port=8092)
+        self.gunicornProcess = self.gunicorn.start()
         if self.osLibrary.name == 'posix':
             print(self.subprocessLib.run(["bash", "ps -efw"], capture_output=True).stdout.decode('utf-8'))
             return self.subprocessLib.Popen(['sudo','nginx', '-g daemon off;'])
@@ -29,3 +33,11 @@ class GunicornNginxStrategy(WebServerStrategy):
             print(self.subprocessLib.run(["bash", "ps -efw"], capture_output=True).stdout.decode('utf-8'))
             return self.subprocessLib.run(["bash", cmd2], capture_output=True).returncode > 0 and \
                 self.subprocessLib.run(["bash", cmd3], capture_output=True).returncode > 0
+
+    def createNginxConfig(self, ports):
+        with open('../nginxTemplate.conf', 'r') as file:
+            config = file.read()
+            config = re.sub(r'{nginx_port}', str(ports.get('nginxPort')), config)
+            config = re.sub(r'{gunicorn_port}', str(ports.get('gunicornPort')), config)
+
+            return config+'\n'

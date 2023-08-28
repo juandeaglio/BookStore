@@ -7,7 +7,7 @@ from Source.WebServerStrategy.GunicornStrategy import GunicornStrategy
 
 
 class FakedOSLibrary:
-    def __init__(self, name):
+    def __init__(self, name=os.name):
         self.name = name
 
 
@@ -26,7 +26,7 @@ class FakedProcessLibrary:
     def run(self, args=None, capture_output=True, check=True):
         class ProcResults:
             returncode = 0
-            stdout=bytes("Works", encoding='utf-8')
+            stdout = bytes("Works", encoding='utf-8')
 
         return ProcResults()
 
@@ -83,3 +83,26 @@ class TestGunicornNginxWebServer(TestGunicornAppServer):
 
     def test_isServerRunning(self, strategy=GunicornStrategy, osLibrary=FakedOSLibrary(name='posix')):
         super().test_isServerRunning(strategy, osLibrary)
+
+    def test_configureServer(self):
+        ports = {'nginxPort': 8091, 'gunicornPort': 8092}
+        self.webserver = WebServer(strategy=GunicornNginxStrategy,
+                                   processLibrary=FakedProcessLibrary,
+                                   osLibrary=FakedOSLibrary(name='posix'),
+                                   ports=ports)
+        assert self.webserver.strategy.createNginxConfig(ports) == """server{
+    listen 8091;
+    server_name {server_name};
+
+    location /static/ {
+        alias {static_path}/;
+    }
+    location /static/imgs/ {
+        alias {static_path}/imgs/;
+    }
+
+    location / {
+        proxy_pass http://localhost:8092;
+    }
+}
+"""

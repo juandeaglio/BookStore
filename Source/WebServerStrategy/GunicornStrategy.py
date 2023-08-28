@@ -2,10 +2,14 @@ from Source.Interfaces.WebServerStrategy import WebServerStrategy
 
 
 class GunicornStrategy(WebServerStrategy):
-    def __init__(self, subprocessLib, osLibrary):
-        super().__init__(subprocessLib, osLibrary)
+    def __init__(self, subprocessLib, osLibrary, ports=None):
+        super().__init__(subprocessLib, osLibrary, ports=ports)
 
-    def start(self, port=8091):
+    def start(self):
+        port = 8091
+        if self.ports.get('gunicornPort'):
+            port = self.ports.get('gunicornPort')
+
         if self.osLibrary.name == 'posix':
             return self.subprocessLib.Popen(["gunicorn", "-b", "0.0.0.0:"+str(port), "BookStoreServer.wsgi"])
 

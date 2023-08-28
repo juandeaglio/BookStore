@@ -4,11 +4,13 @@ from Source.WebServerStrategy.DjangoStrategy import DjangoStrategy
 
 
 class WebServer:
-    def __init__(self, strategy=DjangoStrategy, processLibrary=subprocess, osLibrary=os):
-        self.strategy = strategy(processLibrary, osLibrary)
+    def __init__(self, strategy=DjangoStrategy, processLibrary=subprocess, osLibrary=os, ports=None):
         self.processLibrary = processLibrary
         self.process = None
         self.osLibrary = osLibrary
+        self.ports = ports or {}
+        self.strategy = strategy(processLibrary, osLibrary, ports=self.ports)
+
 
     def start(self):
         if self.strategy.start:

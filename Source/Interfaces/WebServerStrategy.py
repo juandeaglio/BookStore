@@ -2,9 +2,10 @@ from abc import ABC, abstractmethod
 
 
 class WebServerStrategy(ABC):
-    def __init__(self, subprocessLib, osLibrary):
+    def __init__(self, subprocessLib, osLibrary, ports=None):
         self.subprocessLib = subprocessLib
         self.osLibrary = osLibrary
+        self.ports = ports or {}
 
     @abstractmethod
     def start(self):
