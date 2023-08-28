@@ -10,6 +10,10 @@ class FakedOSLibrary:
     def __init__(self, name=os.name):
         self.name = name
 
+    @staticmethod
+    def getcwd():
+        return "D:/PyCharmProjs/BookStore"
+
 
 class FakeProcess:
     def terminate(self):
@@ -41,7 +45,7 @@ class FakedProcessLibrary:
 
 
 class TestDjangoWebServer(unittest.TestCase):
-    def test_startDjangoServer(self, strategy=DjangoStrategy, osLibrary=FakedOSLibrary(os.name)):
+    def test_startServer(self, strategy=DjangoStrategy, osLibrary=FakedOSLibrary(os.name)):
         self.webserver = WebServer(strategy=strategy,
                                    processLibrary=FakedProcessLibrary,
                                    osLibrary=osLibrary)
@@ -65,7 +69,7 @@ class TestDjangoWebServer(unittest.TestCase):
 
 class TestGunicornAppServer(TestDjangoWebServer):
     def test_startGunicornServer(self, strategy=GunicornStrategy, osLibrary=FakedOSLibrary(name='posix')):
-        super().test_startDjangoServer(strategy, osLibrary)
+        super().test_startServer(strategy, osLibrary)
 
     def test_startAndStopServer(self, strategy=GunicornStrategy, osLibrary=FakedOSLibrary(name='posix')):
         super().test_startAndStopServer(strategy, osLibrary)
@@ -75,8 +79,8 @@ class TestGunicornAppServer(TestDjangoWebServer):
 
 
 class TestGunicornNginxWebServer(TestGunicornAppServer):
-    def test_startDjangoServer(self, strategy=GunicornNginxStrategy, osLibrary=FakedOSLibrary(name='posix')):
-        super().test_startDjangoServer(strategy, osLibrary)
+    def test_startGnicornNginxServer(self, strategy=GunicornNginxStrategy, osLibrary=FakedOSLibrary(name='posix')):
+        super().test_startServer(strategy, osLibrary)
 
     def test_startAndStopServer(self, strategy=GunicornStrategy, osLibrary=FakedOSLibrary(name='posix')):
         super().test_startAndStopServer(strategy, osLibrary)
@@ -86,19 +90,20 @@ class TestGunicornNginxWebServer(TestGunicornAppServer):
 
     def test_configureServer(self):
         ports = {'nginxPort': 8091, 'gunicornPort': 8092}
+        FakedOSLibrary.name = 'posix'
         self.webserver = WebServer(strategy=GunicornNginxStrategy,
                                    processLibrary=FakedProcessLibrary,
-                                   osLibrary=FakedOSLibrary(name='posix'),
+                                   osLibrary=FakedOSLibrary,
                                    ports=ports)
         assert self.webserver.strategy.createNginxConfig(ports) == """server{
     listen 8091;
-    server_name {server_name};
+    server_name BookStore;
 
     location /static/ {
-        alias {static_path}/;
+        alias D:/PyCharmProjs/BookStore/static/;
     }
     location /static/imgs/ {
-        alias {static_path}/imgs/;
+        alias D:/PyCharmProjs/BookStore/static/imgs/;
     }
 
     location / {

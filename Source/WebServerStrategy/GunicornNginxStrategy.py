@@ -10,6 +10,8 @@ class GunicornNginxStrategy(WebServerStrategy):
         self.gunicorn = GunicornStrategy(subprocessLib, osLibrary, ports=ports)
         if osLibrary.name == 'posix':
             self.inspectedConfigFile = self.createNginxConfig(ports)
+            self.nginxConfigFile = '/etc/nginx/sites-available/default'
+            self.createConfigFile(self.nginxConfigFile, self.inspectedConfigFile)
 
     def start(self):
         self.gunicornProcess = self.gunicorn.start()
@@ -37,7 +39,20 @@ class GunicornNginxStrategy(WebServerStrategy):
     def createNginxConfig(self, ports):
         with open('../nginxTemplate.conf', 'r') as file:
             config = file.read()
-            config = re.sub(r'{nginx_port}', str(ports.get('nginxPort')), config)
-            config = re.sub(r'{gunicorn_port}', str(ports.get('gunicornPort')), config)
+            config = re.sub('{nginx_port}', str(ports.get('nginxPort')), config)
+            config = re.sub('{gunicorn_port}', str(ports.get('gunicornPort')), config)
+            config = re.sub('{server_name}', 'BookStore', config)
+            path = self.osLibrary.getcwd()
+            config = re.sub('{static_path}', path + '/static', config)
+            config += '\n'
+            file.close()
+            return config
 
-            return config+'\n'
+    def createConfigFile(self, nginxConfigFile, config):
+        try:
+            with open(nginxConfigFile, 'w') as nginxFile:
+                nginxFile.write(config)
+                nginxFile.close()
+        except Exception as e:
+            print(e)
+            print('Error writing to file: ' + nginxConfigFile)
