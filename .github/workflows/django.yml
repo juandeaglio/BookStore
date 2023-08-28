@@ -59,7 +59,7 @@ jobs:
         npm run build --prefix ./TailwindCSS/
         touch ./nginx.conf
         sudo ln -s ./nginx.conf /etc/nginx/sites-available/bookstore.conf
-        sudo ln -s /etc/nginx/sites-available/bookstore.conf /etc/nginx/sites-enabled/bookstore.conf
+        sudo ln -s ./nginx.conf /etc/nginx/sites-enabled/bookstore.conf
 
         
     - name: Run Window test Tests
