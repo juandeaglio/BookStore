@@ -57,7 +57,9 @@ jobs:
         echo "alias python='python3'" >> ~/.bashrc
         npm install --prefix ./TailwindCSS/
         npm run build --prefix ./TailwindCSS/
-
+        touch ./nginx.conf
+        sudo ln -s $(pwd)/nginx.conf /etc/nginx/sites-available/bookstore.conf
+        sudo ln -s $(pwd)/nginx.conf /etc/nginx/sites-enabled/bookstore.conf
         
     - name: Run Window test Tests
       if: ${{matrix.os == 'windows-latest'}}
@@ -71,8 +73,6 @@ jobs:
         source ./venv/bin/activate
         python -m unittest discover -p "Test_*.py"
         ls -lhrt
-        sudo cp ./nginx.conf /etc/nginx/sites-available/bookstore.conf
-        sudo ln -s /etc/nginx/sites-available/bookstore.conf /etc/nginx/sites-enabled/bookstore.conf
         
     - name: Configure Integration Tests for Linux
       if: ${{matrix.os == 'ubuntu-latest'}}
