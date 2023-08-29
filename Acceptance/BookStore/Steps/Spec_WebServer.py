@@ -96,9 +96,10 @@ def fetchStaticImage(context):
 
 @then('The user can see the static image')
 def seeStaticImage(context):
-    if os.name == 'nt' and (context.web_server_type == "Gunicorn" or context.web_server_type == "GunicornNginx"):
+    if os.name == 'nt' and (context.web_server_type == "GunicornNginx"):
         assert os.name == 'nt'
     else:
+        print(context.webserver.strategy.inspectedConfigFile)
         assert context.response.status_code == 200, "Expected 200 OK but got " + str(context.response.status_code)
         assert context.response.headers['Content-Type'] == 'image/jpeg', "Expected image/png but got " + \
                                                                         str(context.response.headers['Content-Type'])
