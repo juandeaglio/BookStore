@@ -68,7 +68,7 @@ jobs:
         pwd
         sudo ln -s $(pwd)/nginx.conf /etc/nginx/sites-available/bookstore.conf
         sudo ln -s $(pwd)/nginx.conf /etc/nginx/sites-enabled/bookstore.conf
-        ls-lhrt ./static/
+        ls -lhrt ./static/
         ls -lhrt ./static/imgs/
         
     - name: Run Window test Tests
