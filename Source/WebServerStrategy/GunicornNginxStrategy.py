@@ -17,6 +17,8 @@ class GunicornNginxStrategy(WebServerStrategy):
         self.gunicornProcess = self.gunicorn.start()
         if self.osLibrary.name == 'posix':
             print(self.subprocessLib.run(["bash", "ps -efw"], capture_output=True).stdout.decode('utf-8'))
+            print(self.subprocessLib.run(["bash", "whoami"],
+                                         capture_output=True).stdout.decode('utf-8'))
             return self.subprocessLib.Popen(['sudo','nginx', '-g daemon off;'])
 
     def createStopCommand(self):
@@ -32,10 +34,6 @@ class GunicornNginxStrategy(WebServerStrategy):
         if self.osLibrary.name == 'posix':
             cmd2 = "CheckRunGunicorn.sh"
             cmd3 = "CheckRunNginx.sh"
-            print(self.subprocessLib.run(["bash", "ps -efw"], capture_output=True).stdout.decode('utf-8'))
-            print(self.subprocessLib.run(["bash", "ps -efw"], capture_output=True).stdout.decode('utf-8'))
-            print(self.subprocessLib.run(["bash", "ls -lhrt /etc/nginx/sites-enabled"],
-                                         capture_output=True).stdout.decode('utf-8'))
             return self.subprocessLib.run(["bash", cmd2], capture_output=True).returncode > 0 and \
                 self.subprocessLib.run(["bash", cmd3], capture_output=True).returncode > 0
 
