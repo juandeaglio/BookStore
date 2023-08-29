@@ -89,10 +89,8 @@ jobs:
         chmod +x startDjangoWithTestUser.py
         ls -lhrt startDjangoWithTestUser.py
         source ./venv/bin/activate
-        whoami
-        $cmdPath=$(whereis behave)
         ls -lhrt /usr/local/bin | cat
-        sudo behave ./Acceptance/BookStore/
+        behave ./Acceptance/BookStore/
 
           
     - name: Run Windows Integation Tests
