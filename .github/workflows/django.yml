@@ -67,6 +67,7 @@ jobs:
         sudo chown -R $(whoami):$(whoami) ./static/
         sudo chmod u+w ./static/
         sudo chmod u+w ./static/imgs/
+        ls -lhrt ./static/imgs/
         
     - name: Run Window test Tests
       if: ${{matrix.os == 'windows-latest'}}
