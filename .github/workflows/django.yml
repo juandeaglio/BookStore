@@ -64,7 +64,7 @@ jobs:
         cat /etc/nginx/sites-enabled/bookstore.conf
         whoami
         sudo chown -R www-data:www-data ./static/
-        sudo chown -R $(whoami) ./static/
+        sudo chown -R $(whoami):$(whoami) ./static/
         sudo chmod $(whoami)+w ./static/
         sudo chmod $(whoami)+w ./static/imgs/
         
