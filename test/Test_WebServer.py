@@ -100,10 +100,10 @@ class TestGunicornNginxWebServer(TestGunicornAppServer):
     server_name BookStore;
 
     location /static/ {
-        alias D:/PyCharmProjs/BookStore/static/;
+        alias /var/www/static/;
     }
     location /static/imgs/ {
-        alias D:/PyCharmProjs/BookStore/static/imgs/;
+        alias /var/www/static/imgs/;
     }
 
     location / {

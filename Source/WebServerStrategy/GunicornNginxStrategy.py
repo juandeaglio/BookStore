@@ -41,8 +41,7 @@ class GunicornNginxStrategy(WebServerStrategy):
         config = re.sub('{nginx_port}', str(nginxPort), nginxTemplate.config)
         config = re.sub('{gunicorn_port}', str(gunicornPort), config)
         config = re.sub('{server_name}', 'BookStore', config)
-        path = self.osLibrary.getcwd()
-        config = re.sub('{static_path}', path + '/static', config)
+        config = re.sub('{static_path}', '/var/www/static', config)
         config += '\n'
         return config
 
