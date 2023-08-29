@@ -58,7 +58,7 @@ jobs:
         #npm install --prefix ./TailwindCSS/
         #npm run build --prefix ./TailwindCSS/
         touch ./nginx.conf
-        sudo chown -R www-data:www-data ./static/
+        chmod 755 /var/lib/nginx/
         sudo chmod u+w ./static/
         sudo chmod u+w ./static/imgs/
         sudo chmod u+w ./static/imgs/*
@@ -85,7 +85,7 @@ jobs:
         ls -lhrt
         chmod +x startDjangoWithTestUser.py
         source ./venv/bin/activate
-        sudo chown -R www-data:www-data *
+        sudo chown -R www-data:www-data ./static/
         behave ./Acceptance/BookStore/
         sudo cat /var/log/nginx/error.log
 
