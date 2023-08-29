@@ -58,7 +58,7 @@ jobs:
         #npm install --prefix ./TailwindCSS/
         #npm run build --prefix ./TailwindCSS/
         touch ./nginx.conf
-        sudo usermod -a -G $whoami www-data
+        sudo usermod -a -G $(whoami) www-data
         sudo chown -R www-data:www-data ./static/
         sudo chmod 755 /var/lib/nginx/
         sudo chmod u+w ./static/
