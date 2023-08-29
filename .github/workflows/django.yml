@@ -90,7 +90,8 @@ jobs:
         ls -lhrt startDjangoWithTestUser.py
         source ./venv/bin/activate
         whoami
-        behave ./Acceptance/BookStore/
+        $cmdPath=$(whereis behave)
+        sudo $cmdPath ./Acceptance/BookStore/
 
           
     - name: Run Windows Integation Tests
