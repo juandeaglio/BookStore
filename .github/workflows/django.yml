@@ -64,6 +64,9 @@ jobs:
         cat /etc/nginx/sites-enabled/bookstore.conf
         whoami
         sudo chown -R www-data:www-data ./static/
+        sudo chown -R $(whoami) ./static/
+        sudo chmod $(whoami)+w ./static/
+        sudo chmod $(whoami)+w ./static/imgs/
         
     - name: Run Window test Tests
       if: ${{matrix.os == 'windows-latest'}}
