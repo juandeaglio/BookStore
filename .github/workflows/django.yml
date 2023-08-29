@@ -65,8 +65,8 @@ jobs:
         whoami
         sudo chown -R www-data:www-data ./static/
         sudo chown -R $(whoami):$(whoami) ./static/
-        sudo chmod $(whoami) +w ./static/
-        sudo chmod $(whoami) +w ./static/imgs/
+        sudo chmod u+w ./static/
+        sudo chmod u+w ./static/imgs/
         
     - name: Run Window test Tests
       if: ${{matrix.os == 'windows-latest'}}
