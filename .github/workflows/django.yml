@@ -91,8 +91,8 @@ jobs:
         source ./venv/bin/activate
         whoami
         $cmdPath=$(whereis behave)
-        ls -lhrt /usr/local/bin/
-        sudo $cmdPath ./Acceptance/BookStore/
+        ls -lhrt /usr/local/bin | cat
+        sudo behave ./Acceptance/BookStore/
 
           
     - name: Run Windows Integation Tests
