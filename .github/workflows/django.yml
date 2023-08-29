@@ -70,6 +70,7 @@ jobs:
         sudo ln -s $(pwd)/nginx.conf /etc/nginx/sites-enabled/bookstore.conf
         ls -lhrt ./static/
         ls -lhrt ./static/imgs/
+        cp -r ./static/ /var/www/static/
         
     - name: Run Window test Tests
       if: ${{matrix.os == 'windows-latest'}}
