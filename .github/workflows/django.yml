@@ -64,9 +64,6 @@ jobs:
         sudo chmod u+w ./static/imgs/*
         sudo ln -s $(pwd)/nginx.conf /etc/nginx/sites-available/bookstore.conf
         sudo ln -s $(pwd)/nginx.conf /etc/nginx/sites-enabled/bookstore.conf
-        ls -lhrt
-        ls -lhrt ./static/
-        ls -lhrt ./static/imgs/
         
     - name: Run Window test Tests
       if: ${{matrix.os == 'windows-latest'}}
@@ -87,10 +84,10 @@ jobs:
         mv ./Acceptance/BookStore/Steps ./Acceptance/BookStore/steps
         ls -lhrt
         chmod +x startDjangoWithTestUser.py
-        ls -lhrt startDjangoWithTestUser.py
         source ./venv/bin/activate
-        ls -lhrt /usr/local/bin | cat
+        chown -R www-data:www-data *
         behave ./Acceptance/BookStore/
+        sudo cat /var/log/nginx/error.log
 
           
     - name: Run Windows Integation Tests
