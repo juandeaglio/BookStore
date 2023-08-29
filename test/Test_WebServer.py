@@ -96,14 +96,15 @@ class TestGunicornNginxWebServer(TestGunicornAppServer):
                                    osLibrary=FakedOSLibrary,
                                    ports=ports)
         assert self.webserver.strategy.createNginxConfig(ports) == """server{
-    user root;
     listen 8091;
     server_name BookStore;
 
     location /static/ {
+        user root;
         alias D:/PyCharmProjs/BookStore/static/;
     }
     location /static/imgs/ {
+        user root;
         alias D:/PyCharmProjs/BookStore/static/imgs/;
     }
 
