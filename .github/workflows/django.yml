@@ -59,6 +59,10 @@ jobs:
         #npm run build --prefix ./TailwindCSS/
         touch ./nginx.conf
         sudo cat /etc/nginx/nginx.conf
+        sudo chown -R www-data:www-data ./static/
+        sudo chown -R www-data:www-data ./static/imgs/
+        sudo chmod u+w ./static/
+        sudo chmod u+w ./static/imgs/
         sudo ln -s $(pwd)/nginx.conf /etc/nginx/sites-available/bookstore.conf
         sudo ln -s $(pwd)/nginx.conf /etc/nginx/sites-enabled/bookstore.conf
         
