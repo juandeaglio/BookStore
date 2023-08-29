@@ -1,12 +1,10 @@
 import os
-import subprocess
 import time
 
 import requests.exceptions
 import urllib3.exceptions
-from behave import given, when, then
+from Acceptance.behave import given, when, then
 from Acceptance.TestRestClient import TestRestClient
-from Source.Interfaces.WebServerStrategy import WebServerStrategy
 from Source.WebServer import WebServer
 from Source.WebServerStrategy.DjangoStrategy import DjangoStrategy
 from Source.WebServerStrategy.GunicornNginxStrategy import GunicornNginxStrategy
