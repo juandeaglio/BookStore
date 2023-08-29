@@ -68,9 +68,9 @@ jobs:
         pwd
         sudo ln -s $(pwd)/nginx.conf /etc/nginx/sites-available/bookstore.conf
         sudo ln -s $(pwd)/nginx.conf /etc/nginx/sites-enabled/bookstore.conf
-        cp -r ./static/ /var/www/static/
-        ls -lhrt /var/www/static/
-        ls -lhrt /var/www/static/imgs/
+        sudo cp -r ./static/ /var/www/static/
+        sudo ls -lhrt /var/www/static/
+        sudo ls -lhrt /var/www/static/imgs/
         
     - name: Run Window test Tests
       if: ${{matrix.os == 'windows-latest'}}
