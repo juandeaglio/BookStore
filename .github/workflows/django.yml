@@ -60,6 +60,8 @@ jobs:
         touch ./nginx.conf
         sudo ln -s $(pwd)/nginx.conf /etc/nginx/sites-available/bookstore.conf
         sudo ln -s $(pwd)/nginx.conf /etc/nginx/sites-enabled/bookstore.conf
+        ls -lhrt /etc/nginx/sites-enabled/
+        cat /etc/nginx/sites-enabled/bookstore.conf
         
     - name: Run Window test Tests
       if: ${{matrix.os == 'windows-latest'}}
