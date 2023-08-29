@@ -85,7 +85,7 @@ jobs:
         ls -lhrt
         chmod +x startDjangoWithTestUser.py
         source ./venv/bin/activate
-        chown -R www-data:www-data *
+        sudo chown -R www-data:www-data *
         behave ./Acceptance/BookStore/
         sudo cat /var/log/nginx/error.log
 
