@@ -92,6 +92,7 @@ jobs:
 
     - name: Print nginx error log
       if: ${{always() && matrix.os == 'ubuntu-latest'}}
+      run: |
           sudo cat /var/log/nginx/error.log
           
     - name: Run Windows Integation Tests
