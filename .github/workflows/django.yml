@@ -58,6 +58,7 @@ jobs:
         #npm install --prefix ./TailwindCSS/
         #npm run build --prefix ./TailwindCSS/
         touch ./nginx.conf
+        sudo cat /etc/nginx/nginx.conf
         sudo ln -s $(pwd)/nginx.conf /etc/nginx/sites-available/bookstore.conf
         sudo ln -s $(pwd)/nginx.conf /etc/nginx/sites-enabled/bookstore.conf
         
