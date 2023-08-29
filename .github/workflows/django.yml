@@ -91,6 +91,7 @@ jobs:
         source ./venv/bin/activate
         whoami
         $cmdPath=$(whereis behave)
+        sudo ls -lhrt /usr/local/bin/
         sudo $cmdPath ./Acceptance/BookStore/
 
           
