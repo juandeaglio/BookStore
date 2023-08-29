@@ -1,4 +1,4 @@
-from Acceptance.behave import given, when, then
+from behave import given, when, then
 from Acceptance.TestRestClient import TestRestClient
 
 

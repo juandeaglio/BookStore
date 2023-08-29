@@ -1,6 +1,6 @@
 from operator import eq
 
-from Acceptance.behave import given, when, then
+from behave import given, when, then
 from Acceptance.TestRestClient import TestRestClient
 from Source.Catalog.InMemoryCatalog import InMemoryCatalog
 

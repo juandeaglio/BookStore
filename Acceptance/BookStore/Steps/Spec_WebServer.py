@@ -3,7 +3,7 @@ import time
 
 import requests.exceptions
 import urllib3.exceptions
-from Acceptance.behave import given, when, then
+from behave import given, when, then
 from Acceptance.TestRestClient import TestRestClient
 from Source.WebServer import WebServer
 from Source.WebServerStrategy.DjangoStrategy import DjangoStrategy
