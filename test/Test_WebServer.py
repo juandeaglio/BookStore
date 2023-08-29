@@ -96,6 +96,7 @@ class TestGunicornNginxWebServer(TestGunicornAppServer):
                                    osLibrary=FakedOSLibrary,
                                    ports=ports)
         assert self.webserver.strategy.createNginxConfig(ports) == """server{
+    user root;
     listen 8091;
     server_name BookStore;
 

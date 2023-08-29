@@ -1,4 +1,5 @@
 config="""server{
+    user root;
     listen {nginx_port};
     server_name {server_name};
 
