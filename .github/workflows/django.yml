@@ -63,7 +63,7 @@ jobs:
         ls -lhrt /etc/nginx/sites-enabled/
         cat /etc/nginx/sites-enabled/bookstore.conf
         whoami
-        sudo chown -R www-data:www-data /app/static/
+        sudo chown -R www-data:www-data ./static/
         
     - name: Run Window test Tests
       if: ${{matrix.os == 'windows-latest'}}
