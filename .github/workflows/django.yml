@@ -82,8 +82,9 @@ jobs:
         chmod +x startDjangoWithTestUser.py
         ls -lhrt startDjangoWithTestUser.py
         source ./venv/bin/activate
-        sudo behave ./Acceptance/BookStore/
         whoami
+        behave ./Acceptance/BookStore/
+
           
     - name: Run Windows Integation Tests
       if: ${{matrix.os == 'windows-latest'}}
