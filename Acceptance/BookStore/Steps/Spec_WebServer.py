@@ -1,4 +1,5 @@
 import os
+import subprocess
 import time
 
 import requests.exceptions
@@ -100,6 +101,7 @@ def seeStaticImage(context):
         assert os.name == 'nt'
     else:
         print(context.web_server .strategy.inspectedConfigFile)
+        print(subprocess.run(["bash", "whoami"],capture_output=True).stdout.decode('utf-8'))
         assert context.response.status_code == 200, "Expected 200 OK but got " + str(context.response.status_code)
         assert context.response.headers['Content-Type'] == 'image/jpeg', "Expected image/png but got " + \
                                                                         str(context.response.headers['Content-Type'])
