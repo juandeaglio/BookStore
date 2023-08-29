@@ -55,18 +55,11 @@ jobs:
         python -m pip install --upgrade pip
         pip install -r requirements.txt
         echo "alias python='python3'" >> ~/.bashrc
-        npm install --prefix ./TailwindCSS/
-        npm run build --prefix ./TailwindCSS/
+        #npm install --prefix ./TailwindCSS/
+        #npm run build --prefix ./TailwindCSS/
         touch ./nginx.conf
         sudo ln -s $(pwd)/nginx.conf /etc/nginx/sites-available/bookstore.conf
         sudo ln -s $(pwd)/nginx.conf /etc/nginx/sites-enabled/bookstore.conf
-        ls -lhrt /etc/nginx/sites-enabled/
-        cat /etc/nginx/sites-enabled/bookstore.conf
-        whoami
-        sudo chown -R www-data:www-data ./static/
-        sudo chown -R $(whoami):$(whoami) ./static/
-        sudo chmod u+w ./static/
-        sudo chmod u+w ./static/imgs/
         
     - name: Run Window test Tests
       if: ${{matrix.os == 'windows-latest'}}
@@ -89,7 +82,9 @@ jobs:
         chmod +x startDjangoWithTestUser.py
         ls -lhrt startDjangoWithTestUser.py
         source ./venv/bin/activate
+        whoami
         behave ./Acceptance/BookStore/
+
           
     - name: Run Windows Integation Tests
       if: ${{matrix.os == 'windows-latest'}}
