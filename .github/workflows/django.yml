@@ -65,8 +65,11 @@ jobs:
         sudo chmod u+w ./static/
         sudo chmod u+w ./static/imgs/
         sudo chmod u+w ./static/imgs/*
+        pwd
         sudo ln -s $(pwd)/nginx.conf /etc/nginx/sites-available/bookstore.conf
         sudo ln -s $(pwd)/nginx.conf /etc/nginx/sites-enabled/bookstore.conf
+        ls-lhrt ./static/
+        ls -lhrt ./static/imgs/
         
     - name: Run Window test Tests
       if: ${{matrix.os == 'windows-latest'}}
