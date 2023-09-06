@@ -14,6 +14,13 @@ class FakedOSLibrary:
     def getcwd():
         return "D:/PyCharmProjs/BookStore"
 
+    @staticmethod
+    def popen(cmd):
+        class Data:
+            def read(self):
+                return "localhost%20"
+
+        return Data()
 
 class FakeProcess:
     def terminate(self):
@@ -30,7 +37,7 @@ class FakedProcessLibrary:
     def run(self, args=None, capture_output=True, check=True):
         class ProcResults:
             returncode = 0
-            stdout = bytes("Works", encoding='utf-8')
+            stdout = bytes("localhost", encoding='utf-8')
 
         return ProcResults()
 
@@ -95,7 +102,7 @@ class TestGunicornNginxWebServer(TestGunicornAppServer):
                                    processLibrary=FakedProcessLibrary,
                                    osLibrary=FakedOSLibrary,
                                    ports=ports)
-        assert self.webserver.strategy.createNginxConfig(ports) == """server{
+        assert self.webserver.strategy.createNginxConfig(ports, curledIPAddress="localhost") == """server{
     listen 8091;
     server_name BookStore;
 
@@ -111,3 +118,13 @@ class TestGunicornNginxWebServer(TestGunicornAppServer):
     }
 }
 """
+
+    def test_curlIPAddress(self):
+        ports = {'nginxPort': 8091, 'gunicornPort': 8092}
+        FakedOSLibrary.name = 'posix'
+        self.webserver = WebServer(strategy=GunicornNginxStrategy,
+                                   processLibrary=FakedProcessLibrary,
+                                   osLibrary=FakedOSLibrary,
+                                   ports=ports)
+        assert self.webserver.strategy.curlIPAddress() == "localhost"
+

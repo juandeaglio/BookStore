@@ -10,6 +10,6 @@ config="""server{
     }
 
     location / {
-        proxy_pass http://localhost:{gunicorn_port};
+        proxy_pass http://{my_ip_address}:{gunicorn_port};
     }
 }"""

@@ -4,6 +4,7 @@ import nginxTemplate
 from Source.Interfaces.WebServerStrategy import WebServerStrategy
 from Source.WebServerStrategy.GunicornStrategy import GunicornStrategy
 
+
 class GunicornNginxStrategy(WebServerStrategy):
     def __init__(self, subprocessLib, osLibrary, ports=None):
         super().__init__(subprocessLib, osLibrary, ports=ports)
@@ -17,7 +18,7 @@ class GunicornNginxStrategy(WebServerStrategy):
         self.gunicornProcess = self.gunicorn.start()
         if self.osLibrary.name == 'posix':
             print(self.subprocessLib.run(["bash", "ps -efw"], capture_output=True).stdout.decode('utf-8'))
-            return self.subprocessLib.Popen(['sudo','nginx', '-g daemon off;'])
+            return self.subprocessLib.Popen(['sudo', 'nginx', '-g daemon off;'])
 
     def createStopCommand(self):
         cmd = ''
@@ -33,15 +34,16 @@ class GunicornNginxStrategy(WebServerStrategy):
             cmd2 = "CheckRunGunicorn.sh"
             cmd3 = "CheckRunNginx.sh"
             return self.subprocessLib.run(["bash", cmd2], capture_output=True).returncode > 0 and \
-                self.subprocessLib.run(["bash", cmd3], capture_output=True).returncode > 0
+                   self.subprocessLib.run(["bash", cmd3], capture_output=True).returncode > 0
 
-    def createNginxConfig(self, ports):
+    def createNginxConfig(self, ports, curledIPAddress='localhost'):
         nginxPort = ports.get('nginxPort') or 80
         gunicornPort = ports.get('gunicornPort') or 8091
         config = re.sub('{nginx_port}', str(nginxPort), nginxTemplate.config)
         config = re.sub('{gunicorn_port}', str(gunicornPort), config)
         config = re.sub('{server_name}', 'BookStore', config)
         config = re.sub('{static_path}', '/var/www/static', config)
+        config = re.sub('{my_ip_address}', curledIPAddress, config)
         config += '\n'
         return config
 
@@ -53,3 +55,8 @@ class GunicornNginxStrategy(WebServerStrategy):
         except Exception as e:
             print(e)
             print('Error writing to file: ' + nginxConfigFile)
+
+    def curlIPAddress(self):
+        ip_address = self.osLibrary.popen("curl icanhazip.com").read().strip()
+        ip_address = re.sub('%20', '', ip_address)
+        return ip_address

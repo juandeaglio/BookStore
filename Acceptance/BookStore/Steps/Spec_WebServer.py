@@ -101,3 +101,32 @@ def seeStaticImage(context):
         assert context.response.status_code == 200, "Expected 200 OK but got " + str(context.response.status_code)
         assert context.response.headers['Content-Type'] == 'image/jpeg', "Expected image/png but got " + \
                                                                         str(context.response.headers['Content-Type'])
+
+
+@given('The user hosts the web server on the public web')
+def start_web_server(context):
+    context.port = context.ports['nginxPort']
+    GunicornNginxStrategy.port = context.port
+    context.web_server = WebServer(strategy=GunicornNginxStrategy, ports=context.ports)
+    context.public_ip_address = context.web_server.strategy.curlIPAddress()
+    print("ip address is: " + context.public_ip_address)
+    context.web_server.strategy.createNginxConfig(context.ports,
+                                                  curledIPAddress=context.public_ip_address)
+    context.web_server.start()
+    time.sleep(2)
+    context.port = context.ports['nginxPort']
+
+    if (isinstance(context.web_server.strategy, GunicornNginxStrategy)) and os.name == 'nt':
+        assert os.name == 'nt'
+    else:
+        assert context.web_server.isRunning() is True, "Expected web server to be up but it is down"
+
+
+@then('The user can access the web page over the internet')
+def accessWebPage(context):
+    if os.name == 'nt' and (context.web_server_type == "Gunicorn" or context.web_server_type == "GunicornNginx"):
+        assert os.name == 'nt'
+    else:
+        response = TestRestClient().searchForBook("The Hobbit", port=context.port, host=context.public_ip_address)
+        assert response.status_code == 200, "Expected 200 OK but got " + str(response.status_code)
+        assert response.json() == [], "Expected empty json but got " + str(response.json)

@@ -21,3 +21,7 @@ Feature: Web Server That Hosts A Webpage
       | web_server_type |
       | Django          |
       | GunicornNginx   |
+
+  Scenario: Create a web server hosted in public
+    Given The user hosts the web server on the public web
+    Then The user can access the web page over the internet

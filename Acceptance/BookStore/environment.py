@@ -10,7 +10,7 @@ def before_scenario(context, scenario):
     context.web_server = WebServer(ports=context.ports)
     if "web server" not in scenario.name.lower():
         context.web_server.start()
-        time.sleep(4)
+        time.sleep(1)
 
     clearDatabase()
     context.defaultPort = 8091
@@ -18,8 +18,9 @@ def before_scenario(context, scenario):
 
 
 def after_scenario(context, scenario):
-    time.sleep(4)
+    time.sleep(1)
     context.web_server.stop()
+    time.sleep(1)
     print("Done")
 
 
