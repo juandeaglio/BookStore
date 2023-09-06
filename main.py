@@ -9,6 +9,7 @@ from Source.Database.SqlBookDatabase import SqlBookDatabase
 from Source.Server.Services.HTTPSocketService import HTTPSocketService
 from Source.Server.SimpleSocketServer import SimpleSocketServer
 from Source.WebServer import WebServer
+from Source.WebServerStrategy.GunicornNginxStrategy import GunicornNginxStrategy
 
 
 def sendRestFromClientHandleRestWithServer(name):
@@ -27,21 +28,24 @@ def sendRestFromClientHandleRestWithServer(name):
     catalog = PersistentCatalog()
     catalog.add(books)
     booksArr = []
-    with open("books/books.txt") as books:
-        i = 0
-        for line in books:
-            line = line.strip()
-            if i % 4 == 0:
-                title = line
-            elif i % 4 == 2:
-                author = line
-            elif i % 4 == 3:
-                releaseYear = line
-            i += 1
-            if i % 4 == 0:
-                booksArr.append(Book(title, author, releaseYear))
+    try:
+        with open("books/books.txt") as books:
+            i = 0
+            for line in books:
+                line = line.strip()
+                if i % 4 == 0:
+                    title = line
+                elif i % 4 == 2:
+                    author = line
+                elif i % 4 == 3:
+                    releaseYear = line
+                i += 1
+                if i % 4 == 0:
+                    booksArr.append(Book(title, author, releaseYear))
+    except:
+        pass
 
-    web_server = WebServer("Django")
+    web_server = WebServer(strategy=GunicornNginxStrategy)
     web_server.start()
     while True:
         continue
