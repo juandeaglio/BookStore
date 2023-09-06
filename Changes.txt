@@ -1,17 +1,13 @@
-Continuing the development. I managed to fix a glaring issue with the acceptance tests. No longer will any behave
-test scenarios generate obscene amounts of python processes, each of them a webserver. I simply only turn on the
-server once for the entire run. I might need to backtrack on this and actually just do it per feature. Yes, I like that.
-Anyway, that's fixed and the API testing can commence.
+Finishing up development. Set up a docker container to locally test ubuntu stuff. Running a CI pipeline thru
+GitHub, using GitHub actions. Not as much CD as I wanted, I'm not sure how to do that with GitHub actions.
+I'm sure it's possible, but I'm not sure how to do it. I'll have to look into it. Deployed the code to an
+Azure VM. Noticed there was an issue with nginx.conf being set up with the wrong IP address. You end up getting
+a request to a localhost on port 8091 for the APIs. In the process of fixing it, just involves getting the current
+IP address with a curl to icanhazip.com. This is teaching me a lot of CI/CD issues, especially with hosting
+web servers. I want to potentially figure out how to dynamically grab the domain of the azure VM I'm hosting on.
+Maybe I can use some of the azure APIs to fetch it and make the changes, but I'd have to figure out how to automatically
+set it up so that it fits into the CI workflow.
 
-I ended up implementing the addBook API which requires authentication. Works like a charm I think, for a single book
-anyway. Don't know if I will need an API for addition tons of books yet, probably not (YAGNI). I'll have a go at
-refactoring the API tomorrow to handle JSON too. Additionally, I'll probably refactor the client code to send JSON
-instead of sending args in the URL as parameters (looks lame). Anyway, lots of good progress. At this point, I want to
-implement delete and then lastly implement a search functionality + shopping cart. At that point, I will be very
-confident with this fairly simple webpage I've been working on, and can move onto my other projects in my portfolio.
-Eventually, I want to move it all to a CD pipeline and develop with that continuous feedback loop.
-It will be a challenge to do this for the first time given that I have an entire project developed in Windows under me.
-It should be fun the first time, and at the very least show me the huge reason of why implementing the CD pipeline is
-very important for a project that's larger than a few functions and classes, especially when any amount of I/O becomes
-involved! I bet I'll actually hate myself for NOT going into CD as soon as I had my first integration tests up (oh well).
-As an additional challenge, I can port the CD pipeline to a Linux docker pod.
+I didn't consider dynamically setting up IP addreses. I mostly stuck to localhost for the sake of test, but when
+deploying and trying to use things over the public internet, they broke because of the configuration of nginx and
+django being wrong.
