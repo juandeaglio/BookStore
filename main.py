@@ -44,10 +44,10 @@ def sendRestFromClientHandleRestWithServer(name):
                     booksArr.append(Book(title, author, releaseYear))
     except:
         pass
-
-    web_server = WebServer(strategy=GunicornNginxStrategy)
+    ports={'nginxPort': 8091, 'gunicornPort': 8092}
+    web_server = WebServer(ports=ports, strategy=GunicornNginxStrategy)
     public_ip_address = web_server.strategy.curlIPAddress()
-    web_server.strategy.createNginxConfig(curledIPAddress=public_ip_address)
+    web_server.strategy.createNginxConfig(ports=ports, curledIPAddress=public_ip_address)
     web_server.start()
     while True:
         continue
