@@ -126,5 +126,5 @@ class TestGunicornNginxWebServer(TestGunicornAppServer):
                                    processLibrary=FakedProcessLibrary,
                                    osLibrary=FakedOSLibrary,
                                    ports=ports)
-        assert self.webserver.strategy.curlIPAddress() == "localhost"
+        assert self.webserver.ip_address == "localhost"
 

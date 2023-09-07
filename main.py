@@ -8,7 +8,7 @@ from Source.Catalog.PersistentCatalog import PersistentCatalog
 from Source.Database.SqlBookDatabase import SqlBookDatabase
 from Source.Server.Services.HTTPSocketService import HTTPSocketService
 from Source.Server.SimpleSocketServer import SimpleSocketServer
-from Source.WebServer import WebServer
+from Source.WebServer import WebServer, curlIPAddress
 from Source.WebServerStrategy.GunicornNginxStrategy import GunicornNginxStrategy
 
 
@@ -46,7 +46,7 @@ def sendRestFromClientHandleRestWithServer(name):
         pass
     ports={'nginxPort': 8091, 'gunicornPort': 8092}
     web_server = WebServer(ports=ports, strategy=GunicornNginxStrategy)
-    public_ip_address = web_server.strategy.curlIPAddress()
+    public_ip_address = curlIPAddress(web_server.strategy.osLibrary)
     web_server.strategy.createNginxConfig(ports=ports, curledIPAddress=public_ip_address)
     web_server.start()
     while True:

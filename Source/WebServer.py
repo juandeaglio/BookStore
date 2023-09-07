@@ -1,4 +1,5 @@
 import os
+import re
 import subprocess
 from Source.WebServerStrategy.DjangoStrategy import DjangoStrategy
 
@@ -10,6 +11,7 @@ class WebServer:
         self.osLibrary = osLibrary
         self.ports = ports or {}
         self.strategy = strategy(processLibrary, osLibrary, ports=self.ports)
+        self.ip_address = self.curlIPAddress()
 
 
     def start(self):
@@ -39,3 +41,7 @@ class WebServer:
     def isRunning(self):
         return self.strategy.isRunning()
 
+    def curlIPAddress(self):
+        ip_address = self.osLibrary.popen("curl icanhazip.com").read().strip()
+        ip_address = re.sub('%20', '', ip_address)
+        return ip_address

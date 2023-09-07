@@ -55,8 +55,3 @@ class GunicornNginxStrategy(WebServerStrategy):
         except Exception as e:
             print(e)
             print('Error writing to file: ' + nginxConfigFile)
-
-    def curlIPAddress(self):
-        ip_address = self.osLibrary.popen("curl icanhazip.com").read().strip()
-        ip_address = re.sub('%20', '', ip_address)
-        return ip_address

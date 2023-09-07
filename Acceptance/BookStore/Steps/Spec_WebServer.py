@@ -21,7 +21,6 @@ strategies = {
 @given('"{web_server_type}" web server is started')
 def start_web_server(context, web_server_type):
     context.port = context.ports['nginxPort']
-    GunicornNginxStrategy.port = context.port
     context.web_server = WebServer(strategy=strategies[web_server_type], ports=context.ports)
     context.web_server.start()
     context.web_server_type = web_server_type
@@ -98,23 +97,23 @@ def seeStaticImage(context):
     if os.name == 'nt' and (context.web_server_type == "GunicornNginx"):
         assert os.name == 'nt'
     else:
+        context.web_server.stop()
         assert context.response.status_code == 200, "Expected 200 OK but got " + str(context.response.status_code)
         assert context.response.headers['Content-Type'] == 'image/jpeg', "Expected image/png but got " + \
                                                                         str(context.response.headers['Content-Type'])
 
 
 @given('The user hosts the web server on the public web')
-def start_web_server(context):
+def start_public_web_server(context):
     context.port = context.ports['nginxPort']
     GunicornNginxStrategy.port = context.port
     context.web_server = WebServer(strategy=GunicornNginxStrategy, ports=context.ports)
-    context.public_ip_address = context.web_server.strategy.curlIPAddress()
+    context.public_ip_address = context.web_server.ip_address
     print("ip address is: " + context.public_ip_address)
     context.web_server.strategy.createNginxConfig(context.ports,
                                                   curledIPAddress=context.public_ip_address)
     context.web_server.start()
     time.sleep(2)
-    context.port = context.ports['nginxPort']
 
     if (isinstance(context.web_server.strategy, GunicornNginxStrategy)) and os.name == 'nt':
         assert os.name == 'nt'
@@ -123,12 +122,12 @@ def start_web_server(context):
 
 
 @then('The user can access the web page over the internet')
-def accessWebPage(context):
+def access_public_web_server(context):
     if os.name == 'nt':
         assert os.name == 'nt'
-    elif os.name == 'posix' and os.popen("whoami").read().strip() == "runner":
-        pass
     else:
         response = TestRestClient().searchForBook("The Hobbit", port=context.port, host=context.public_ip_address)
         assert response.status_code == 200, "Expected 200 OK but got " + str(response.status_code)
         assert response.json() == [], "Expected empty json but got " + str(response.json)
+
+#todo: add test for changing django config to have CORS allowed for ip address/domain and allowed hosts

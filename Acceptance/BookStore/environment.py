@@ -18,10 +18,8 @@ def before_scenario(context, scenario):
 
 
 def after_scenario(context, scenario):
-    time.sleep(1)
     context.web_server.stop()
     time.sleep(1)
-    print("Done")
 
 
 def clearDatabase():
