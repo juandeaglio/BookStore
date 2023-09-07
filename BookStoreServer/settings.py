@@ -122,6 +122,7 @@ ALLOWED_HOSTS.append(get_ip())
 
 CORS_ORIGIN_WHITELIST = [
     'http://localhost:3000',
+    'http://localhost:8091',
 ]
 
 CORS_ORIGIN_WHITELIST.append('http://' + get_ip() + ':3000')

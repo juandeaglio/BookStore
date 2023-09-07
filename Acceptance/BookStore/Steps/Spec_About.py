@@ -6,12 +6,11 @@ from Acceptance.TestRestClient import TestRestClient
 
 @given('An about page')
 def defineCatalog(context):
-    time.sleep(2)
-
+    pass
 
 @when('A user requests the about page')
 def viewCatalog(context):
-    response = TestRestClient().createClientForAboutPage()
+    response = TestRestClient().createClientForAboutPage(timeout=2)
     context.aboutPageResponse = response
 
 

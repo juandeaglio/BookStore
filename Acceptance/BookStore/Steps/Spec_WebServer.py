@@ -118,7 +118,7 @@ def start_public_web_server(context):
 
     assert len(BookStoreServer.settings.ALLOWED_HOSTS) == 3, "Expected 3 allowed hosts but got " + \
                                                              BookStoreServer.settings.ALLOWED_HOSTS
-    assert len(BookStoreServer.settings.CORS_ORIGIN_WHITELIST) == 2, "Expected 3 allowed hosts but got " + \
+    assert len(BookStoreServer.settings.CORS_ORIGIN_WHITELIST) == 3, "Expected 3 allowed CORS but got " + \
                                                                      BookStoreServer.settings.CORS_ORIGIN_WHITELIST
 
     if (isinstance(context.web_server.strategy, GunicornNginxStrategy)) and os.name == 'nt':
@@ -132,6 +132,7 @@ def access_public_web_server(context):
     if os.name == 'nt':
         assert os.name == 'nt'
     else:
+        print("about to connect to: " + context.public_ip_address)
         response = TestRestClient().searchForBook("The Hobbit", port=context.port, host=context.public_ip_address)
         assert response.status_code == 200, "Expected 200 OK but got " + str(response.status_code)
         assert response.json() == [], "Expected empty json but got " + str(response.json)

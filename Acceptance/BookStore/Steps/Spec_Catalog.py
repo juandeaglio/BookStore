@@ -75,7 +75,7 @@ def checkForExtraBook(context):
 
 @when('A user searches for Harry Potter')
 def searchForBookTitle(context):
-    response = TestRestClient().searchForBook(title="Harry Potter")
+    response = TestRestClient().searchForBook(title="Harry Potter", timeout=2)
     assert response.status_code == 200
     context.jsonBooks = response.json()
 
