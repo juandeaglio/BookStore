@@ -1,6 +1,9 @@
+import glob
 import os
 import re
 import subprocess
+from tempfile import NamedTemporaryFile, gettempdir
+
 from Source.WebServerStrategy.DjangoStrategy import DjangoStrategy
 
 
@@ -11,8 +14,20 @@ class WebServer:
         self.osLibrary = osLibrary
         self.ports = ports or {}
         self.strategy = strategy(processLibrary, osLibrary, ports=self.ports)
-        self.ip_address = self.curlIPAddress()
+        self.temp_ip_address_file = self.fetch_cached_ip()
 
+        if self.fetch_cached_ip():
+            with open(self.temp_ip_address_file[0]) as f:
+                self.ip_address = f.read()
+        else:
+            self.ip_address = self.curlIPAddress()
+            with NamedTemporaryFile(prefix="ip_address", mode='w', delete=False) as f:
+                f.write(self.ip_address)
+                f.close()
+
+    def fetch_cached_ip(self):
+        temp_dir = gettempdir()
+        return glob.glob(f'{temp_dir}/ip_address*')
 
     def start(self):
         if self.strategy.start:

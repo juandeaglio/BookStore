@@ -128,3 +128,17 @@ class TestGunicornNginxWebServer(TestGunicornAppServer):
                                    ports=ports)
         assert self.webserver.ip_address == "localhost"
 
+    def test_store_cached_public_ip(self):
+        ports = {'nginxPort': 8091, 'gunicornPort': 8092}
+        FakedOSLibrary.name = 'posix'
+        self.webserver = WebServer(strategy=GunicornNginxStrategy,
+                                   processLibrary=FakedProcessLibrary,
+                                   osLibrary=FakedOSLibrary,
+                                   ports=ports)
+        old_ip_file = self.webserver.temp_ip_address_file
+        self.webserver2 = WebServer(strategy=GunicornNginxStrategy,
+                                   processLibrary=FakedProcessLibrary,
+                                   osLibrary=FakedOSLibrary,
+                                   ports=ports)
+        current_ip_file = self.webserver2.temp_ip_address_file
+        assert current_ip_file == old_ip_file
