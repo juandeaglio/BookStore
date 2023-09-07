@@ -116,9 +116,9 @@ def start_public_web_server(context):
     context.web_server.start()
     time.sleep(2)
 
-    assert len(BookStoreServer.settings.ALLOWED_HOSTS) == 3, "Expected 3 allowed hosts but got " + \
+    assert len(BookStoreServer.settings.ALLOWED_HOSTS) == 5, "Expected 3 allowed hosts but got " + \
                                                              BookStoreServer.settings.ALLOWED_HOSTS
-    assert len(BookStoreServer.settings.CORS_ORIGIN_WHITELIST) == 3, "Expected 3 allowed CORS but got " + \
+    assert len(BookStoreServer.settings.CORS_ORIGIN_WHITELIST) == 4, "Expected 3 allowed CORS but got " + \
                                                                      BookStoreServer.settings.CORS_ORIGIN_WHITELIST
 
     if (isinstance(context.web_server.strategy, GunicornNginxStrategy)) and os.name == 'nt':

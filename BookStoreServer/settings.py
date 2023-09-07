@@ -111,7 +111,7 @@ USE_TZ = True
 
 STATIC_ROOT = BASE_DIR / 'static'
 
-ALLOWED_HOSTS = ['.localhost', '127.0.0.1']
+ALLOWED_HOSTS = ['.localhost', '127.0.0.1', '[::1]', 'localhost']
 
 
 def get_ip():
@@ -123,6 +123,7 @@ ALLOWED_HOSTS.append(get_ip())
 CORS_ORIGIN_WHITELIST = [
     'http://localhost:3000',
     'http://localhost:8091',
+    'http://[::1]:3000',
 ]
 
 CORS_ORIGIN_WHITELIST.append('http://' + get_ip() + ':3000')
