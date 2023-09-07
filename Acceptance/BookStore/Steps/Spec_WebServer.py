@@ -111,8 +111,8 @@ def start_public_web_server(context):
     context.web_server = WebServer(strategy=GunicornNginxStrategy, ports=context.ports)
     context.public_ip_address = context.web_server.ip_address
     print("ip address is: " + context.public_ip_address)
-    context.web_server.strategy.createNginxConfig(context.ports,
-                                                  curledIPAddress=context.public_ip_address)
+    print("Config is: " + context.web_server.strategy.createNginxConfig(context.ports,
+                                                  curledIPAddress=context.public_ip_address))
     context.web_server.start()
     time.sleep(2)
 

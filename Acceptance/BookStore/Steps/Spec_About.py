@@ -1,10 +1,12 @@
+import time
+
 from behave import given, when, then
 from Acceptance.TestRestClient import TestRestClient
 
 
 @given('An about page')
 def defineCatalog(context):
-    pass
+    time.sleep(2)
 
 
 @when('A user requests the about page')
