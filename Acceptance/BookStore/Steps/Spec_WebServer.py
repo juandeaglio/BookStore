@@ -4,12 +4,13 @@ import time
 import requests.exceptions
 import urllib3.exceptions
 from behave import given, when, then
+
+import BookStoreServer.settings
 from Acceptance.TestRestClient import TestRestClient
 from Source.WebServer import WebServer
 from Source.WebServerStrategy.DjangoStrategy import DjangoStrategy
 from Source.WebServerStrategy.GunicornNginxStrategy import GunicornNginxStrategy
 from Source.WebServerStrategy.GunicornStrategy import GunicornStrategy
-
 
 strategies = {
     "Django": DjangoStrategy,
@@ -67,20 +68,20 @@ def accessWebPage(context):
         print(response1)
         print(type(response1))
         if not isinstance(response1, requests.exceptions.ConnectTimeout) \
-                or not isinstance(response1, requests.exceptions.ConnectionError) and response1.status_code == 200\
+                or not isinstance(response1, requests.exceptions.ConnectionError) and response1.status_code == 200 \
                 or not isinstance(response1, urllib3.exceptions.NewConnectionError):
             time.sleep(0.5)
             response2 = TestRestClient().createClientForAboutPage(port=context.port)
 
             assert isinstance(response2, requests.exceptions.ConnectTimeout) \
-                or not isinstance(response2, requests.exceptions.ConnectionError)\
-                or not isinstance(response2, urllib3.exceptions.NewConnectionError), \
+                   or not isinstance(response2, requests.exceptions.ConnectionError) \
+                   or not isinstance(response2, urllib3.exceptions.NewConnectionError), \
                 "Expected TimeoutError but got " + str(response2)
 
         else:
             assert isinstance(response1, requests.exceptions.ConnectTimeout) \
-                or not isinstance(response1, requests.exceptions.ConnectionError)\
-                or not isinstance(response1, urllib3.exceptions.NewConnectionError), \
+                   or not isinstance(response1, requests.exceptions.ConnectionError) \
+                   or not isinstance(response1, urllib3.exceptions.NewConnectionError), \
                 "Expected TimeoutError but got " + str(response1)
 
 
@@ -100,7 +101,7 @@ def seeStaticImage(context):
         context.web_server.stop()
         assert context.response.status_code == 200, "Expected 200 OK but got " + str(context.response.status_code)
         assert context.response.headers['Content-Type'] == 'image/jpeg', "Expected image/png but got " + \
-                                                                        str(context.response.headers['Content-Type'])
+                                                                         str(context.response.headers['Content-Type'])
 
 
 @given('The user hosts the web server on the public web')
@@ -114,6 +115,11 @@ def start_public_web_server(context):
                                                   curledIPAddress=context.public_ip_address)
     context.web_server.start()
     time.sleep(2)
+
+    assert len(BookStoreServer.settings.ALLOWED_HOSTS) == 3, "Expected 3 allowed hosts but got " + \
+                                                             BookStoreServer.settings.ALLOWED_HOSTS
+    assert len(BookStoreServer.settings.CORS_ORIGIN_WHITELIST) == 2, "Expected 3 allowed hosts but got " + \
+                                                                     BookStoreServer.settings.CORS_ORIGIN_WHITELIST
 
     if (isinstance(context.web_server.strategy, GunicornNginxStrategy)) and os.name == 'nt':
         assert os.name == 'nt'
@@ -129,5 +135,3 @@ def access_public_web_server(context):
         response = TestRestClient().searchForBook("The Hobbit", port=context.port, host=context.public_ip_address)
         assert response.status_code == 200, "Expected 200 OK but got " + str(response.status_code)
         assert response.json() == [], "Expected empty json but got " + str(response.json)
-
-#todo: add test for changing django config to have CORS allowed for ip address/domain and allowed hosts

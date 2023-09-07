@@ -113,9 +113,18 @@ STATIC_ROOT = BASE_DIR / 'static'
 
 ALLOWED_HOSTS = ['.localhost', '127.0.0.1']
 
+
+def get_ip():
+    return os.popen('curl icanhazip.com').read().strip()
+
+
+ALLOWED_HOSTS.append(get_ip())
+
 CORS_ORIGIN_WHITELIST = [
     'http://localhost:3000',
 ]
+
+CORS_ORIGIN_WHITELIST.append('http://' + get_ip() + ':3000')
 
 STATIC_URL = 'static/'
 
