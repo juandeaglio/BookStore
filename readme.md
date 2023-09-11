@@ -1,3 +1,4 @@
+http://bookhaven.eastus.cloudapp.azure.com/
 # Short description
 A pretty basic and simple book store.
 There is a catalog which serves suggestions based on category.
