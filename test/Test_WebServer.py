@@ -140,5 +140,6 @@ class TestGunicornNginxWebServer(TestGunicornAppServer):
                                    processLibrary=FakedProcessLibrary,
                                    osLibrary=FakedOSLibrary,
                                    ports=ports)
+        
         current_ip_file = self.webserver2.temp_ip_address_file
         assert current_ip_file == old_ip_file

@@ -25,3 +25,9 @@ Feature: Web Server That Hosts A Webpage
   Scenario: Create a web server hosted in public
     Given The user hosts the web server on the public web
     Then The user can access the web page over the internet
+
+
+  Scenario: Create an admin user and log in
+      Given A username and password
+      When The application creates an admin user
+      Then An admin can log in with the credentials

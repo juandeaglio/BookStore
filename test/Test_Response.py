@@ -1,6 +1,5 @@
 import unittest
 from Source.Response import Response
-from Source.StatusCode import StatusCode
 
 
 class ResponseTest(unittest.TestCase):

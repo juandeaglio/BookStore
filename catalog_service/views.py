@@ -58,8 +58,6 @@ def loginWithCredentials(request, username, password):
         raise (ValueError("Unauthorized"))
 
 
-
-
 @login_required
 def addBook(request):
     if request.method == "POST":
@@ -85,3 +83,27 @@ def makeBookFromRequest(request):
     author = request.POST.get("author")
     releaseYear = request.POST.get("releaseYear")
     return Book(title, author, releaseYear)
+
+
+def createUser(request):
+    # Django checks host to be equal to localhost (can only create user from the same machine) in production
+    if request.method == "POST":
+        with open(os.path.join(os.path.dirname(__file__), 'http_origin.txt'), 'w') as f:
+            f.write(request.get_host())
+
+        if os.environ.get('ENVIRONMENT') == "test" and request.get_host() != "localhost:8091":
+            return HttpResponse("User creation not allowed from outside localhost", status=401)
+        elif os.environ.get('ENVIRONMENT') != "test" and request.META.get("HTTP_ORIGIN") != "localhost:8091":
+            return HttpResponse("User creation not allowed from outside localhost", status=401)
+        else:
+            username = request.POST.get("username")
+            password = request.POST.get("password")
+            if User.objects.filter(username=username).exists():
+                return HttpResponse("User already exists", status=409)
+            else:
+                User.objects.create_user(username=username, password=password)
+
+        return HttpResponse("User created", status=201)
+
+    else:
+        return HttpResponse("Not found", status=404)

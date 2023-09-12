@@ -50,12 +50,12 @@ class TestRestClient:
         statusCode = self.sendPostFromSession(payload=bookDetails, endpoint="catalog_service/addBook/")
         return statusCode
 
-    def createClientAsAdmin(self):
-        userCreds = {
+    def createClientAsAdmin(self, credentials=None):
+        creds = credentials or {
             'username': 'username',
             'password': 'creativepassword'
         }
-        return self.sendPostFromSession(payload=userCreds, endpoint="catalog_service/login/")
+        return self.sendPostFromSession(payload=creds, endpoint="catalog_service/login/")
 
     def createClientAddBook(self, book=None):
         statusCode = self.sendPostFromSession(payload=book.to_json(), endpoint="catalog_service/addBook/")
@@ -83,4 +83,7 @@ class TestRestClient:
         r = self.getStatic(port=port, staticfile="imgs/Emma.jpg")
         return r
 
+    def createUser(self, username, password):
+        return self.sendPostFromSession(payload={'username': username, 'password': password},
+                                 endpoint="catalog_service/createUser/")
 

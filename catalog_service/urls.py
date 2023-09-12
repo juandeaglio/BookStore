@@ -9,7 +9,8 @@ urlpatterns = [
     path("addBook/", views.addBook),
     path("login/", views.loginUser),
     path("search/", views.searchBooks),
-    path("removeBook/", views.removeBook)
+    path("removeBook/", views.removeBook),
+    path("createUser/", views.createUser)
 ]
 
 def createTestCatalogAdminUser():

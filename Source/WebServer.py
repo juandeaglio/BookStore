@@ -3,7 +3,6 @@ import os
 import re
 import subprocess
 from tempfile import NamedTemporaryFile, gettempdir
-
 from Source.WebServerStrategy.DjangoStrategy import DjangoStrategy
 
 
