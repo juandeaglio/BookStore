@@ -112,16 +112,16 @@ def start_public_web_server(context):
     context.public_ip_address = context.web_server.ip_address
     print("ip address is: " + context.public_ip_address)
     print("Config is: " + context.web_server.strategy.createNginxConfig(context.ports,
-                                                  curledIPAddress=context.public_ip_address))
+                                                                        curledIPAddress=context.public_ip_address))
     context.web_server.start()
     time.sleep(2)
 
     assert len(BookStoreServer.settings.ALLOWED_HOSTS) == \
            len(['.localhost', '127.0.0.1', '[::1]', 'localhost']) + 1
     assert len(BookStoreServer.settings.CORS_ORIGIN_WHITELIST) == \
-           len(['http://localhost:3000','http://localhost:8091',
-                   'http://[::1]:3000'])+1, "Expected 4 CORS but got " + \
-                                            str(BookStoreServer.settings.ALLOWED_HOSTS)
+           len(['http://localhost:3000', 'http://localhost:8091',
+                'http://[::1]:3000']) + 1, "Expected 4 CORS but got " + \
+                                           str(BookStoreServer.settings.ALLOWED_HOSTS)
 
     if (isinstance(context.web_server.strategy, GunicornNginxStrategy)) and os.name == 'nt':
         assert os.name == 'nt'
