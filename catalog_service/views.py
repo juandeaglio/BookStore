@@ -32,8 +32,6 @@ def searchBooks(request):
 
 
 def loginUser(request):
-    createTestCatalogAdminUser(request)
-
     if request.method == "POST":
         username = request.POST.get("username")
         password = request.POST.get("password")
@@ -60,10 +58,6 @@ def loginWithCredentials(request, username, password):
         raise (ValueError("Unauthorized"))
 
 
-def createTestCatalogAdminUser(request):
-    if os.environ.get('ENVIRONMENT') == "test" and os.environ.get('TESTPW') and os.environ.get('TESTUSERNAME'):
-        if authenticate(request, username=os.environ.get('TESTUSERNAME'), password=os.environ.get('TESTPW')) is None:
-            User.objects.create_user(username=os.environ.get('TESTUSERNAME'), password=os.environ.get('TESTPW'))
 
 
 @login_required
