@@ -101,7 +101,10 @@ def createUser(request):
             if User.objects.filter(username=username).exists():
                 return HttpResponse("User already exists", status=409)
             else:
-                User.objects.create_user(username=username, password=password)
+                try:
+                    User.objects.create_user(username=username, password=password)
+                except Exception as e:
+                    return HttpResponse(str(e), status=500)
 
         return HttpResponse("User created", status=201)
 
