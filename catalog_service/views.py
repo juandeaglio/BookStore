@@ -103,10 +103,10 @@ def createUser(request):
             else:
                 try:
                     User.objects.create_user(username=username, password=password)
+                    return HttpResponse("User created", status=201)
                 except Exception as e:
                     return HttpResponse(str(e), status=500)
 
-        return HttpResponse("User created", status=201)
 
     else:
         return HttpResponse("Not found", status=404)
