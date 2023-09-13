@@ -93,9 +93,9 @@ def createUser(request):
         with open(os.path.join(os.path.dirname(__file__), 'http_origin.txt'), 'w') as f:
             f.write(request.get_host())
 
-        if os.environ.get('ENVIRONMENT') == "test" and request.get_host() != "localhost:8091":
+        if os.environ.get('ENVIRONMENT') == "test" and request.META.get('REMOTE_ADDR') == "127.0.0.1":
             return HttpResponse("User creation not allowed from outside localhost", status=401)
-        elif os.environ.get('ENVIRONMENT') != "test" and request.META.get("HTTP_ORIGIN") != "localhost:8091":
+        elif os.environ.get('ENVIRONMENT') != "test" and request.META.get('REMOTE_ADDR') == "127.0.0.1":
             return HttpResponse("User creation not allowed from outside localhost", status=401)
         else:
             username = request.POST.get("username")
