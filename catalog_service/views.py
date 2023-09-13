@@ -6,6 +6,8 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.shortcuts import render
 from django.http import HttpResponse
+from django.views.decorators.csrf import csrf_exempt
+
 from Source.Book import Book
 from Source.Catalog.PersistentCatalog import PersistentCatalog
 
@@ -84,7 +86,7 @@ def makeBookFromRequest(request):
     releaseYear = request.POST.get("releaseYear")
     return Book(title, author, releaseYear)
 
-
+@csrf_exempt
 def createUser(request):
     # Django checks host to be equal to localhost (can only create user from the same machine) in production
     if request.method == "POST":
