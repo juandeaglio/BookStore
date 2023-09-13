@@ -92,10 +92,13 @@ def createUser(request):
     if request.method == "POST":
         with open(os.path.join(os.path.dirname(__file__), 'http_origin.txt'), 'w') as f:
             f.write(request.get_host())
+            f.write(request.META.get('REMOTE_ADDR'))
+            f.write(request.META.get('HTTP_X_FORWARDED_FOR'))
 
-        if os.environ.get('ENVIRONMENT') == "test" and request.META.get('REMOTE_ADDR') == "127.0.0.1":
+        if request.META.get('HTTP_X_FORWARDED_FOR') is None and request.META.get('REMOTE_ADDR') != "127.0.0.1":
             return HttpResponse("User creation not allowed from outside localhost", status=401)
-        elif os.environ.get('ENVIRONMENT') != "test" and request.META.get('REMOTE_ADDR') == "127.0.0.1":
+        elif request.META.get('HTTP_X_FORWARDED_FOR') and \
+                request.META.get('HTTP_X_FORWARDED_FOR').split(',')[0] != "127.0.0.1":
             return HttpResponse("User creation not allowed from outside localhost", status=401)
         else:
             username = request.POST.get("username")
