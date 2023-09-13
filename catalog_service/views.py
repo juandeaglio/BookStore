@@ -90,11 +90,6 @@ def makeBookFromRequest(request):
 def createUser(request):
     # Django checks host to be equal to localhost (can only create user from the same machine) in production
     if request.method == "POST":
-        with open(os.path.join(os.path.dirname(__file__), 'http_origin.txt'), 'w') as f:
-            f.write(request.get_host()+"\n")
-            f.write(request.META.get('REMOTE_ADDR')+'\n')
-            f.write(request.META.get('HTTP_X_FORWARDED_FOR')+"\n")
-
         if request.META.get('HTTP_X_FORWARDED_FOR') and \
                 request.META.get('HTTP_X_FORWARDED_FOR').split(',')[0] != "127.0.0.1":
             return HttpResponse("User creation not allowed from outside localhost", status=401)
