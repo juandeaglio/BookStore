@@ -1,3 +1,5 @@
+
+
 class DjangoConfig:
     @classmethod
     def deleteSqlite(cls):
@@ -7,6 +9,7 @@ class DjangoConfig:
 
     @classmethod
     def setupMigrations(cls):
-        import os
-        os.system("python manage.py makemigrations")
-        os.system("python manage.py migrate")
+        import sys
+        import subprocess
+        subprocess.Popen([sys.executable, "manage.py", "makemigrations"]).wait()
+        subprocess.Popen([sys.executable, "manage.py", "migrate"]).wait()
