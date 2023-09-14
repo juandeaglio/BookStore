@@ -13,7 +13,7 @@ def before_scenario(context, scenario):
     context.web_server = WebServer(ports=context.ports)
     if "web server" not in scenario.name.lower():
         context.web_server.start()
-        time.sleep(1)
+        time.sleep(4)
 
     context.defaultPort = 8091
     context.catalog = PersistentCatalog()
