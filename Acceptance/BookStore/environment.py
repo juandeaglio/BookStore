@@ -10,7 +10,7 @@ def before_scenario(context, scenario):
     context.ports = {'nginxPort': 8091, 'gunicornPort': 8092}
     clearDatabase()
     DjangoConfig.setupMigrations()
-    time.sleep(2)
+    time.sleep(4)
     context.web_server = WebServer(ports=context.ports)
     if "web server" not in scenario.name.lower():
         context.web_server.start()
