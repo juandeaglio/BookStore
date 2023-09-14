@@ -4,8 +4,9 @@ import os
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
+from django.middleware.csrf import get_token
 from django.shortcuts import render
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 
 from Source.Book import Book
@@ -86,27 +87,32 @@ def makeBookFromRequest(request):
     releaseYear = request.POST.get("releaseYear")
     return Book(title, author, releaseYear)
 
+
+def attemptCreateUser(request):
+    if request.META.get('HTTP_X_FORWARDED_FOR') and \
+            request.META.get('HTTP_X_FORWARDED_FOR').split(',')[0] != "127.0.0.1":
+        return HttpResponse("User creation not allowed from outside localhost", status=401)
+    elif request.META.get('REMOTE_ADDR') != "127.0.0.1":
+        return HttpResponse("User creation not allowed from outside localhost", status=401)
+    else:
+        username = request.POST.get("username")
+        password = request.POST.get("password")
+        try:
+            User.objects.create_user(username=username, password=password)
+            return HttpResponse("User created", status=201)
+        except Exception as e:
+            return HttpResponse(str(e), status=500)
+
+
 @csrf_exempt
 def createUser(request):
     # Django checks host to be equal to localhost (can only create user from the same machine) in production
     if request.method == "POST":
-        if request.META.get('HTTP_X_FORWARDED_FOR') and \
-                request.META.get('HTTP_X_FORWARDED_FOR').split(',')[0] != "127.0.0.1":
-            return HttpResponse("User creation not allowed from outside localhost", status=401)
-        elif request.META.get('REMOTE_ADDR') != "127.0.0.1":
-            return HttpResponse("User creation not allowed from outside localhost", status=401)
-        else:
-            username = request.POST.get("username")
-            password = request.POST.get("password")
-            if User.objects.filter(username=username).exists():
-                return HttpResponse("User already exists", status=409)
-            else:
-                try:
-                    User.objects.create_user(username=username, password=password)
-                    return HttpResponse("User created", status=201)
-                except Exception as e:
-                    return HttpResponse(str(e), status=500)
-
-
+        return attemptCreateUser(request)
     else:
         return HttpResponse("Not found", status=404)
+
+
+def csrf(request):
+    if request.method == "GET":
+        return JsonResponse({'csrfToken': get_token(request)})

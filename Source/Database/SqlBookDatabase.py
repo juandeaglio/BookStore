@@ -170,3 +170,7 @@ class SqlBookDatabase(DatabaseConnection):
 
     def clearCatalog(self):
         self.database.dropCatalog('catalog')
+
+    def deleteSqlite(self):
+        import os
+        os.remove('db.sqlite3')

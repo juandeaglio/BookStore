@@ -32,7 +32,7 @@ def start_web_server(context, web_server_type):
     else:
         context.port = context.ports['nginxPort']
 
-    if (context.web_server_type == "Gunicorn" or context.web_server_type == "GunicornNginx") and os.name == 'nt':
+    if runningGunicornOnWindows(context):
         assert os.name == 'nt'
     else:
         assert context.web_server.isRunning() is True, "Expected web server to be up but it is down"
@@ -40,7 +40,7 @@ def start_web_server(context, web_server_type):
 
 @then('The user can access the web page')
 def accessWebPage(context):
-    if os.name == 'nt' and (context.web_server_type == "Gunicorn" or context.web_server_type == "GunicornNginx"):
+    if runningGunicornOnWindows(context):
         assert os.name == 'nt'
     else:
         response = TestRestClient().searchForBook("The Hobbit", port=context.port)
@@ -50,7 +50,7 @@ def accessWebPage(context):
 
 @when('The user shuts down the web server')
 def stopWebServer(context):
-    if os.name == 'nt' and (context.web_server_type == "Gunicorn" or context.web_server_type == "GunicornNginx"):
+    if runningGunicornOnWindows(context):
         assert os.name == 'nt'
     else:
         context.web_server.stop()
@@ -65,9 +65,15 @@ def responseIsAnError(response):
            or not isinstance(response, urllib3.exceptions.NewConnectionError)
 
 
+def runningGunicornOnWindows(context):
+    web_server_type = context.web_server.strategy
+    return os.name == 'nt' and (isinstance(web_server_type, GunicornStrategy) or
+                                isinstance(web_server_type, GunicornNginxStrategy))
+
+
 @then('The user can no longer access the web page')
 def accessWebPage(context):
-    if os.name == 'nt' and (context.web_server_type == "Gunicorn" or context.web_server_type == "GunicornNginx"):
+    if runningGunicornOnWindows(context):
         assert os.name == 'nt'
     else:
         response1 = TestRestClient().createClientForAboutPage(port=context.port)
@@ -86,7 +92,7 @@ def accessWebPage(context):
 
 @when('The user fetches a static image')
 def fetchStaticImage(context):
-    if os.name == 'nt' and (context.web_server_type == "Gunicorn" or context.web_server_type == "GunicornNginx"):
+    if runningGunicornOnWindows(context):
         assert os.name == 'nt'
     else:
         context.response = TestRestClient().fetchStaticImage(port=context.port)
@@ -98,6 +104,7 @@ def seeStaticImage(context):
         assert os.name == 'nt'
     else:
         context.web_server.stop()
+        time.sleep(2)
         assert context.response.status_code == 200, "Expected 200 OK but got " + str(context.response.status_code)
         assert context.response.headers['Content-Type'] == 'image/jpeg', "Expected image/png but got " + \
                                                                          str(context.response.headers['Content-Type'])
@@ -121,21 +128,24 @@ def start_public_web_server(context):
                 'http://[::1]:3000', 'http://bookhaven.eastus.cloudapp.azure.com']) + 1, "Expected 4 CORS but got " + \
                                            str(BookStoreServer.settings.ALLOWED_HOSTS)
 
-    if (isinstance(context.web_server.strategy, GunicornNginxStrategy)) and os.name == 'nt':
+    if runningGunicornOnWindows(context):
         assert os.name == 'nt'
     else:
         assert context.web_server.isRunning() is True, "Expected web server to be up but it is down"
 
+def isGitHubRunner():
+    return os.name == 'posix' and os.popen('whoami').read().strip() == 'runner'
 
 @then('The user can access the web page over the internet')
 def access_public_web_server(context):
     if os.name == 'nt':
         assert os.name == 'nt'
-    elif os.name == 'posix' and os.popen('whoami').read().strip() == 'runner':
+    elif isGitHubRunner():
         pass
     else:
         print("about to connect to: " + context.public_ip_address)
-        response = TestRestClient().searchForBook("The Hobbit", port=context.port, host=context.public_ip_address)
+        response = TestRestClient().searchForBook("The Hobbit", port=context.port, host=context.public_ip_address
+                                                  , timeout=4)
         context.web_server.stop()
         assert response.status_code == 200, "Expected 200 OK but got " + str(response.status_code)
         assert response.json() == [], "Expected empty json but got " + str(response.json)
@@ -144,24 +154,35 @@ def access_public_web_server(context):
 @given('A username and password')
 def defineUser(context):
     context.web_server = WebServer(strategy=GunicornNginxStrategy, ports=context.ports)
-    context.port = context.ports['nginxPort']
-    context.web_server.start()
-    context.adminUsername = "newadmin"
-    context.password = "password"
-
+    if runningGunicornOnWindows(context):
+        assert os.name == 'nt'
+    else:
+        context.port = context.ports['nginxPort']
+        context.web_server.start()
+        context.adminUsername = "newadmin"
+        context.password = "password"
+        assert context.web_server.isRunning() is True, "Expected web server to be up but it is down"
 
 
 @when('The application creates an admin user')
 def createAdminUser(context):
-    response = TestRestClient().createUser(username=context.adminUsername, password=context.password)
-    assert response == 201, "Expected 201 Created but got " + str(response)
+    if runningGunicornOnWindows(context):
+        assert os.name == 'nt'
+    else:
+        response = TestRestClient().createUser(username=context.adminUsername, password=context.password)
+        assert response == 201, "Expected 201 Created but got " + str(response)
 
 @then('An admin can log in with the credentials')
 def loginWithCredentials(context):
-    credentials = {
-        'username': context.adminUsername,
-        'password': context.password
-    }
-    response = TestRestClient().createClientAsAdmin(credentials=credentials)
-    context.web_server.stop()
-    assert response == 200, "Expected 200 OK but got " + str(response)
+    if runningGunicornOnWindows(context):
+        assert os.name == 'nt'
+    else:
+        credentials = {
+            'username': context.adminUsername,
+            'password': context.password
+        }
+        client = TestRestClient()
+        response = client.createClientAsAdmin(credentials=credentials)
+        context.web_server.stop()
+        time.sleep(2)
+        assert response == 200, "Expected 200 OK but got " + str(response)

@@ -13,9 +13,7 @@ SECRET_KEY = BookStoreServer.settings.SECRET_KEY
 
 INSTALLED_APPS = BookStoreServer.settings.INSTALLED_APPS
 
-MIDDLEWARE = BookStoreServer.settings.MIDDLEWARE\
-
-MIDDLEWARE.remove('django.middleware.csrf.CsrfViewMiddleware') # don't know how to do this in test quite yet.
+MIDDLEWARE = BookStoreServer.settings.MIDDLEWARE
 
 ROOT_URLCONF = BookStoreServer.settings.ROOT_URLCONF
 
@@ -52,6 +50,7 @@ STATIC_URL = BookStoreServer.settings.STATIC_URL
 STATICFILES_DIRS = [
     BookStoreServer.settings.BASE_DIR, 'static'
 ]
+CSRF_TRUSTED_ORIGINS = BookStoreServer.settings.CSRF_TRUSTED_ORIGINS
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field

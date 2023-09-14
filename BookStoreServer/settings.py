@@ -123,6 +123,10 @@ ALLOWED_HOSTS.append(get_ip())
 CORS_ORIGIN_WHITELIST = ['http://localhost:3000', 'http://localhost:8091', 'http://[::1]:3000',
                          'http://bookhaven.eastus.cloudapp.azure.com', 'http://' + get_ip() + ':3000']
 
+CSRF_TRUSTED_ORIGINS = [
+    'http://bookhaven.eastus.cloudapp.azure.com'
+]
+
 STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'

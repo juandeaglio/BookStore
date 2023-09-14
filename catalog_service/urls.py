@@ -10,7 +10,8 @@ urlpatterns = [
     path("login/", views.loginUser),
     path("search/", views.searchBooks),
     path("removeBook/", views.removeBook),
-    path("createUser/", views.createUser)
+    path("createUser/", views.createUser),
+    path("csrf/", views.csrf),
 ]
 
 def createTestCatalogAdminUser():
