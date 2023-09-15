@@ -124,7 +124,8 @@ CORS_ORIGIN_WHITELIST = ['http://localhost:3000', 'http://localhost:8091', 'http
                          'http://bookhaven.eastus.cloudapp.azure.com', 'http://' + get_ip() + ':3000']
 
 CSRF_TRUSTED_ORIGINS = [
-    'http://bookhaven.eastus.cloudapp.azure.com'
+    'http://bookhaven.eastus.cloudapp.azure.com',
+    'http://localhost:3000'
 ]
 
 STATIC_URL = 'static/'

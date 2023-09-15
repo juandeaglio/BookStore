@@ -44,12 +44,16 @@ USE_TZ = BookStoreServer.settings.USE_TZ
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
+ALLOWED_HOSTS = BookStoreServer.settings.ALLOWED_HOSTS
 
 STATIC_URL = BookStoreServer.settings.STATIC_URL
 
 STATICFILES_DIRS = [
     BookStoreServer.settings.BASE_DIR, 'static'
 ]
+
+CORS_ORIGINAL_WHITELIST = BookStoreServer.settings.CORS_ORIGIN_WHITELIST
+
 CSRF_TRUSTED_ORIGINS = BookStoreServer.settings.CSRF_TRUSTED_ORIGINS
 
 # Default primary key field type
