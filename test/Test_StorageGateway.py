@@ -7,7 +7,22 @@ from Source.Database.InMemoryDatabase import InMemoryDatabase
 from Source.Database.SqlBookDatabase import SqlBookDatabase
 from test.BooksForTest import booksForTest
 
+def breakJsonIntoComponentizedBooks(jsonList):
+    titles = []
+    authors = []
+    releaseYears = []
+    imagePaths = []
+    descriptions = []
+    prices = []
+    for book in jsonList:
+        titles.append(book["title"])
+        authors.append(book["author"])
+        releaseYears.append(book["releaseYear"])
+        imagePaths.append(book["imagePath"])
+        descriptions.append(book["description"])
+        prices.append(book["price"])
 
+    return [titles, authors, releaseYears, imagePaths, descriptions, prices]
 class TestInMemoryStorageGateway(unittest.TestCase):
     def setUp(self):
         self.books = booksForTest
@@ -48,6 +63,8 @@ class TestInMemoryStorageGateway(unittest.TestCase):
         assert self.storageGateway.fetchByString(title) == expected
 
 
+
+
 class TestPersistentStorageGateway(TestInMemoryStorageGateway):
     def setUp(self):
         self.books = booksForTest
@@ -57,3 +74,29 @@ class TestPersistentStorageGateway(TestInMemoryStorageGateway):
 
     # Removed SQL injection tests for add & delete methods using "; DROP TABLE catalog;--" since they
     # passed initially and added no further testing value.
+
+
+class TestEmptyMemoryStorageGateway(unittest.TestCase):
+    def setUp(self) -> None:
+        self.storageGateway = StorageGateway(InMemoryDatabase())
+        self.storageGateway.add(booksForTest[0])
+
+    def test_makeBookWithQuotes(self):
+        expected_book = booksForTest[0]
+        actual_book = self.storageGateway.fetchBooksFromDatabase()[0]
+
+        assert expected_book.title == actual_book.title
+        assert expected_book.author == actual_book.author
+        assert expected_book.releaseYear == actual_book.releaseYear
+        assert expected_book.imagePath == actual_book.imagePath
+        assert expected_book.description == actual_book.description
+        assert expected_book.price == actual_book.price
+        
+
+class TestEmptyPersistentStorageGateway(TestEmptyMemoryStorageGateway):
+    def setUp(self):
+        SqlBookDatabase().clearCatalog()
+        self.storageGateway = StorageGateway(SqlBookDatabase())
+        self.storageGateway.add(booksForTest[0])
+
+

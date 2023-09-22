@@ -104,6 +104,5 @@ class PersistentCatalogWithVariableAmountOfBooks(CatalogWithVariableAmountOfBook
         super().setUp()
         self.catalog = PersistentCatalog()
 
-
 if __name__ == '__main__':
     unittest.main()

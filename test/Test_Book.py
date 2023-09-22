@@ -1,7 +1,7 @@
 import json
 
 from Source.Book import Book
-from test.BooksForTest import booksForTest
+from test.BooksForTest import booksForTest, titles, authors, releaseYears, imagePaths, descriptions, prices
 
 class TestBook:
     def test_bookToJson(self):

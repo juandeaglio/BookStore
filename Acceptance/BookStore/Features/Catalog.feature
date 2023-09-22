@@ -1,16 +1,16 @@
 Feature: Book catalog
     Scenario: View a persistent catalog
         Given A catalog
-        |Title                                  |Author             |Release year   | Image path                                        | Summary                                                   | Price |
-        |The Hunger Games                       |Suzanne Collins    |2008           |/static/The Hunger Games.jpg                       | Lorem ipsum dolor sit amet, consectetur adipiscing elit.  | 5.50  |
-        |Harry Potter and the Sorcerer's Stone  |J.K. Rowling       |1998           |/static/Harry Potter and the Sorcerer's Stone.jpg  | Lorem ipsum dolor sit amet, consectetur adipiscing elit.  | 5.60  |
-        |To Kill a Mockingbird                  |Harper Lee         |1960           |/static/To Kill a Mockingbird.jpg                  | Lorem ipsum dolor sit amet, consectetur adipiscing elit.  | 5.70  |
+        |Title                                  |Author             |Release year   | Image path                                        | Summary                                                                                   | Price |
+        |The Hunger Games                       |Suzanne Collins    |2008           |/static/The Hunger Games.jpg                       | In Suzanne Collins' dystopian masterpiece, "The Hunger Games", 16-year-old Katniss ' '    | 5.50  |
+        |Harry Potter and the Sorcerer's Stone  |J.K. Rowling       |1998           |/static/Harry Potter and the Sorcerer's Stone.jpg  | Lorem ipsum dolor sit amet, consectetur adipiscing elit.                                  | 5.60  |
+        |To Kill a Mockingbird                  |Harper Lee         |1960           |/static/To Kill a Mockingbird.jpg                  | Lorem ipsum dolor sit amet, consectetur adipiscing elit.                                  | 5.70  |
         When A user views the catalog
         Then The entire catalog is displayed
-        |Title                                  |Author             |Release year   | Image path                                        | Summary                                                   | Price |
-        |Harry Potter and the Sorcerer's Stone  |J.K. Rowling       |1998           |/static/Harry Potter and the Sorcerer's Stone.jpg  | Lorem ipsum dolor sit amet, consectetur adipiscing elit.  | 5.60  |
-        |The Hunger Games                       |Suzanne Collins    |2008           |/static/The Hunger Games.jpg                       | Lorem ipsum dolor sit amet, consectetur adipiscing elit.  | 5.50  |
-        |To Kill a Mockingbird                  |Harper Lee         |1960           |/static/To Kill a Mockingbird.jpg                  | Lorem ipsum dolor sit amet, consectetur adipiscing elit.  | 5.70  |
+        |Title                                  |Author             |Release year   | Image path                                        | Summary                                                                                   | Price |
+        |Harry Potter and the Sorcerer's Stone  |J.K. Rowling       |1998           |/static/Harry Potter and the Sorcerer's Stone.jpg  | Lorem ipsum dolor sit amet, consectetur adipiscing elit.                                  | 5.60  |
+        |The Hunger Games                       |Suzanne Collins    |2008           |/static/The Hunger Games.jpg                       | In Suzanne Collins' dystopian masterpiece, "The Hunger Games", 16-year-old Katniss ' '    | 5.50  |
+        |To Kill a Mockingbird                  |Harper Lee         |1960           |/static/To Kill a Mockingbird.jpg                  | Lorem ipsum dolor sit amet, consectetur adipiscing elit.                                  | 5.70  |
 
     Scenario: No duplicates in the catalog
         Given A catalog
@@ -44,14 +44,14 @@ Feature: Book catalog
         Given A catalog
         |Title                                      |Author             |Release year   | Image path                                            | Summary                                                   | Price |
         |The Hunger Games                           |Suzanne Collins    |2008           |/static/The Hunger Games.jpg                           | Lorem ipsum dolor sit amet, consectetur adipiscing elit.  | 5.50  |
-        |Harry Potter and the Sorcerer's Stone      |J.K. Rowling       |1998           |/static/Harry Potter and the Sorcerer's Stone.jpg      | Lorem ipsum dolor sit amet, consectetur adipiscing elit.  | 5.60  |
+        |Harry Potter and the Sorcerer's Stone      |J.K. Rowling       |1998           |/static/Harry Potter and the Sorcerer's Stone.jpg      |  J. K. Rowling's first Harry Potter Novel.                | 5.60  |
         |Harry Potter and the Chamber of Secrets    |J.K. Rowling       |1999           |/static/Harry Potter and the Chamber of Secrets.jpg    | Lorem ipsum dolor sit amet, consectetur adipiscing elit.  | 5.70  |
         |Harry Potter and the Prisoner of Azkaban   |J.K. Rowling       |1999           |/static/Harry Potter and the Prisoner of Azkaban.jpg   | Lorem ipsum dolor sit amet, consectetur adipiscing elit.  | 5.80  |
         |To Kill a Mockingbird                      |Harper Lee         |1960           |/static/To Kill a Mockingbird.jpg                      | Lorem ipsum dolor sit amet, consectetur adipiscing elit.  | 5.90  |
         When A user searches for Harry Potter
         Then Relevant results are displayed
         |Title                                      |Author             |Release year   | Image path                                            | Summary                                                   | Price |
-        |Harry Potter and the Sorcerer's Stone      |J.K. Rowling       |1998           |/static/Harry Potter and the Sorcerer's Stone.jpg      | Lorem ipsum dolor sit amet, consectetur adipiscing elit.  | 5.60  |
+        |Harry Potter and the Sorcerer's Stone      |J.K. Rowling       |1998           |/static/Harry Potter and the Sorcerer's Stone.jpg      |  J. K. Rowling's first Harry Potter Novel.                | 5.60  |
         |Harry Potter and the Chamber of Secrets    |J.K. Rowling       |1999           |/static/Harry Potter and the Chamber of Secrets.jpg    | Lorem ipsum dolor sit amet, consectetur adipiscing elit.  | 5.70  |
         |Harry Potter and the Prisoner of Azkaban   |J.K. Rowling       |1999           |/static/Harry Potter and the Prisoner of Azkaban.jpg   | Lorem ipsum dolor sit amet, consectetur adipiscing elit.  | 5.80  |
 

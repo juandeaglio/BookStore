@@ -121,8 +121,7 @@ class BookAdapter:
     @staticmethod
     def cleanDoubleQuotesFromTitle(book):
         # SQL requirement for quotes in field (must be double-quoted)
-        if BookAdapter.titleHasDoubleQuote(book):
-            BookAdapter.removeDuplicateQuotes(book)
+        BookAdapter.removeDuplicateQuotes(book)
 
     @staticmethod
     def removeDuplicateQuotes(book):

@@ -1,5 +1,5 @@
 # This is a python webserver that serves a list of books to a web browser client.
-
+from ExampleDescriptions import exampleDescriptions
 from Source.Book import Book
 from Source.Catalog.PersistentCatalog import PersistentCatalog
 from Source.Database.SqlBookDatabase import SqlBookDatabase
@@ -8,17 +8,36 @@ from Source.WebServerStrategy.GunicornNginxStrategy import GunicornNginxStrategy
 
 
 def sendRestFromClientHandleRestWithServer(name):
-    books = [Book('The Hunger Games', 'Suzanne Collins', '2008'),
-             Book('Harry Potter and the Sorcerer\'s Stone', 'J.K. Rowling', '1998'),
-             Book('To Kill a Mockingbird', 'Harper Lee', '1960'),
-             Book('The Lord of the Rings', 'J.R.R. Tolkien', '1954'),
-             Book('The Great Gatsby', 'F. Scott Fitzgerald', '1925'),
-             Book('Pride and Prejudice', 'Jane Austen', '1813'),
-             Book('Oedipus Rex', 'Sophocles', '1956'),
-             Book('Moby-Dick', 'Herman Melville', '1851'),
-             Book('The Adventures of Tom Sawyer', 'Mark Twain', '1876'),
-             Book('The Canterbury Tales', 'Geoffrey Chaucer', '1392'),
-             Book('Frankenstein: The 1818 Text', 'Mary Wollstonecraft Shelley', '1818')]
+    books = [Book(title='The Hunger Games', author='Suzanne Collins', releaseYear='2008',
+                  imagePath="/var/www/static/The Hunger Games.jpg", description=exampleDescriptions[0], price="5.50"),
+             Book(title='Harry Potter and the Sorcerer\'s Stone', author='J.K. Rowling', releaseYear='1998',
+                  imagePath="/var/www/static/Harry Potter and the Sorcerer's Stone.jpg",
+                  description=exampleDescriptions[1], price="5.60"),
+             Book(title='To Kill a Mockingbird', author='Harper Lee', releaseYear='1960',
+                  imagePath="/var/www/static/To Kill a Mockingbird.jpg",
+                  description=exampleDescriptions[2], price="5.70"),
+             Book(title='The Lord of the Rings', author='J.R.R. Tolkien', releaseYear='1954',
+                  imagePath="/var/www/static/The Lord of the Rings.jpg",
+                  description=exampleDescriptions[3], price="5.80"),
+             Book(title='The Great Gatsby', author='F. Scott Fitzgerald', releaseYear='1925',
+                  imagePath="/var/www/static/The Great Gatsby.jpg", description=exampleDescriptions[4], price="5.90"),
+             Book(title='Pride and Prejudice', author='Jane Austen', releaseYear='1813',
+                  imagePath="/var/www/static/Pride and Prejudice.jpg", description=exampleDescriptions[5],
+                  price="6.00"),
+             Book(title='Oedipus Rex', author='Sophocles', releaseYear='1956',
+                  imagePath="/var/www/static/Oedipus Rex.jpg", description=exampleDescriptions[6], price="6.10"),
+             Book(title='Moby-Dick', author='Herman Melville', releaseYear='1851',
+                  imagePath='/var/www/static/Moby-Dick.jpg', description=exampleDescriptions[7], price="6.20"),
+             Book(title='The Adventures of Tom Sawyer', author="Mark Twain", releaseYear="1876",
+                  imagePath='/var/www/static/The Adventures of Tom Sawyer.jpg', description=exampleDescriptions[8],
+                  price="6.30"),
+             Book(title='The Canterbury Tales', author='Geoffrey Chaucer', releaseYear='1392',
+                  imagePath="/var/www/static/The Canterbury Tales.jpg", description=exampleDescriptions[9],
+                  price='6.40'),
+             Book(title='Frankenstein: The 1818 Text', author='Mary Wollstonecraft Shelley', releaseYear='1818',
+                  imagePath="/var/www/static/The Canterbury Tales.jpg", description=exampleDescriptions[10],
+                  price='6.50')
+             ]
     SqlBookDatabase().clearCatalog()
     catalog = PersistentCatalog()
     catalog.add(books)
