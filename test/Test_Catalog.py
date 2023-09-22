@@ -4,6 +4,7 @@ from Source.Book import Book
 from Source.Catalog.InMemoryCatalog import InMemoryCatalog
 from Source.Catalog.PersistentCatalog import PersistentCatalog
 from Source.Database.SqlBookDatabase import SqlBookDatabase
+from test.BooksForTest import booksForTest
 
 
 def sortBooksByTitle(books):
@@ -26,13 +27,7 @@ def arrayFromTitles(books):
 
 class CatalogWithInitialAmountOfBooks(unittest.TestCase):
     def setUp(self):
-        self.books = [
-                        Book(title='The Hunger Games', author='Suzanne Collins', releaseYear='2008', imagePath='/static/The Hunger Games.jpg', description='Lorem ipsum dolor sit amet, consectetur adipiscing elit.'),
-                        Book(title='Harry Potter and the Philosopher\'s Stone', author='J.K. Rowling', releaseYear='1997', imagePath='/static/Harry Potter and the Philosopher\'s Stone.jpg', description='Lorem ipsum dolor sit amet, consectetur adipiscing elit.'),
-                        Book(title='Harry Potter and the Chamber of Secrets', author='J.K. Rowling', releaseYear='1998', imagePath='/static/Harry Potter and the Chamber of Secrets.jpg', description='Lorem ipsum dolor sit amet, consectetur adipiscing elit.'),
-                        Book(title='Harry Potter and the Prisoner of Azkaban', author='J.K. Rowling', releaseYear='1999', imagePath='/static/Harry Potter and the Prisoner of Azkaban.jpg', description='Lorem ipsum dolor sit amet, consectetur adipiscing elit.'),
-                        Book(title='Harry Potter and the Goblet of Fire', author='J.K. Rowling', releaseYear='2000', imagePath='/static/Harry Potter and the Goblet of Fire.jpg', description='Lorem ipsum dolor sit amet, consectetur adipiscing elit.')
-            ]
+        self.books = booksForTest
         self.catalog = InMemoryCatalog()
         self.catalog.add(self.books)
 
@@ -99,7 +94,7 @@ class CatalogWithVariableAmountOfBooks(unittest.TestCase):
         assert self.catalog.getSizeOfCatalog() == 0
 
     def test_addSingleBookToCatalog(self):
-        self.catalog.add(Book(title='The Hunger Games', author='Suzanne Collins', releaseYear='2008', imagePath='/static/The Hunger Games.jpg', description='Lorem ipsum dolor sit amet, consectetur adipiscing elit.'))
+        self.catalog.add(booksForTest[0])
         assert self.catalog.getSizeOfCatalog() == 1
 
 
@@ -108,6 +103,7 @@ class PersistentCatalogWithVariableAmountOfBooks(CatalogWithVariableAmountOfBook
         SqlBookDatabase().clearCatalog()
         super().setUp()
         self.catalog = PersistentCatalog()
+
 
 if __name__ == '__main__':
     unittest.main()

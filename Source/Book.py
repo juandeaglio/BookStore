@@ -2,13 +2,14 @@ import re
 
 
 class Book:
-    def __init__(self, title='', author='', releaseYear='', imagePath='', description=''):
+    def __init__(self, title='', author='', releaseYear='', imagePath='', description='', price=''):
+        self.attributes = ['title', 'author', 'releaseYear', 'imagePath', 'description', 'price']
         self.title = title
         self.author = author
         self.releaseYear = releaseYear
         self.imagePath = imagePath
         self.description = description
-        self.attributes = ['title', 'author', 'releaseYear', 'imagePath', 'description']
+        self.price = price
 
     def __eq__(self, other):
         if not isinstance(other, Book):

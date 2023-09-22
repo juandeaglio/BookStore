@@ -5,13 +5,12 @@ from Source.Book import Book
 from Source.StorageGateway import StorageGateway
 from Source.Database.InMemoryDatabase import InMemoryDatabase
 from Source.Database.SqlBookDatabase import SqlBookDatabase
+from test.BooksForTest import booksForTest
 
 
 class TestInMemoryStorageGateway(unittest.TestCase):
     def setUp(self):
-        self.books = [Book('The Hunger Games', 'Suzanne Collins', '2008'),
-                      Book('Harry Potter and the Sorcerer\'s Stone', 'J.K. Rowling', '1998'),
-                      Book('To Kill a Mockingbird', 'Harper Lee', '1960')]
+        self.books = booksForTest
         self.storageGateway = StorageGateway(InMemoryDatabase())
         self.storageGateway.add(self.books)
 
@@ -30,9 +29,7 @@ class TestInMemoryStorageGateway(unittest.TestCase):
 
     def test_addDuplicateEntryToCatalog(self):
         expectedTotal = len(self.storageGateway.fetchBooksFromDatabase())
-        books = [Book('The Hunger Games', 'Suzanne Collins', '2008'),
-                 Book('Harry Potter and the Sorcerer\'s Stone', 'J.K. Rowling', '1998'),
-                 Book('To Kill a Mockingbird', 'Harper Lee', '1960')]
+        books = booksForTest
         self.storageGateway.add(Book(title=books[0].title, author=books[0].author, releaseYear=books[0].releaseYear, imagePath="SomePath", description="SomeDescription"))
         assert len(self.storageGateway.fetchBooksFromDatabase()) == expectedTotal
 
@@ -53,11 +50,7 @@ class TestInMemoryStorageGateway(unittest.TestCase):
 
 class TestPersistentStorageGateway(TestInMemoryStorageGateway):
     def setUp(self):
-        self.books = [
-            Book('The Hunger Games', 'Suzanne Collins', '2008'),
-            Book('Harry Potter and the Sorcerer\'s Stone', 'J.K. Rowling', '1998'),
-            Book('To Kill a Mockingbird', 'Harper Lee', '1960')
-        ]
+        self.books = booksForTest
         SqlBookDatabase().clearCatalog()
         self.storageGateway = StorageGateway(SqlBookDatabase())
         self.storageGateway.add(self.books)
