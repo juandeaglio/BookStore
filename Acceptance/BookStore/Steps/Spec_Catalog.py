@@ -9,8 +9,13 @@ from Source.Book import Book
 
 def convertTableToArray(context):
     books = []
+    #reflect on the book object from context.table and compare all columns
     for book in context.table:
-        new = Book(title=book[0], author=book[1], releaseYear=book[2])
+        new = Book()
+        #use the index of the column to get the attribute name
+        for index, attribute in enumerate(context.table.headings):
+            setattr(new, new.attributes[index], book[index])
+
         books.append(new)
 
     return books
@@ -39,8 +44,9 @@ def viewCatalog(context):
 def displayCatalog(context):
     books = convertTableToArray(context)
     books = createExpectedJson(books)
-    jsonBooks = context.jsonCatalog
-    assert jsonBooks == books
+    print("context.jsonCatalog" + str(context.jsonCatalog))
+    print("books" + str(books))
+    assert context.jsonCatalog == books
 
 
 @given('A user has admin permissions')
@@ -70,6 +76,8 @@ def checkForExtraBook(context):
     response = TestRestClient().createClientThatGetsCatalogAsJson()
     books = convertTableToArray(context)
     books = createExpectedJson(books)
+    print("actual response" + str(response))
+    print("expected" + str(books))
     assert len(books) == len(response)
 
 
@@ -77,6 +85,7 @@ def checkForExtraBook(context):
 def searchForBookTitle(context):
     response = TestRestClient().searchForBook(title="Harry Potter", timeout=2)
     assert response.status_code == 200
+    print("response" + str(response.json()))
     context.jsonBooks = response.json()
 
 
@@ -84,6 +93,7 @@ def searchForBookTitle(context):
 def bookFound(context):
     books = convertTableToArray(context)
     books = createExpectedJson(books)
+    print("expected" + str(books))
     assert eq(context.jsonBooks, books)
 
 

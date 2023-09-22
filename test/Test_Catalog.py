@@ -26,11 +26,13 @@ def arrayFromTitles(books):
 
 class CatalogWithInitialAmountOfBooks(unittest.TestCase):
     def setUp(self):
-        self.books = [Book('The Hunger Games', 'Suzanne Collins', '2008'),
-                      Book('Harry Potter and the Sorcerer\'s Stone', 'J.K. Rowling', '1998'),
-                      Book('Harry Potter and the Chamber of Secrets', 'J.K. Rowling', '1999'),
-                      Book('Harry Potter and the Prisoner of Azkaban', 'J.K. Rowling', '1999'),
-                      Book('To Kill a Mockingbird', 'Harper Lee', '1960')]
+        self.books = [
+                        Book(title='The Hunger Games', author='Suzanne Collins', releaseYear='2008', imagePath='/static/The Hunger Games.jpg', description='Lorem ipsum dolor sit amet, consectetur adipiscing elit.'),
+                        Book(title='Harry Potter and the Philosopher\'s Stone', author='J.K. Rowling', releaseYear='1997', imagePath='/static/Harry Potter and the Philosopher\'s Stone.jpg', description='Lorem ipsum dolor sit amet, consectetur adipiscing elit.'),
+                        Book(title='Harry Potter and the Chamber of Secrets', author='J.K. Rowling', releaseYear='1998', imagePath='/static/Harry Potter and the Chamber of Secrets.jpg', description='Lorem ipsum dolor sit amet, consectetur adipiscing elit.'),
+                        Book(title='Harry Potter and the Prisoner of Azkaban', author='J.K. Rowling', releaseYear='1999', imagePath='/static/Harry Potter and the Prisoner of Azkaban.jpg', description='Lorem ipsum dolor sit amet, consectetur adipiscing elit.'),
+                        Book(title='Harry Potter and the Goblet of Fire', author='J.K. Rowling', releaseYear='2000', imagePath='/static/Harry Potter and the Goblet of Fire.jpg', description='Lorem ipsum dolor sit amet, consectetur adipiscing elit.')
+            ]
         self.catalog = InMemoryCatalog()
         self.catalog.add(self.books)
 
@@ -61,11 +63,16 @@ class CatalogWithInitialAmountOfBooks(unittest.TestCase):
     def test_searchBooks(self):
         title = "Harry Potter"
         actualBooks = self.catalog.search(title)
+        for book in actualBooks:
+            print("actual")
+            print(book.toString())
         expectedBooks = []
 
         for book in self.books:
             if title in book.title:
+                print ("expected")
                 expectedBooks.append(book)
+                print(book.toString())
         expectedBooks.sort(key=lambda x: x.title)
         assert expectedBooks == actualBooks
 
@@ -92,7 +99,7 @@ class CatalogWithVariableAmountOfBooks(unittest.TestCase):
         assert self.catalog.getSizeOfCatalog() == 0
 
     def test_addSingleBookToCatalog(self):
-        self.catalog.add(Book('The Hunger Games', 'Suzanne Collins', '2008'))
+        self.catalog.add(Book(title='The Hunger Games', author='Suzanne Collins', releaseYear='2008', imagePath='/static/The Hunger Games.jpg', description='Lorem ipsum dolor sit amet, consectetur adipiscing elit.'))
         assert self.catalog.getSizeOfCatalog() == 1
 
 

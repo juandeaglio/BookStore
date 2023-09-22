@@ -16,11 +16,10 @@ class Database:
         create_table_query = '''
             CREATE TABLE IF NOT EXISTS catalog (
                 id INTEGER PRIMARY KEY,
-                title TEXT,
-                author TEXT,
-                releaseyear TEXT
-            )
+                {0}
         '''
+        create_table_query = create_table_query.format(' TEXT, '.join(Book().attributes))
+        create_table_query += ' TEXT)'
         self.query(query=create_table_query)
 
     def dropCatalog(self, name):
@@ -43,7 +42,7 @@ class Database:
         columns = self.cursor.description
         return rows, columns
 
-    def queryCatalogBySQL(self, query, data=None):
+    def getBooksFromExecutedSQL(self, query, data=None):
         if data is None:
             self.cursor.execute(query)
         else:
@@ -53,18 +52,18 @@ class Database:
 
         return books
 
-    def synchronize(self):
-        sqlStatement = '''
-                    SELECT title AS title, author AS author, releaseyear AS "releaseYear" FROM catalog ORDER BY title ASC
-                '''
-        return self.queryCatalogBySQL(sqlStatement)
+    def getAllBooksFromCatalog(self):
+        sqlStatement = 'SELECT {0} FROM catalog'
+        sqlStatement = sqlStatement.format(', '.join(Book().attributes))
+        return self.getBooksFromExecutedSQL(sqlStatement)
 
-    def insertQuery(self, title, author, releaseYear):
+    def insertQuery(self, book):
         query = '''
-                    INSERT INTO catalog (title, author, releaseyear)
-                    VALUES (?, ?, ?)
+                    INSERT INTO catalog ({0})
+                    VALUES ({1})
                 '''
-        data = (title, author, releaseYear)
+        query = query.format(', '.join(book.attributes), ', '.join(['?'] * len(book.attributes)))
+        data = tuple(getattr(book, attr) for attr in book.attributes)
         self.query(query=query, data=data)
 
     def sendDeleteQuery(self, entry):
@@ -110,13 +109,12 @@ class BookAdapter:
             newEntry = re.sub("'", "''", entry)
 
         else:
-            newEntry.author = entry.author
-            newEntry.releaseYear = entry.releaseYear
-            newEntry.title = entry.title
-
-            if "'" in newEntry.title and "''" not in newEntry.title:
-                title = re.sub("'", "''", newEntry.title)
-                newEntry.title = title
+            for attribute in entry.attributes:
+                #check if the entry.attribute has a single quote
+                if "'" in getattr(entry, attribute):
+                    setattr(newEntry, attribute, re.sub("'", "''", getattr(entry, attribute)))
+                else:
+                    setattr(newEntry, attribute, getattr(entry, attribute))
 
         return newEntry
 
@@ -128,7 +126,8 @@ class BookAdapter:
 
     @staticmethod
     def removeDuplicateQuotes(book):
-        book.title = re.sub("''+", "'", book.title)
+        for attribute in book.attributes:
+            setattr(book, attribute, re.sub("''", "'", getattr(book, attribute)))
 
     @staticmethod
     def titleHasDoubleQuote(book):
@@ -144,7 +143,7 @@ class SqlBookDatabase(DatabaseConnection):
     def insertBooksIntoCatalogTable(self, books, booksToInsert):
         for book in booksToInsert:
             bookToInsert = BookAdapter().replaceSingleQuoteWithDouble(book)
-            self.database.insertQuery(bookToInsert.title, bookToInsert.author, bookToInsert.releaseYear)
+            self.database.insertQuery(bookToInsert)
 
         return self.cachedData.insertBooksIntoCatalogTable(books, booksToInsert)
 
@@ -166,7 +165,7 @@ class SqlBookDatabase(DatabaseConnection):
         return self.cachedData.deleteWhereTitle(title, books)
 
     def synchronize(self, books):
-        return self.cachedData.synchronize(self.database.synchronize())
+        return self.cachedData.synchronize(self.database.getAllBooksFromCatalog())
 
     def clearCatalog(self):
         self.database.dropCatalog('catalog')

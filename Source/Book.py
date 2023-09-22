@@ -2,24 +2,22 @@ import re
 
 
 class Book:
-    def __init__(self, title="", author="", releaseYear=""):
+    def __init__(self, title='', author='', releaseYear='', imagePath='', description=''):
         self.title = title
         self.author = author
         self.releaseYear = releaseYear
+        self.imagePath = imagePath
+        self.description = description
+        self.attributes = ['title', 'author', 'releaseYear', 'imagePath', 'description']
 
     def __eq__(self, other):
         if not isinstance(other, Book):
             return NotImplemented
 
-        return self.title == other.title and self.author == other.author and self.releaseYear == other.releaseYear
-
-    def toString(self):
-        return self.title + ", " + self.author + ", " + self.releaseYear
+        return all(getattr(self, attr) == getattr(other, attr) for attr in self.attributes)
 
     def to_json(self):
-        variableDictionary = {
-            "title": self.title,
-            "author": self.author,
-            "releaseYear": self.releaseYear
-        }
-        return variableDictionary
+        return {attr: getattr(self, attr) for attr in self.attributes if hasattr(self, attr)}
+
+    def toString(self):
+        return ', '.join(str(getattr(self, attr)) for attr in self.attributes if hasattr(self, attr))

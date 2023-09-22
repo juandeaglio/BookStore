@@ -23,12 +23,15 @@ class StorageGateway:
 
     def add(self, entries):
         if entries is not None:
-            for entry in entries:
-                self.addUniqueEntry(entry)
+            if isinstance(entries, list):
+                for entry in entries:
+                    self.addUniqueEntry(entry)
+            else:
+                self.addUniqueEntry(entries)
 
     def addUniqueEntry(self, entry):
         self.books = self.dbConnection.synchronize(self.books)
-        result = self.dbConnection.select(entry, self.books)
+        result = self.dbConnection.selectWith(entry.title, self.books)
         if not result:
             self.dbConnection.insertBooksIntoCatalogTable(self.books, [entry])
 
