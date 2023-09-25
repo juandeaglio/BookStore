@@ -30,3 +30,7 @@ class DatabaseConnection(ABC):
     @abstractmethod
     def synchronize(self, books):
         pass
+
+    @abstractmethod
+    def selectFromAllFields(self, textContent, books):
+        pass

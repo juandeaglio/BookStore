@@ -24,7 +24,7 @@ def convertTableToArray(context):
 def createExpectedJson(books):
     fakeCatalog = InMemoryCatalog()
     fakeCatalog.add(books)
-    books = fakeCatalog.getAllBooksJson()
+    books = fakeCatalog.booksToJson(fakeCatalog.getAllBooks())
     return books
 
 

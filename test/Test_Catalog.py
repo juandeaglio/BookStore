@@ -43,7 +43,7 @@ class CatalogWithInitialAmountOfBooks(unittest.TestCase):
         assert self.catalog.getSizeOfCatalog() == 0
 
     def test_getAllBooksJson(self):
-        assert len(self.catalog.getAllBooksJson()) == len(self.books)
+        assert len(self.catalog.booksToJson(self.catalog.getAllBooks())) == len(self.books)
 
     def test_removeBookFromCatalogByName(self):
         oldLength = self.catalog.getSizeOfCatalog()
@@ -70,6 +70,11 @@ class CatalogWithInitialAmountOfBooks(unittest.TestCase):
                 print(book.toString())
         expectedBooks.sort(key=lambda x: x.title)
         assert expectedBooks == actualBooks
+
+    def test_fetchBooksWithEmptyFields(self):
+        self.catalog.add([Book("Harry Cotter", "", "", "", "")])
+        result = self.catalog.fetchBooksWithEmptyFields()
+        assert len(result) == 1
 
 
 class PersistentCatalogWithInitialAmountOfBooks(CatalogWithInitialAmountOfBooks):

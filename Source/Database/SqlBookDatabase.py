@@ -134,6 +134,7 @@ class BookAdapter:
 
 
 class SqlBookDatabase(DatabaseConnection):
+
     def __init__(self):
         super().__init__()
         self.cachedData = InMemoryDatabase()
@@ -172,3 +173,6 @@ class SqlBookDatabase(DatabaseConnection):
     def deleteSqlite(self):
         import os
         os.remove('db.sqlite3')
+
+    def selectFromAllFields(self, textContent, books):
+        return self.cachedData.selectFromAllFields(textContent, books)

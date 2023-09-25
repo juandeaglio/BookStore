@@ -52,3 +52,8 @@ class StorageGateway:
         self.books = self.dbConnection.synchronize(self.books)
         books = self.dbConnection.selectWith(bookDetail, self.books)
         return books
+
+    def fetchFromAllFields(self, textContent):
+        self.books = self.dbConnection.synchronize(self.books)
+        books = self.dbConnection.selectFromAllFields(textContent, self.books)
+        return books

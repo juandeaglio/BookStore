@@ -91,3 +91,6 @@ class TestRestClient:
 
     def withCSRF(self):
         return self.sendFromSession(payload=None, endpoint="catalog_service/csrf/", method="get")
+
+    def getBooksWithEmptyFields(self):
+        return self.getRequest(port=8091, endpoint="catalog_service/fetchCatalog/", parameters={"empty": "true"}).json()

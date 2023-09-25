@@ -16,9 +16,11 @@ from Source.Catalog.PersistentCatalog import PersistentCatalog
 def fetchCatalog(request):
     if request.method == "GET":
         catalog = PersistentCatalog()
-        catalogContent = catalog.getAllBooksJson()
+        if request.GET.get("empty"):
+            catalogContent = catalog.booksToJson(catalog.fetchBooksWithEmptyFields())
+        else:
+            catalogContent = catalog.booksToJson(catalog.getAllBooks())
         response = HttpResponse(json.dumps(catalogContent), content_type="application/json")
-        print(response.headers)
         return response
 
 
@@ -82,10 +84,12 @@ def removeBook(request):
 
 
 def makeBookFromRequest(request):
-    title = request.POST.get("title")
-    author = request.POST.get("author")
-    releaseYear = request.POST.get("releaseYear")
-    return Book(title, author, releaseYear)
+    attributes = Book().attributes
+    book = Book()
+    for attribute in attributes:
+        book.__setattr__(attribute, request.POST.get(attribute))
+
+    return book
 
 
 def attemptCreateUser(request):

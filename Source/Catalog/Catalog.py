@@ -28,12 +28,15 @@ class Catalog:
 
         return catalog
 
-    def getAllBooksJson(self):
+    def booksToJson(self, books):
         jsonList = []
-        for book in self.getAllBooks():
+        for book in books:
             jsonList.append(book.to_json())
 
         return jsonList
 
     def search(self, bookDetail):
         return self.storageGateway.fetchByString(bookDetail)
+
+    def fetchBooksWithEmptyFields(self):
+        return self.storageGateway.fetchFromAllFields("")

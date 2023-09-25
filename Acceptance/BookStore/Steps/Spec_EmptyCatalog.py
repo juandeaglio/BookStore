@@ -10,7 +10,8 @@ def defineCatalog(context):
 
 @when('The admin adds a book to the catalog')
 def addBook(context):
-    book = Book("Harry Pottah", "J.K. Row", "1998")
+    book = Book(title="Harry Pottah", author="J.K. Row", releaseYear="1998", price="$10.00",
+                imagePath="static/imgs/Harry Pottah.jpg", description="Random description")
     assert TestRestClient().createClientAsAdminAddBook(book=book) == 200
 
 
@@ -18,7 +19,11 @@ def addBook(context):
 def checkForExtraBook(context):
     response = TestRestClient().createClientThatGetsCatalogAsJson()
     context.booksInCatalog = response
-    assert 1 == len(context.booksInCatalog)\
+    assert 1 == len(context.booksInCatalog)
+    response = TestRestClient().getBooksWithEmptyFields()
+    context.booksInCatalog = response
+    print("Empty books found: " + str(context.booksInCatalog))
+    assert 0 == len(context.booksInCatalog)
 
 
 @when('An unauthorized user try to add a book to the catalog')
