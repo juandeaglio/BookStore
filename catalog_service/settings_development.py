@@ -76,14 +76,5 @@ if os.environ.get("ENVIRONMENT") == "test":
     CORS_ORIGIN_WHITELIST = (
         'http://localhost:3000',  # for localhost (REACT Default)
     )
-    # CORS_URLS_REGEX = r'^/catalog_service/fetchCatalog.*$'
-    # CORS_ALLOW_METHODS = [
-    #     'DELETE',
-    #     'GET',
-    #     'OPTIONS',
-    #     'PATCH',
-    #     'POST',
-    #     'PUT',
-    # ]
 else:
     DEBUG = False

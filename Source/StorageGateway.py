@@ -9,7 +9,7 @@ class StorageGateway:
 
     def fetchBooksFromDatabase(self):
         self.books = self.dbConnection.synchronize(self.books)
-        self.books = self.dbConnection.selectAll(self.books)
+        self.dbConnection.selectAll(self.books)
         return self.books
 
     def loadEntryToCache(self, book):
