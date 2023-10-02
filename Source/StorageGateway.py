@@ -3,23 +3,20 @@ from Source.Interfaces.DatabaseConnection import DatabaseConnection
 
 class StorageGateway:
     def __init__(self, dbConn):
-        self.books = []
         if isinstance(dbConn, DatabaseConnection):
             self.dbConnection = dbConn
 
     def fetchBooksFromDatabase(self):
-        self.books = self.dbConnection.synchronize(self.books)
-        self.dbConnection.selectAll(self.books)
-        return self.books
+        return self.dbConnection.selectAll()
 
     def loadEntryToCache(self, book):
-        self.books = self.dbConnection.synchronize(self.books)
-        return self.dbConnection.select(book, self.books)
+        books = self.dbConnection.synchronize()
+        return self.dbConnection.select(book)
 
     def removeEntry(self, entry):
         if self.doesBookExist(entry):
-            self.books = self.dbConnection.synchronize(self.books)
-            self.dbConnection.delete(entry, self.books)
+            books = self.dbConnection.synchronize()
+            self.dbConnection.delete(entry)
 
     def add(self, entries):
         if entries is not None:
@@ -30,10 +27,10 @@ class StorageGateway:
                 self.addUniqueEntry(entries)
 
     def addUniqueEntry(self, entry):
-        self.books = self.dbConnection.synchronize(self.books)
-        result = self.dbConnection.selectWith(entry.title, self.books)
+        books = self.dbConnection.synchronize()
+        result = self.dbConnection.selectWith(entry.title)
         if not result:
-            self.dbConnection.insertBooksIntoCatalogTable(self.books, [entry])
+            self.dbConnection.insertBooksIntoCatalogTable([entry])
 
     def doesBookExist(self, entry):
         return self.loadEntryToCache(entry) is not None
@@ -44,16 +41,16 @@ class StorageGateway:
             self.removeEntry(book)
 
     def loadEntryByTitleToCache(self, title):
-        self.books = self.dbConnection.synchronize(self.books)
-        books = self.dbConnection.selectWith(title, self.books)
+        books = self.dbConnection.synchronize()
+        books = self.dbConnection.selectWith(title)
         return books
 
     def fetchByString(self, bookDetail):
-        self.books = self.dbConnection.synchronize(self.books)
-        books = self.dbConnection.selectWith(bookDetail, self.books)
+        books = self.dbConnection.synchronize()
+        books = self.dbConnection.selectWith(bookDetail)
         return books
 
     def fetchFromAllFields(self, textContent):
-        self.books = self.dbConnection.synchronize(self.books)
-        books = self.dbConnection.selectFromAllFields(textContent, self.books)
+        self.dbConnection.synchronize()
+        books = self.dbConnection.selectFromAllFields(textContent)
         return books

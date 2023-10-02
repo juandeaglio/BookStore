@@ -3,6 +3,7 @@ import unittest
 from Source.Book import Book
 from Source.Catalog.InMemoryCatalog import InMemoryCatalog
 from Source.Catalog.PersistentCatalog import PersistentCatalog
+from Source.Database.InMemoryDatabase import InMemoryDatabase
 from Source.Database.SqlBookDatabase import SqlBookDatabase
 from test.BooksForTest import booksForTest
 
@@ -30,6 +31,9 @@ class CatalogWithInitialAmountOfBooks(unittest.TestCase):
         self.books = booksForTest
         self.catalog = InMemoryCatalog()
         self.catalog.add(self.books)
+
+    def tearDown(self) -> None:
+        InMemoryDatabase.books = []
 
     def test_smokeTestOfAllFunctions(self):
         title = "Harry"
@@ -76,6 +80,11 @@ class CatalogWithInitialAmountOfBooks(unittest.TestCase):
         result = self.catalog.fetchBooksWithEmptyFields()
         assert len(result) == 1
 
+    def test_getJsonFromCatalog(self):
+        expected = self.catalog.booksToJson(self.books)
+        assert len(expected) == len(self.books)
+
+
 
 class PersistentCatalogWithInitialAmountOfBooks(CatalogWithInitialAmountOfBooks):
     def setUp(self):
@@ -84,10 +93,15 @@ class PersistentCatalogWithInitialAmountOfBooks(CatalogWithInitialAmountOfBooks)
         self.catalog = PersistentCatalog()
         self.catalog.add(self.books)
 
+    def tearDown(self) -> None:
+        InMemoryDatabase.books = []
 
 class CatalogWithVariableAmountOfBooks(unittest.TestCase):
     def setUp(self):
         self.catalog = InMemoryCatalog()
+
+    def tearDown(self) -> None:
+        InMemoryDatabase.books = []
 
     def test_addNoneToCatalog(self):
         self.catalog.add(None)

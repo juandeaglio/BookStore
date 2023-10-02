@@ -29,6 +29,9 @@ class TestInMemoryStorageGateway(unittest.TestCase):
         self.storageGateway = StorageGateway(InMemoryDatabase())
         self.storageGateway.add(self.books)
 
+    def tearDown(self) -> None:
+        InMemoryDatabase.books = []
+
     def test_retrieveCatalog(self):
         assert len(self.books) == len(self.storageGateway.fetchBooksFromDatabase())
 
@@ -64,13 +67,15 @@ class TestInMemoryStorageGateway(unittest.TestCase):
 
 
 
-
 class TestPersistentStorageGateway(TestInMemoryStorageGateway):
     def setUp(self):
         self.books = booksForTest
         SqlBookDatabase().clearCatalog()
         self.storageGateway = StorageGateway(SqlBookDatabase())
         self.storageGateway.add(self.books)
+
+    def tearDown(self) -> None:
+        InMemoryDatabase.books = []
 
     # Removed SQL injection tests for add & delete methods using "; DROP TABLE catalog;--" since they
     # passed initially and added no further testing value.
@@ -80,6 +85,9 @@ class TestEmptyMemoryStorageGateway(unittest.TestCase):
     def setUp(self) -> None:
         self.storageGateway = StorageGateway(InMemoryDatabase())
         self.storageGateway.add(booksForTest[0])
+
+    def tearDown(self) -> None:
+        InMemoryDatabase.books = []
 
     def test_makeBookWithQuotes(self):
         expected_book = booksForTest[0]

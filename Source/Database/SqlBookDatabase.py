@@ -1,12 +1,13 @@
-import re
 from Source.Book import Book
 from Source.Database.InMemoryDatabase import InMemoryDatabase
+from Source.Database.Utilities import *
 from Source.Interfaces.DatabaseConnection import DatabaseConnection
 import sqlite3
 
 
 class Database:
     catalogTableName = 'catalog'
+
     def __init__(self):
         self.conn = sqlite3.connect('catalog.db')
         self.cursor = self.conn.cursor()
@@ -32,7 +33,7 @@ class Database:
         else:
             self.cursor.execute(query, data)
 
-        books = BookAdapter().getBooksChanged(self.commit())
+        books = getBooksChanged(self.commit())
 
         return books
 
@@ -48,13 +49,12 @@ class Database:
         else:
             self.cursor.execute(query, data)
 
-        books = BookAdapter().getBooksChanged(self.commit())
+        books = getBooksChanged(self.commit())
 
         return books
 
     def getAllBooksFromCatalog(self):
-        sqlStatement = 'SELECT {0} FROM catalog'
-        sqlStatement = sqlStatement.format(', '.join(Book().attributes))
+        sqlStatement = 'SELECT * FROM catalog'
         return self.getBooksFromExecutedSQL(sqlStatement)
 
     def insertQuery(self, book):
@@ -67,7 +67,7 @@ class Database:
         self.query(query=query, data=data)
 
     def sendDeleteQuery(self, entry):
-        parsedBook = BookAdapter().replaceSingleQuoteWithDouble(entry)
+        parsedBook = replaceSingleQuoteWithDouble(entry)
         query = '''DELETE FROM catalog WHERE
                 title LIKE ? 
                 AND author = ? 
@@ -76,96 +76,46 @@ class Database:
         self.query(query=query, data=data)
 
     def sendDeleteWhereQuery(self, title):
-        sanitizedDetail = BookAdapter().replaceSingleQuoteWithDouble(title)
+        sanitizedDetail = replaceSingleQuoteWithDouble(title)
         query = 'DELETE FROM catalog WHERE title LIKE ?'
         data = ('%' + sanitizedDetail + '%',)
         self.query(query=query, data=data)
 
 
-class BookAdapter:
-    @staticmethod
-    def makeBookFromSQL(columns, row):
-        book = Book()
-        for i in range(len(columns)):
-            setattr(book, columns[i][0], row[i])
-        return book
-
-    @staticmethod
-    def getBooksChanged(sqlData):
-        rows, columns = sqlData
-        books = []
-        for row in rows:
-            book = BookAdapter.makeBookFromSQL(columns, row)
-
-            BookAdapter.cleanDoubleQuotesFromTitle(book)
-            books.append(book)
-        return books
-
-    @staticmethod
-    def replaceSingleQuoteWithDouble(entry):
-        # SQL requirement for single quote character ' in field.
-        newEntry = Book()
-        if isinstance(entry, str):
-            newEntry = re.sub("'", "''", entry)
-
-        else:
-            for attribute in entry.attributes:
-                #check if the entry.attribute has a single quote
-                if "'" in getattr(entry, attribute):
-                    setattr(newEntry, attribute, re.sub("'", "''", getattr(entry, attribute)))
-                else:
-                    setattr(newEntry, attribute, getattr(entry, attribute))
-
-        return newEntry
-
-    @staticmethod
-    def cleanDoubleQuotesFromTitle(book):
-        # SQL requirement for quotes in field (must be double-quoted)
-        BookAdapter.removeDuplicateQuotes(book)
-
-    @staticmethod
-    def removeDuplicateQuotes(book):
-        for attribute in book.attributes:
-            setattr(book, attribute, re.sub("''", "'", getattr(book, attribute)))
-
-    @staticmethod
-    def titleHasDoubleQuote(book):
-        return "\'\'" in book.title
-
-
 class SqlBookDatabase(DatabaseConnection):
-
     def __init__(self):
         super().__init__()
+        self.books = []
         self.cachedData = InMemoryDatabase()
         self.database = Database()
 
-    def insertBooksIntoCatalogTable(self, books, booksToInsert):
+    def insertBooksIntoCatalogTable(self, booksToInsert):
         for book in booksToInsert:
-            bookToInsert = BookAdapter().replaceSingleQuoteWithDouble(book)
+            bookToInsert = replaceSingleQuoteWithDouble(book)
             self.database.insertQuery(bookToInsert)
 
-        return self.cachedData.insertBooksIntoCatalogTable(books, booksToInsert)
+        return self.cachedData.insertBooksIntoCatalogTable(booksToInsert)
 
-    def selectAll(self, books):
-        return self.cachedData.selectAll(books)
+    def selectAll(self):
+        self.synchronize()
+        return self.cachedData.selectAll()
 
-    def select(self, searchTerm, books):
-        return self.cachedData.select(searchTerm, books)
+    def select(self, searchTerm):
+        return self.cachedData.select(searchTerm)
 
-    def selectWith(self, bookDetail, books):
-        return self.cachedData.selectWith(bookDetail, books)
+    def selectWith(self, bookDetail):
+        return self.cachedData.selectWith(bookDetail)
 
-    def delete(self, entry, books):
+    def delete(self, entry):
         self.database.sendDeleteQuery(entry)
-        return self.cachedData.delete(entry, books)
+        return self.cachedData.delete(entry)
 
-    def deleteWhereTitle(self, title, books):
+    def deleteWhereTitle(self, title):
         self.database.sendDeleteWhereQuery(title)
-        return self.cachedData.deleteWhereTitle(title, books)
+        return self.cachedData.deleteWhereTitle(title)
 
-    def synchronize(self, books):
-        return self.cachedData.synchronize(self.database.getAllBooksFromCatalog())
+    def synchronize(self):
+        return self.database.getAllBooksFromCatalog()
 
     def clearCatalog(self):
         self.database.dropCatalog('catalog')
@@ -174,5 +124,5 @@ class SqlBookDatabase(DatabaseConnection):
         import os
         os.remove('db.sqlite3')
 
-    def selectFromAllFields(self, textContent, books):
-        return self.cachedData.selectFromAllFields(textContent, books)
+    def selectFromAllFields(self, textContent):
+        return self.cachedData.selectFromAllFields(textContent)

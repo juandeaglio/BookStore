@@ -20,7 +20,7 @@ def fetchCatalog(request):
             catalogContent = catalog.booksToJson(catalog.fetchBooksWithEmptyFields())
         else:
             catalogContent = catalog.booksToJson(catalog.getAllBooks())
-        response = HttpResponse(json.dumps(catalogContent), content_type="application/json")
+        response = HttpResponse(content=catalogContent, content_type="application/json")
         return response
 
 

@@ -9,10 +9,10 @@ from Source.Book import Book
 
 def convertTableToArray(context):
     books = []
-    #reflect on the book object from context.table and compare all columns
+    # reflect on the book object from context.table and compare all columns
     for book in context.table:
         new = Book()
-        #use the index of the column to get the attribute name
+        # use the index of the column to get the attribute name
         for index, attribute in enumerate(context.table.headings):
             setattr(new, new.attributes[index], book[index])
 

@@ -10,18 +10,24 @@ def before_scenario(context, scenario):
     context.ports = {'nginxPort': 8091, 'gunicornPort': 8092}
     clearDatabase()
     DjangoConfig.setupMigrations()
+    context.defaultPort = 8091
+    context.catalog = PersistentCatalog()
     context.web_server = WebServer(ports=context.ports)
     if "web server" not in scenario.name.lower():
         context.web_server.start()
         time.sleep(4)
 
-    context.defaultPort = 8091
-    context.catalog = PersistentCatalog()
 
 
 def after_scenario(context, scenario):
     context.web_server.stop()
     time.sleep(2)
+
+
+def after_all(context):
+    context.ports = {'nginxPort': 8091, 'gunicornPort': 8092}
+    web_server = WebServer(ports=context.ports)
+    web_server.stop()
 
 
 def clearDatabase():
