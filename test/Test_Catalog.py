@@ -32,9 +32,6 @@ class CatalogWithInitialAmountOfBooks(unittest.TestCase):
         self.catalog = InMemoryCatalog()
         self.catalog.add(self.books)
 
-    def tearDown(self) -> None:
-        InMemoryDatabase.books = []
-
     def test_smokeTestOfAllFunctions(self):
         title = "Harry"
         sizeOfSearch = len(self.catalog.search(title))
@@ -93,15 +90,10 @@ class PersistentCatalogWithInitialAmountOfBooks(CatalogWithInitialAmountOfBooks)
         self.catalog = PersistentCatalog()
         self.catalog.add(self.books)
 
-    def tearDown(self) -> None:
-        InMemoryDatabase.books = []
 
 class CatalogWithVariableAmountOfBooks(unittest.TestCase):
     def setUp(self):
         self.catalog = InMemoryCatalog()
-
-    def tearDown(self) -> None:
-        InMemoryDatabase.books = []
 
     def test_addNoneToCatalog(self):
         self.catalog.add(None)

@@ -48,7 +48,8 @@ class TestInMemoryStorageGateway(unittest.TestCase):
     def test_addDuplicateEntryToCatalog(self):
         expectedTotal = len(self.storageGateway.fetchBooksFromDatabase())
         books = booksForTest
-        self.storageGateway.add(Book(title=books[0].title, author=books[0].author, releaseYear=books[0].releaseYear, imagePath="SomePath", description="SomeDescription"))
+        self.storageGateway.add(Book(title=books[0].title, author=books[0].author, releaseYear=books[0].releaseYear,
+                                     imagePath=books[0].imagePath, description=books[0].description))
         assert len(self.storageGateway.fetchBooksFromDatabase()) == expectedTotal
 
     def test_addNothing(self):
@@ -85,9 +86,6 @@ class TestEmptyMemoryStorageGateway(unittest.TestCase):
     def setUp(self) -> None:
         self.storageGateway = StorageGateway(InMemoryDatabase())
         self.storageGateway.add(booksForTest[0])
-
-    def tearDown(self) -> None:
-        InMemoryDatabase.books = []
 
     def test_makeBookWithQuotes(self):
         expected_book = booksForTest[0]

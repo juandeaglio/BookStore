@@ -4,51 +4,8 @@ from Source.WebServer import WebServer
 from Source.WebServerStrategy.DjangoStrategy import DjangoStrategy
 from Source.WebServerStrategy.GunicornNginxStrategy import GunicornNginxStrategy
 from Source.WebServerStrategy.GunicornStrategy import GunicornStrategy
-
-
-class FakedOSLibrary:
-    def __init__(self, name=os.name):
-        self.name = name
-
-    @staticmethod
-    def getcwd():
-        return "D:/PyCharmProjs/BookStore"
-
-    @staticmethod
-    def popen(cmd):
-        class Data:
-            def read(self):
-                return "localhost%20"
-
-        return Data()
-
-class FakeProcess:
-    def terminate(self):
-        pass
-
-    def kill(self):
-        pass
-
-    def poll(self):
-        return None
-
-
-class FakedProcessLibrary:
-    def run(self, args=None, capture_output=True, check=True):
-        class ProcResults:
-            returncode = 0
-            stdout = bytes("localhost", encoding='utf-8')
-
-        return ProcResults()
-
-    def call(self):
-        pass
-
-    def Popen(self, args=None):
-        if args is None:
-            args = []
-
-        return FakeProcess()
+from test.FakedProcessLibrary import FakedProcessLibrary
+from test.FakedOSLibrary import FakedOSLibrary
 
 
 class TestDjangoWebServer(unittest.TestCase):
@@ -137,9 +94,9 @@ class TestGunicornNginxWebServer(TestGunicornAppServer):
                                    ports=ports)
         old_ip_file = self.webserver.temp_ip_address_file
         self.webserver2 = WebServer(strategy=GunicornNginxStrategy,
-                                   processLibrary=FakedProcessLibrary,
-                                   osLibrary=FakedOSLibrary,
-                                   ports=ports)
+                                    processLibrary=FakedProcessLibrary,
+                                    osLibrary=FakedOSLibrary,
+                                    ports=ports)
         
         current_ip_file = self.webserver2.temp_ip_address_file
         assert current_ip_file == old_ip_file

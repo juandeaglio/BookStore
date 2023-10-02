@@ -28,7 +28,7 @@ class StorageGateway:
 
     def addUniqueEntry(self, entry):
         books = self.dbConnection.synchronize()
-        result = self.dbConnection.selectWith(entry.title)
+        result = self.dbConnection.selectWithStrict(entry.title)
         if not result:
             self.dbConnection.insertBooksIntoCatalogTable([entry])
 

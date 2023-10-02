@@ -85,7 +85,6 @@ class Database:
 class SqlBookDatabase(DatabaseConnection):
     def __init__(self):
         super().__init__()
-        self.books = []
         self.cachedData = InMemoryDatabase()
         self.database = Database()
 
@@ -106,6 +105,9 @@ class SqlBookDatabase(DatabaseConnection):
     def selectWith(self, bookDetail):
         return self.cachedData.selectWith(bookDetail)
 
+    def selectWithStrict(self, bookDetail):
+        return self.cachedData.selectWithStrict(bookDetail)
+
     def delete(self, entry):
         self.database.sendDeleteQuery(entry)
         return self.cachedData.delete(entry)
@@ -115,7 +117,8 @@ class SqlBookDatabase(DatabaseConnection):
         return self.cachedData.deleteWhereTitle(title)
 
     def synchronize(self):
-        return self.database.getAllBooksFromCatalog()
+        self.cachedData.books = self.database.getAllBooksFromCatalog()
+        return self.cachedData.books
 
     def clearCatalog(self):
         self.database.dropCatalog('catalog')

@@ -37,4 +37,5 @@ prices = [
 ]
 booksForTest = []
 for i in range(5):
-    booksForTest.append(Book(titles[i], authors[i], releaseYears[i], imagePaths[i], descriptions[i], prices[i]))
+    booksForTest.append(Book(title=titles[i], author=authors[i], releaseYear=releaseYears[i], imagePath=imagePaths[i],
+                             description=descriptions[i], price=prices[i]))
