@@ -85,7 +85,7 @@ class CatalogWithInitialAmountOfBooks(unittest.TestCase):
 
 class PersistentCatalogWithInitialAmountOfBooks(CatalogWithInitialAmountOfBooks):
     def setUp(self):
-        SqlBookDatabase().clearCatalog()
+        SqlBookDatabase().clear_catalog()
         super().setUp()
         self.catalog = PersistentCatalog()
         self.catalog.add(self.books)
@@ -111,7 +111,7 @@ class CatalogWithVariableAmountOfBooks(unittest.TestCase):
 
 class PersistentCatalogWithVariableAmountOfBooks(CatalogWithVariableAmountOfBooks):
     def setUp(self):
-        SqlBookDatabase().clearCatalog()
+        SqlBookDatabase().clear_catalog()
         super().setUp()
         self.catalog = PersistentCatalog()
 

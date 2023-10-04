@@ -8,9 +8,9 @@ from Source.WebServerStrategy.DjangoStrategy import DjangoStrategy
 
 class WebServer:
     def __init__(self, strategy=DjangoStrategy, processLibrary=subprocess, osLibrary=os, ports=None):
-        self.processLibrary = processLibrary
+        self.process_library = processLibrary
         self.process = None
-        self.osLibrary = osLibrary
+        self.os_library = osLibrary
         self.ports = ports or {}
         self.strategy = strategy(processLibrary, osLibrary, ports=self.ports)
         self.temp_ip_address_file = self.fetch_cached_ip()
@@ -39,23 +39,23 @@ class WebServer:
             self.process.terminate()
             self.process.kill()
 
-        cmd = self.strategy.createStopCommand()
-        self.executeCommand(cmd)
+        cmd = self.strategy.create_stop_command()
+        self.execute_command(cmd)
 
-    def executeCommand(self, cmd):
+    def execute_command(self, cmd):
         try:
-            if self.osLibrary.name == 'nt':
-                self.processLibrary.run(["powershell", "-Command", cmd], check=True)
-            elif self.osLibrary.name == 'posix':
-                self.processLibrary.run(["bash", "-c", cmd], check=True)
+            if self.os_library.name == 'nt':
+                self.process_library.run(["powershell", "-Command", cmd], check=True)
+            elif self.os_library.name == 'posix':
+                self.process_library.run(["bash", "-c", cmd], check=True)
 
         except subprocess.CalledProcessError as e:
             print(f"Error executing command: {e}")
 
-    def isRunning(self):
-        return self.strategy.isRunning()
+    def is_running(self):
+        return self.strategy.is_running()
 
     def curlIPAddress(self):
-        ip_address = self.osLibrary.popen("curl icanhazip.com").read().strip()
+        ip_address = self.os_library.popen("curl icanhazip.com").read().strip()
         ip_address = re.sub('%20', '', ip_address)
         return ip_address

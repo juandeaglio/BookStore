@@ -5,10 +5,10 @@ import sys
 
 
 class DjangoStrategy(WebServerStrategy):
-    def __init__(self, subprocessLib, osLibrary, ports=None):
-        super().__init__(subprocessLib, osLibrary, ports=ports)
+    def __init__(self, sub_process_library, os_library, ports=None):
+        super().__init__(sub_process_library, os_library, ports=ports)
 
-    def createStopCommand(self):
+    def create_stop_command(self):
         cmd = ''
         if os.name == 'nt':
             cmd = "Get-WmiObject Win32_Process | Where-Object " \
@@ -19,17 +19,17 @@ class DjangoStrategy(WebServerStrategy):
 
         return cmd
 
-    def isRunning(self):
+    def is_running(self):
         cmd = ''
         if os.name == 'nt':
             # get all python processes and filter out the ones that are not runserver, count the number of processes and return true if there is at least one
             cmd = "CheckRunServerDjango.ps1"
-            print(self.subprocessLib.run(["powershell", "-File", cmd], capture_output=True).returncode)
-            return self.subprocessLib.run(["powershell", "-File", cmd], capture_output=True).returncode > 0
+            print(self.sub_process_lib.run(["powershell", "-File", cmd], capture_output=True).returncode)
+            return self.sub_process_lib.run(["powershell", "-File", cmd], capture_output=True).returncode > 0
 
         elif os.name == 'posix':
             cmd = "CheckRunDjango.sh"
-            return self.subprocessLib.run(["bash", cmd], capture_output=True).returncode > 0
+            return self.sub_process_lib.run(["bash", cmd], capture_output=True).returncode > 0
 
     def start(self):
-        return self.subprocessLib.Popen([sys.executable, "startDjangoWithTestUser.py"])
+        return self.sub_process_lib.Popen([sys.executable, "startDjangoWithTestUser.py"])

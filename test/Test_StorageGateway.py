@@ -71,7 +71,7 @@ class TestInMemoryStorageGateway(unittest.TestCase):
 class TestPersistentStorageGateway(TestInMemoryStorageGateway):
     def setUp(self):
         self.books = booksForTest
-        SqlBookDatabase().clearCatalog()
+        SqlBookDatabase().clear_catalog()
         self.storageGateway = StorageGateway(SqlBookDatabase())
         self.storageGateway.add(self.books)
 
@@ -101,7 +101,7 @@ class TestEmptyMemoryStorageGateway(unittest.TestCase):
 
 class TestEmptyPersistentStorageGateway(TestEmptyMemoryStorageGateway):
     def setUp(self):
-        SqlBookDatabase().clearCatalog()
+        SqlBookDatabase().clear_catalog()
         self.storageGateway = StorageGateway(SqlBookDatabase())
         self.storageGateway.add(booksForTest[0])
 

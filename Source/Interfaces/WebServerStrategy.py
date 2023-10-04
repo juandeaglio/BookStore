@@ -2,9 +2,9 @@ from abc import ABC, abstractmethod
 
 
 class WebServerStrategy(ABC):
-    def __init__(self, subprocessLib, osLibrary, ports=None):
-        self.subprocessLib = subprocessLib
-        self.osLibrary = osLibrary
+    def __init__(self, sub_process_library, os_library, ports=None):
+        self.sub_process_lib = sub_process_library
+        self.os_library = os_library
         self.ports = ports or {}
 
     @abstractmethod
@@ -12,9 +12,9 @@ class WebServerStrategy(ABC):
         pass
 
     @abstractmethod
-    def createStopCommand(self):
+    def create_stop_command(self):
         pass
 
     @abstractmethod
-    def isRunning(self):
+    def is_running(self):
         pass

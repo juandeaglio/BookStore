@@ -5,26 +5,26 @@ from Source.Book import Book
 
 class DatabaseConnection(ABC):
     @abstractmethod
-    def insertBooksIntoCatalogTable(self, booksToInsert):
+    def insert_books_into_catalog_table(self, books_to_insert):
         pass
 
     @abstractmethod
-    def selectAll(self):
+    def select_all(self):
         pass
 
     @abstractmethod
-    def select(self, searchTerm):
+    def select(self, search_term):
         pass
 
     @abstractmethod
     def delete(self, entry):
         pass
     @abstractmethod
-    def deleteWhereTitle(self, title):
+    def delete_where_title(self, title):
         pass
 
     @abstractmethod
-    def selectWith(self, bookDetail):
+    def select_with_substring(self, book_detail):
         pass
 
     @abstractmethod
@@ -32,5 +32,9 @@ class DatabaseConnection(ABC):
         pass
 
     @abstractmethod
-    def selectFromAllFields(self, textContent):
+    def select_from_all_fields(self, text_content):
+        pass
+
+    @abstractmethod
+    def select_from_title_or_author(self, title):
         pass

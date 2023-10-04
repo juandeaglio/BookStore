@@ -28,38 +28,38 @@ class TestDjangoWebServer(unittest.TestCase):
         self.webserver = WebServer(strategy=strategy,
                                    processLibrary=FakedProcessLibrary,
                                    osLibrary=osLibrary)
-        assert self.webserver.isRunning() is False
+        assert self.webserver.is_running() is False
 
 
 class TestGunicornAppServer(TestDjangoWebServer):
     def test_startGunicornServer(self, strategy=GunicornStrategy, osLibrary=FakedOSLibrary(name='posix')):
-        super().test_startServer(strategy, osLibrary)
+        super().test_startServer(strategy=strategy, osLibrary=osLibrary)
 
     def test_startAndStopServer(self, strategy=GunicornStrategy, osLibrary=FakedOSLibrary(name='posix')):
-        super().test_startAndStopServer(strategy, osLibrary)
+        super().test_startAndStopServer(strategy=strategy, osLibrary=osLibrary)
 
     def test_isServerRunning(self, strategy=GunicornStrategy, osLibrary=FakedOSLibrary(name='posix')):
-        super().test_isServerRunning(strategy, osLibrary)
+        super().test_isServerRunning(strategy=strategy, osLibrary=osLibrary)
 
 
 class TestGunicornNginxWebServer(TestGunicornAppServer):
     def test_startGnicornNginxServer(self, strategy=GunicornNginxStrategy, osLibrary=FakedOSLibrary(name='posix')):
-        super().test_startServer(strategy, osLibrary)
+        super().test_startServer(strategy=strategy, osLibrary=osLibrary)
 
     def test_startAndStopServer(self, strategy=GunicornStrategy, osLibrary=FakedOSLibrary(name='posix')):
-        super().test_startAndStopServer(strategy, osLibrary)
+        super().test_startAndStopServer(strategy=strategy, osLibrary=osLibrary)
 
     def test_isServerRunning(self, strategy=GunicornStrategy, osLibrary=FakedOSLibrary(name='posix')):
-        super().test_isServerRunning(strategy, osLibrary)
+        super().test_isServerRunning(strategy=strategy, osLibrary=osLibrary)
 
     def test_configureServer(self):
-        ports = {'nginxPort': 8091, 'gunicornPort': 8092}
+        ports = {'nginx_port': 8091, 'gunicorn_port': 8092}
         FakedOSLibrary.name = 'posix'
         self.webserver = WebServer(strategy=GunicornNginxStrategy,
                                    processLibrary=FakedProcessLibrary,
                                    osLibrary=FakedOSLibrary,
                                    ports=ports)
-        assert self.webserver.strategy.createNginxConfig(ports, curledIPAddress="localhost") == """server{
+        assert self.webserver.strategy.create_nginx_config(ports=ports, curled_ip_address="localhost") == """server{
     listen 8091;
     server_name BookStore;
 

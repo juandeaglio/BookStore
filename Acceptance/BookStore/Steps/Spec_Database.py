@@ -9,7 +9,7 @@ from test.BooksForTest import booksForTest
 def add_books_to_catalog(context):
     context.books = booksForTest
     context.type = SqlBookDatabase
-    SqlBookDatabase().clearCatalog()
+    SqlBookDatabase().clear_catalog()
     context.storageGateway = StorageGateway(context.type())
     context.storageGateway.add(context.books)
 

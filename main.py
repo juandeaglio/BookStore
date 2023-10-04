@@ -31,7 +31,7 @@ def sendRestFromClientHandleRestWithServer(name):
     ports = {'nginxPort': 8091, 'gunicornPort': 8092}
     web_server = WebServer(ports=ports, strategy=GunicornNginxStrategy)
     public_ip_address = web_server.ip_address
-    web_server.strategy.createNginxConfig(ports=ports, curledIPAddress=public_ip_address)
+    web_server.strategy.create_nginx_config(ports=ports, curled_ip_address=public_ip_address)
     web_server.start()
     while True:
         continue

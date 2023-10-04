@@ -5,10 +5,10 @@ class InMemoryDatabase(DatabaseConnection):
     def __init__(self):
         self.books = []
 
-    def insertBooksIntoCatalogTable(self, booksToInsert):
+    def insert_books_into_catalog_table(self, booksToInsert):
         self.books += booksToInsert
 
-    def selectAll(self):
+    def select_all(self):
         books = sorted(self.books,
                        key=lambda book: book.title if "The" not in book.title[0:4]
                        else book.title[4:])
@@ -20,7 +20,7 @@ class InMemoryDatabase(DatabaseConnection):
     def delete(self, entry):
         self.books.remove(entry)
 
-    def deleteWhereTitle(self, title):
+    def delete_where_title(self, title):
         deleted = []
         for book in self.books:
             if title in book.title:
@@ -29,7 +29,7 @@ class InMemoryDatabase(DatabaseConnection):
 
         return deleted
 
-    def selectWith(self, bookDetail):
+    def select_with_substring(self, bookDetail):
         found = []
         for book in self.books:
             if bookDetail in book.title or bookDetail in book.author:
@@ -39,7 +39,7 @@ class InMemoryDatabase(DatabaseConnection):
                       key=lambda book: book.title if "The" not in book.title[0:4]
                       else book.title[4:])
 
-    def selectWithStrict(self, bookDetail):
+    def select_from_title_or_author(self, bookDetail):
         found = []
         for book in self.books:
             if bookDetail == book.title or bookDetail == book.author:
@@ -51,7 +51,7 @@ class InMemoryDatabase(DatabaseConnection):
     def synchronize(self):
         return self.books
 
-    def selectFromAllFields(self, textContent):
+    def select_from_all_fields(self, textContent):
         found = []
         for book in self.books:
             if textContent == book.title or textContent == book.author or textContent == book.releaseYear or \

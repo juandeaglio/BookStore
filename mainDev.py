@@ -36,7 +36,7 @@ def sendRestFromClientHandleRestWithServer(name):
                   imagePath="static/imgs/Frankenstein: The 1818 Text", description=exampleDescriptions[10],
                   price='6.50')
              ]
-    SqlBookDatabase().clearCatalog()
+    SqlBookDatabase().clear_catalog()
     catalog = PersistentCatalog()
     catalog.add(books)
     booksArr = []

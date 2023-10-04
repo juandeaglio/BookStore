@@ -10,7 +10,7 @@ def makeBookFromSQL(columns, row):
     return book
 
 
-def getBooksChanged(sqlData):
+def get_books_changed(sqlData):
     rows, columns = sqlData
     books = []
     for row in rows:
@@ -21,7 +21,7 @@ def getBooksChanged(sqlData):
     return books
 
 
-def replaceSingleQuoteWithDouble(entry):
+def replace_single_quote_with_double(entry):
     # SQL requirement for single quote character ' in field.
     newEntry = Book()
     if isinstance(entry, str):

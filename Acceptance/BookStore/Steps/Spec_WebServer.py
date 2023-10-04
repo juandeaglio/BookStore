@@ -35,7 +35,7 @@ def start_web_server(context, web_server_type):
     if runningGunicornOnWindows(context):
         assert os.name == 'nt'
     else:
-        assert context.web_server.isRunning() is True, "Expected web server to be up but it is down"
+        assert context.web_server.is_running() is True, "Expected web server to be up but it is down"
 
 
 @then('The user can access the web page')
@@ -55,7 +55,7 @@ def stopWebServer(context):
     else:
         context.web_server.stop()
         time.sleep(2)
-        assert context.web_server.isRunning() is False, "Expected web server to be down but it is still running."
+        assert context.web_server.is_running() is False, "Expected web server to be down but it is still running."
 
 
 def responseIsAnError(response):
@@ -116,8 +116,8 @@ def start_public_web_server(context):
     context.web_server = WebServer(strategy=GunicornNginxStrategy, ports=context.ports)
     context.public_ip_address = context.web_server.ip_address
     print("ip address is: " + context.public_ip_address)
-    print("Config is: " + context.web_server.strategy.createNginxConfig(context.ports,
-                                                                        curledIPAddress=context.public_ip_address))
+    print("Config is: " + context.web_server.strategy.create_nginx_config(context.ports,
+                                                                          curled_ip_address=context.public_ip_address))
     context.web_server.start()
     time.sleep(2)
 
@@ -131,7 +131,7 @@ def start_public_web_server(context):
     if runningGunicornOnWindows(context):
         assert os.name == 'nt'
     else:
-        assert context.web_server.isRunning() is True, "Expected web server to be up but it is down"
+        assert context.web_server.is_running() is True, "Expected web server to be up but it is down"
 
 def isGitHubRunner():
     return os.name == 'posix' and os.popen('whoami').read().strip() == 'runner'
@@ -161,7 +161,7 @@ def defineUser(context):
         context.web_server.start()
         context.adminUsername = "newadmin"
         context.password = "password"
-        assert context.web_server.isRunning() is True, "Expected web server to be up but it is down"
+        assert context.web_server.is_running() is True, "Expected web server to be up but it is down"
 
 
 @when('The application creates an admin user')

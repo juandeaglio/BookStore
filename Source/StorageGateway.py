@@ -7,7 +7,7 @@ class StorageGateway:
             self.dbConnection = dbConn
 
     def fetchBooksFromDatabase(self):
-        return self.dbConnection.selectAll()
+        return self.dbConnection.select_all()
 
     def loadEntryToCache(self, book):
         books = self.dbConnection.synchronize()
@@ -28,9 +28,9 @@ class StorageGateway:
 
     def addUniqueEntry(self, entry):
         books = self.dbConnection.synchronize()
-        result = self.dbConnection.selectWithStrict(entry.title)
+        result = self.dbConnection.select_from_title_or_author(entry.title)
         if not result:
-            self.dbConnection.insertBooksIntoCatalogTable([entry])
+            self.dbConnection.insert_books_into_catalog_table([entry])
 
     def doesBookExist(self, entry):
         return self.loadEntryToCache(entry) is not None
@@ -42,15 +42,15 @@ class StorageGateway:
 
     def loadEntryByTitleToCache(self, title):
         books = self.dbConnection.synchronize()
-        books = self.dbConnection.selectWith(title)
+        books = self.dbConnection.select_with_substring(title)
         return books
 
     def fetchByString(self, bookDetail):
         books = self.dbConnection.synchronize()
-        books = self.dbConnection.selectWith(bookDetail)
+        books = self.dbConnection.select_with_substring(bookDetail)
         return books
 
     def fetchFromAllFields(self, textContent):
         self.dbConnection.synchronize()
-        books = self.dbConnection.selectFromAllFields(textContent)
+        books = self.dbConnection.select_from_all_fields(textContent)
         return books

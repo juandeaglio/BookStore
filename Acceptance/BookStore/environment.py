@@ -8,8 +8,8 @@ from Source.WebServer import WebServer
 
 def before_scenario(context, scenario):
     context.ports = {'nginxPort': 8091, 'gunicornPort': 8092}
-    clearDatabase()
-    DjangoConfig.setupMigrations()
+    clear_database()
+    DjangoConfig.setup_migrations()
     context.defaultPort = 8091
     context.catalog = PersistentCatalog()
     context.web_server = WebServer(ports=context.ports)
@@ -30,8 +30,8 @@ def after_all(context):
     web_server.stop()
 
 
-def clearDatabase():
-    SqlBookDatabase().clearCatalog()
-    DjangoConfig.deleteSqlite()
+def clear_database():
+    SqlBookDatabase().clear_catalog()
+    DjangoConfig.delete_sqlite()
 
 
