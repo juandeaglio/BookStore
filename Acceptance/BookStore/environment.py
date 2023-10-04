@@ -7,7 +7,7 @@ from Source.WebServer import WebServer
 
 
 def before_scenario(context, scenario):
-    context.ports = {'nginxPort': 8091, 'gunicornPort': 8092}
+    context.ports = {'nginx_port': 8091, 'gunicorn_port': 8092}
     clear_database()
     DjangoConfig.setup_migrations()
     context.defaultPort = 8091
@@ -25,7 +25,7 @@ def after_scenario(context, scenario):
 
 
 def after_all(context):
-    context.ports = {'nginxPort': 8091, 'gunicornPort': 8092}
+    context.ports = {'nginx_port': 8091, 'gunicorn_port': 8092}
     web_server = WebServer(ports=context.ports)
     web_server.stop()
 

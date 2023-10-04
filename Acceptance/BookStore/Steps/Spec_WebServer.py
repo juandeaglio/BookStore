@@ -21,16 +21,16 @@ strategies = {
 
 @given('"{web_server_type}" web server is started')
 def start_web_server(context, web_server_type):
-    context.port = context.ports['nginxPort']
+    context.port = context.ports['nginx_port']
     context.web_server = WebServer(strategy=strategies[web_server_type], ports=context.ports)
     context.web_server.start()
     context.web_server_type = web_server_type
     time.sleep(2)
 
     if context.web_server_type == "Gunicorn":
-        context.port = context.ports['gunicornPort']
+        context.port = context.ports['gunicorn_port']
     else:
-        context.port = context.ports['nginxPort']
+        context.port = context.ports['nginx_port']
 
     if runningGunicornOnWindows(context):
         assert os.name == 'nt'
@@ -112,7 +112,7 @@ def seeStaticImage(context):
 
 @given('The user hosts the web server on the public web')
 def start_public_web_server(context):
-    context.port = context.ports['nginxPort']
+    context.port = context.ports['nginx_port']
     context.web_server = WebServer(strategy=GunicornNginxStrategy, ports=context.ports)
     context.public_ip_address = context.web_server.ip_address
     print("ip address is: " + context.public_ip_address)
@@ -136,6 +136,7 @@ def start_public_web_server(context):
 def isGitHubRunner():
     return os.name == 'posix' and os.popen('whoami').read().strip() == 'runner'
 
+
 @then('The user can access the web page over the internet')
 def access_public_web_server(context):
     if os.name == 'nt':
@@ -157,7 +158,7 @@ def defineUser(context):
     if runningGunicornOnWindows(context):
         assert os.name == 'nt'
     else:
-        context.port = context.ports['nginxPort']
+        context.port = context.ports['nginx_port']
         context.web_server.start()
         context.adminUsername = "newadmin"
         context.password = "password"
