@@ -24,5 +24,5 @@ class GunicornStrategy(WebServerStrategy):
 
     def is_running(self):
         if self.os_library.name == 'posix':
-            cmd2 = "CheckRunGunicorn.sh"
+            cmd2 = "./Source/Scripts/CheckRunGunicorn.sh"
             return self.sub_process_lib.run(["bash", cmd2], capture_output=True).returncode > 0

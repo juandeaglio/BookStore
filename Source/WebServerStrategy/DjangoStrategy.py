@@ -23,13 +23,13 @@ class DjangoStrategy(WebServerStrategy):
         cmd = ''
         if os.name == 'nt':
             # get all python processes and filter out the ones that are not runserver, count the number of processes and return true if there is at least one
-            cmd = "CheckRunServerDjango.ps1"
+            cmd = "./Source/Scripts/CheckRunServerDjango.ps1"
             print(self.sub_process_lib.run(["powershell", "-File", cmd], capture_output=True).returncode)
             return self.sub_process_lib.run(["powershell", "-File", cmd], capture_output=True).returncode > 0
 
         elif os.name == 'posix':
-            cmd = "CheckRunDjango.sh"
+            cmd = "./Source/Scripts/CheckRunDjango.sh"
             return self.sub_process_lib.run(["bash", cmd], capture_output=True).returncode > 0
 
     def start(self):
-        return self.sub_process_lib.Popen([sys.executable, "startDjangoWithTestUser.py"])
+        return self.sub_process_lib.Popen([sys.executable, "./startDjangoWithTestUser.py"])

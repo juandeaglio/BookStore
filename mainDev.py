@@ -1,12 +1,11 @@
 # This is a python webserver that serves a list of books to a web browser client.
 
-from ExampleDescriptions import exampleDescriptions
+from Source.ExampleDescriptions import exampleDescriptions
 from Source.Book import Book
 from Source.Catalog.PersistentCatalog import PersistentCatalog
 from Source.Database.SqlBookDatabase import SqlBookDatabase
 from Source.WebServer import WebServer
 from Source.WebServerStrategy.DjangoStrategy import DjangoStrategy
-from Source.WebServerStrategy.GunicornNginxStrategy import GunicornNginxStrategy
 
 
 def sendRestFromClientHandleRestWithServer(name):

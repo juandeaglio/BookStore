@@ -1,6 +1,6 @@
 import re
 
-import nginx_template
+from Source.WebServerStrategy import nginx_template
 from Source.Interfaces.WebServerStrategy import WebServerStrategy
 from Source.WebServerStrategy.GunicornStrategy import GunicornStrategy
 
@@ -31,8 +31,8 @@ class GunicornNginxStrategy(WebServerStrategy):
 
     def is_running(self):
         if self.os_library.name == 'posix':
-            cmd2 = "CheckRunGunicorn.sh"
-            cmd3 = "CheckRunNginx.sh"
+            cmd2 = "./Source/Scripts/CheckRunGunicorn.sh"
+            cmd3 = "./Source/Scripts/CheckRunNginx.sh"
             return self.sub_process_lib.run(["bash", cmd2], capture_output=True).returncode > 0 and \
                    self.sub_process_lib.run(["bash", cmd3], capture_output=True).returncode > 0
 
