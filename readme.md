@@ -1,3 +1,5 @@
+I'm happy to demo and explain my code. I'm open for changes in the front or backend.
+
 This is the live website on Azure:
 http://bookhaven.eastus.cloudapp.azure.com/
 
