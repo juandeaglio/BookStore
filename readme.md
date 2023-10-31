@@ -26,4 +26,4 @@ Run in base project directory
 ****
 allure serve allure_reports
 
-I've had a bumpy road integrating Django with React, especially with some specific features like CORS, CSRF, and dynamically configuring nginx as needed. I'm including my road through development on anthonyvolkovportfolio.com
+I've had a bumpy road integrating Django with React, especially with some specific features like CORS, CSRF, and dynamically configuring nginx as needed. I'm including my road through development on [juandeaglio.github.io](https://juandeaglio.github.io/)
