@@ -1,5 +1,3 @@
-I'm happy to demo and explain my code. I'm open for changes in the front or backend.
-
 This is the live website on Azure:
 http://bookhaven.eastus.cloudapp.azure.com/
 
@@ -10,6 +8,10 @@ An API for an online store with a shopping cart.
 Built with Django in the backend and React in the frontend. 
 
 My GitHub action currently has the latest on how to properly set up and run the website along with how to run the tests.
+
+### How to deploy:
+I'm considering automatically generating documentation on how to download dependencies and deploy the webserver, generating it based off the GitHub action I have implemented on the repository.
+To deploy, it's a handful of Linux commands to download nginx, python, etc. Once all dependencies are downloading, it's just a simple shell script to start.
 
 ### To run behave tests:
 python integrationTests.py
