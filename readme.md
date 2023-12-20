@@ -1,5 +1,6 @@
 **I'm currently only maintaining this project, temporarily.**
 This is not going to be permanent. I just want to become more familiar with testing the frontend so that I can start building out more functionality in a sustainable manner. I'll be back to fleshing out the backend and adding a larger dataset in the future.
+You can see my progress in [HTMLPhysics](https://github.com/juandeaglio/TCR_TypeScript), a practical example of accomplishing testing on the frontend.
 
 This is the live website on Azure:
 http://bookhaven.eastus.cloudapp.azure.com/
